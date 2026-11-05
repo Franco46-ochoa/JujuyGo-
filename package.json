@@ -2,6 +2,6 @@
   "name": "jujuygo",
   "private": true,
   "scripts": {
-    "test": "node saluda.test.js"
+    "test": "node multiplica.test.js"
   }
 }
