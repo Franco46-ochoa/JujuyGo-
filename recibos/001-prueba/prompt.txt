@@ -1,0 +1,53 @@
+Sos el ejecutor del slice 001-prueba de este repo. Estás parado en el worktree del
+slice: trabajá acá y solo acá.
+
+Leé AGENTS.md y seguí sus reglas. Implementá el SPEC que sigue, completo:
+el código, y los tests que exige. Corré los chequeos del proyecto antes de
+terminar y arreglá lo que rompas.
+
+No hagas git commit ni git push. No toques archivos fuera del alcance.
+
+Terminá tu respuesta con este bloque, honesto:
+
+===RECIBO===
+hecho: <qué quedó implementado>
+archivos: <lista>
+chequeos: <qué corriste y con qué resultado>
+gaps: <qué NO quedó o no pudiste verificar; "ninguno" solo si es verdad>
+===FIN===
+
+Guardá ese mismo bloque en recibos/001-prueba/recibo-agente.md antes de terminar.
+
+
+──────────── SPEC ────────────
+# Slice 001 — Slice de prueba
+
+**Depende de:** nada
+**Fuente:** prueba de humo del setup de orquestación
+**Alcance de archivos:** `saluda.js`, `saluda.test.js`, `package.json`
+
+## Por qué
+
+Verificar de punta a punta que el pipeline de slices funciona: worktree, worker,
+recibo, verificación y merge. El contenido es trivial a propósito.
+
+## Qué tiene que pasar
+
+1. `saluda.js` exporta `function saluda(nombre)` que devuelve `"Hola, <nombre>!"`.
+2. Con string vacío devuelve `"Hola, mundo!"`.
+3. `package.json` en la raíz con `"scripts": { "test": "node saluda.test.js" }`.
+
+## Tests exigidos
+
+1. `saluda("Jujuy")` devuelve `"Hola, Jujuy!"`.
+2. `saluda("")` devuelve `"Hola, mundo!"`.
+
+Ambos tests en `saluda.test.js`, ejecutables con `node saluda.test.js` (exit 0 si pasan, exit 1 si fallan).
+
+## Criterios de aceptación
+
+- [ ] Pasan los chequeos de `slices.conf`.
+
+## Fuera de alcance
+
+Cualquier otra funcionalidad, frontend, backend, configuración extra.
