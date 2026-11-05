@@ -1,0 +1,7 @@
+recibos/*/pid
+recibos/.orca-run
+.slices/
+.env
+.env.local
+**/.env
+**/.env.local

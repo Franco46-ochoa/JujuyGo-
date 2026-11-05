@@ -1,0 +1,21 @@
+# orca.yaml — configuración de Orca para este repo (commitealo).
+# Doc: https://github.com/stablyai/orca/blob/main/docs/site/content/docs/model/orca-yaml.mdx
+scripts:
+  # Corre en cada worktree nuevo. $ORCA_WORKTREE_PATH es el worktree, $ORCA_ROOT_PATH el checkout principal.
+  setup: |
+    # Dependencias del proyecto (se salta lo que aún no existe):
+    for d in frontend backend; do
+      [ -d "$d" ] && (cd "$d" && npm ci)
+    done
+    # Base de pruebas propia por worktree (Postgres local 18), para que los
+    # workers en paralelo no se pisen. Activar cuando exista backend/ y las
+    # credenciales estén en .env (ver docs/agents/orquestacion.md):
+    #   createdb "jujuygo_test_${ORCA_WORKSPACE_NAME}"
+    #   sed -i "s#/jujuygo[^\"']*#/jujuygo_test_${ORCA_WORKSPACE_NAME}#" backend/.env
+    echo "worktree listo: $ORCA_WORKSPACE_NAME"
+# El agente arranca cuando terminó el setup.
+setupAgentStartupPolicy: wait-for-setup
+defaultTabs:
+  - title: Agente          # sin comando: lo ocupa el agente que lanza Orca
+  - title: Slices
+    command: ./slices estado
