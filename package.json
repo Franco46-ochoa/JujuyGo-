@@ -1,7 +1,0 @@
-{
-  "name": "jujuygo",
-  "private": true,
-  "scripts": {
-    "test": "node multiplica.test.js"
-  }
-}

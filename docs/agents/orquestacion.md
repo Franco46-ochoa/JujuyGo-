@@ -8,12 +8,10 @@ Con cada pedido: **`start`**. Decide la ruta (solo lectura, directo u orquestar)
 |---|---|---|
 | Coordinador | **Devin** | Arma el DAG, verifica recibos (`./slices verificar`), decide merges, reporta qué cerró y qué no |
 | Worker | **Devin** | Toma **un slice por ola** en paralelo con los workers; al terminar el suyo, verifica los ajenos |
-| Workers | **Gemini vía Orca** | `LANZADOR=orca`, `AGENTE_ORCA=gemini`. Antigravity como segundo agente si Orca lo acepta |
-| Tareas mínimas | **Kimi** | `EJECUTOR=cmd` + `EJECUTOR_CMD` en `slices.conf` (con `SLICES_LANZADOR=local`) |
+| Workers | **Copilot vía Orca** | `LANZADOR=orca`, `AGENTE_ORCA=copilot` — verificado E2E (smoke test 002) |
+| Tareas mínimas | **Kimi** | `EJECUTOR=cmd` + `EJECUTOR_CMD` en `slices.conf`. Pausado: suscripción sin Kimi Code |
 | Juez | checks + `code-review-en-loop` de Devin | `JUEZ=""`: `claude` no conecta a la API (verificado 2026-11-05). Si aparece un LLM → `JUEZ=claude` (MODELO_JUEZ=haiku) o `JUEZ=jev` |
-| Reserva | `MAX_PARALELO=2` | Una sola cuota Google. Si se agota: bajar a 1 o pausar workers |
-
-Copilot queda fuera del loop de workers (el kit no lo soporta como agente); lee `AGENTS.md` desde el IDE.
+| Reserva | `MAX_PARALELO=2` | Un solo plan Copilot. Si se agota: bajar a 1 o pausar workers |
 
 ## Checks (slices.conf)
 
@@ -70,8 +68,10 @@ El worker no carga skills por su cuenta: si un slice necesita `tdd` o `diagnosin
 
 - **Windows / `LANZADOR=local`:** `slices` desacopla con `setsid`, que no existe en Git Bash → `lanzar` queda "cortado a medias" con un `pid` huérfano. Local se corre en primer plano: `./slices _trabajar <id>`. El modo `orca` no lo necesita.
 - **`claude` sin API** (sin suscripción): no sirve de juez ni de worker hasta que conecte.
-- **`kimi` sin login:** `kimi -p` falla con "No model configured" hasta `kimi` → `/login`. Probar `-y` tras el login.
-- **Orca `--agent`:** requiere alias de agente configurado en la app (Settings → Agents); `agent_unconfigured` si falta. Workers `gemini`/`agy` además necesitan su CLI instalado y logueado.
+- **`gemini` CLI no sirve de worker:** Google cerró el OAuth individual (migra a Antigravity) y la API key da 403 sin billing.
+- **`agy`/Antigravity:** cuenta nativa guardada en Orca (`46323573@…`), pero `worker-start --agent agy` da `agent_unconfigured` hasta crear el alias en Settings → Agents.
+- **`kimi` sin acceso a Kimi Code:** logueado pero la suscripción no lo cubre; `kimi -p` da auth_error. Pausado salvo upgrade u otro provider en `kimi provider`.
+- **Workers de Copilot en Orca piden aprobaciones interactivas** por cada tipo de comando la primera vez (crear archivos, `npm test`, `git`, …): la persona responde "Yes, and don't ask again … in this repo" en la terminal del worker y queda registrado para futuros workers. La primera corrida además carga la "managed account policy" una vez (ya quedó en caché). Alternativa sin prompts: `LANZADOR=local` + `EJECUTOR_CMD='copilot -p "$SLICES_PROMPT" --allow-all-tools'` (headless verificado).
 
 ## Cómo se ajusta después
 
