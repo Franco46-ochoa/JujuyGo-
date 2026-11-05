@@ -10,7 +10,7 @@ Con cada pedido: **`start`**. Decide la ruta (solo lectura, directo u orquestar)
 | Worker | **Devin** | Toma **un slice por ola** en paralelo con los workers; al terminar el suyo, verifica los ajenos |
 | Workers | **Gemini vía Orca** | `LANZADOR=orca`, `AGENTE_ORCA=gemini`. Antigravity como segundo agente si Orca lo acepta |
 | Tareas mínimas | **Kimi** | `EJECUTOR=cmd` + `EJECUTOR_CMD` en `slices.conf` (con `SLICES_LANZADOR=local`) |
-| Juez | `claude -p --model haiku` + revisión de Devin | `JUEZ=claude`. Si el CLI no responde → `JUEZ=""` y `code-review-en-loop` queda como gate |
+| Juez | checks + `code-review-en-loop` de Devin | `JUEZ=""`: `claude` no conecta a la API (verificado 2026-11-05). Si aparece un LLM → `JUEZ=claude` (MODELO_JUEZ=haiku) o `JUEZ=jev` |
 | Reserva | `MAX_PARALELO=2` | Una sola cuota Google. Si se agota: bajar a 1 o pausar workers |
 
 Copilot queda fuera del loop de workers (el kit no lo soporta como agente); lee `AGENTS.md` desde el IDE.
@@ -65,6 +65,13 @@ Reconocé el momento y cargá la skill sin esperar a que la nombren.
 | **No sé cuál** | | `ask-matt` (router de las de mattpocock) |
 
 El worker no carga skills por su cuenta: si un slice necesita `tdd` o `diagnosing-bugs`, decilo en el SPEC.
+
+## Limitaciones conocidas (verificadas en el setup)
+
+- **Windows / `LANZADOR=local`:** `slices` desacopla con `setsid`, que no existe en Git Bash → `lanzar` queda "cortado a medias" con un `pid` huérfano. Local se corre en primer plano: `./slices _trabajar <id>`. El modo `orca` no lo necesita.
+- **`claude` sin API** (sin suscripción): no sirve de juez ni de worker hasta que conecte.
+- **`kimi` sin login:** `kimi -p` falla con "No model configured" hasta `kimi` → `/login`. Probar `-y` tras el login.
+- **Orca `--agent`:** requiere alias de agente configurado en la app (Settings → Agents); `agent_unconfigured` si falta. Workers `gemini`/`agy` además necesitan su CLI instalado y logueado.
 
 ## Cómo se ajusta después
 
