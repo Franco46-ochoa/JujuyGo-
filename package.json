@@ -1,0 +1,7 @@
+{
+  "name": "jujuygo",
+  "private": true,
+  "scripts": {
+    "test": "node saluda.test.js"
+  }
+}
