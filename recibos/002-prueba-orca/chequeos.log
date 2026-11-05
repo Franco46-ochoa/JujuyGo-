@@ -1,0 +1,14 @@
+### tests: test ! -f package.json || npm test
+
+> test
+> node multiplica.test.js
+
+2 tests pasaron
+### fin tests (ok=true)
+
+### tests-front: test ! -d frontend || (cd frontend && npm test -- --watch=false)
+### fin tests-front (ok=true)
+
+### tests-back: test ! -d backend || (cd backend && npm test)
+### fin tests-back (ok=true)
+

@@ -1,0 +1,4 @@
+ multiplica.js      | 9 +++++++++
+ multiplica.test.js | 6 ++++++
+ package.json       | 2 +-
+ 3 files changed, 16 insertions(+), 1 deletion(-)
