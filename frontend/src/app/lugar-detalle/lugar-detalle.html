@@ -55,6 +55,25 @@
           </div>
         </section>
 
+        <!-- Mini-mapa centrado en el lugar con su zona de contexto -->
+        <section class="detail-map-section" aria-label="Ubicación territorial y contexto">
+          <div class="detail-map-header">
+            <div>
+              <p class="detail-kicker">Territorio · {{ lugar.zona }}</p>
+              <h2 class="serif">En el mapa</h2>
+            </div>
+            <p class="detail-map-coords">{{ lugar.lat | number:'1.4-4' }}° S, {{ lugar.lng | number:'1.4-4' }}° O</p>
+          </div>
+          <yapa-mapa
+            [lugares]="lugaresContexto().length > 0 ? lugaresContexto() : [lugar]"
+            [centro]="[lugar.lat, lugar.lng]"
+            [zoom]="12"
+            [lugarSeleccionado]="lugar"
+            [modoMini]="true"
+            altura="360px"
+          ></yapa-mapa>
+        </section>
+
         <a class="detail-return" routerLink="/">Seguí explorando Jujuy <span aria-hidden="true">→</span></a>
       </div>
     </article>

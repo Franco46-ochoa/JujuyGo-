@@ -1,0 +1,27 @@
+ audit-salida-detalle/home-1440.png                 | Bin 0 -> 7954406 bytes
+ audit-salida-detalle/home-390.png                  | Bin 0 -> 1962777 bytes
+ audit-salida-detalle/report.json                   | 307 ++++++++++++++++++++
+ audit-salida-detalle/run.json                      | 306 ++++++++++++++++++++
+ audit-salida/home-1440.png                         | Bin 0 -> 7954405 bytes
+ audit-salida/home-390.png                          | Bin 0 -> 1962777 bytes
+ audit-salida/report.json                           | 307 ++++++++++++++++++++
+ audit-salida/run3.json                             | 306 ++++++++++++++++++++
+ frontend/angular.json                              |   5 +-
+ frontend/package-lock.json                         |  23 ++
+ frontend/package.json                              |   4 +-
+ frontend/src/app/home/home.css                     | 124 +++++++++
+ frontend/src/app/home/home.html                    |  74 ++++-
+ frontend/src/app/home/home.spec.ts                 |  26 ++
+ frontend/src/app/home/home.ts                      |  32 ++-
+ frontend/src/app/lugar-detalle/lugar-detalle.css   |  32 +++
+ frontend/src/app/lugar-detalle/lugar-detalle.html  |  19 ++
+ .../src/app/lugar-detalle/lugar-detalle.spec.ts    |  20 +-
+ frontend/src/app/lugar-detalle/lugar-detalle.ts    |  20 +-
+ frontend/src/app/yapa-mapa/yapa-mapa.clustering.ts | 125 +++++++++
+ frontend/src/app/yapa-mapa/yapa-mapa.component.css | 242 ++++++++++++++++
+ .../src/app/yapa-mapa/yapa-mapa.component.html     |  33 +++
+ .../src/app/yapa-mapa/yapa-mapa.component.spec.ts  | 158 +++++++++++
+ frontend/src/app/yapa-mapa/yapa-mapa.component.ts  | 310 +++++++++++++++++++++
+ frontend/src/app/yapa-mapa/yapa-mapa.types.ts      |  20 ++
+ frontend/src/styles.css                            |   1 +
+ 26 files changed, 2488 insertions(+), 6 deletions(-)

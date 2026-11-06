@@ -6,9 +6,10 @@ import { DecimalPipe } from '@angular/common';
 import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { CatalogoService } from '../catalogo.service';
 import { Lugar } from '../catalogo.types';
+import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
 
 @Component({
-  imports: [DecimalPipe, RouterLink],
+  imports: [DecimalPipe, RouterLink, YapaMapaComponent],
   selector: 'app-lugar-detalle',
   styleUrl: './lugar-detalle.css',
   templateUrl: './lugar-detalle.html',
@@ -19,6 +20,7 @@ export class LugarDetallePage {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly lugar = signal<Lugar | null>(null);
+  protected readonly lugaresContexto = signal<Lugar[]>([]);
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal('');
   private readonly slug = signal('');
@@ -34,6 +36,7 @@ export class LugarDetallePage {
     ).subscribe(lugar => {
       this.lugar.set(lugar);
       this.loading.set(false);
+      this.cargarContextoZona(lugar);
     });
   }
 
@@ -41,6 +44,7 @@ export class LugarDetallePage {
     this.cargar(this.slug()).subscribe(lugar => {
       this.lugar.set(lugar);
       this.loading.set(false);
+      this.cargarContextoZona(lugar);
     });
   }
 
@@ -64,5 +68,19 @@ export class LugarDetallePage {
         return of(null);
       }),
     );
+  }
+
+  private cargarContextoZona(lugar: Lugar | null): void {
+    if (!lugar) {
+      this.lugaresContexto.set([]);
+      return;
+    }
+
+    this.catalogo.getLugares(lugar.zona_slug).pipe(
+      catchError(() => of([lugar])),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(lugares => {
+      this.lugaresContexto.set(lugares.length > 0 ? lugares : [lugar]);
+    });
   }
 }

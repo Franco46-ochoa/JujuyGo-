@@ -23,6 +23,38 @@
 .detail-fact { padding: 24px 0; border-top: 1px solid var(--t14); }
 .detail-fact h2 { font: 500 21px var(--serif); text-wrap: balance; }
 .detail-fact p { margin-top: 10px; color: var(--t60); font-size: 15px; line-height: 1.65; }
+
+.detail-map-section {
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid var(--t14);
+}
+.detail-map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.detail-map-header .detail-kicker {
+  color: var(--oxido);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.detail-map-header h2 {
+  font: 500 28px var(--serif);
+  margin-top: 6px;
+}
+.detail-map-coords {
+  color: var(--t60);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .05em;
+}
+
 .detail-return { display: inline-flex; min-height: 44px; align-items: center; gap: 14px; margin-top: 38px; color: var(--oxido); font-size: 15px; font-weight: 600; text-decoration: none; }
 .detail-return span { font-size: 20px; }
 

@@ -6,6 +6,7 @@
     <div class="pillnav">
       <a class="active" routerLink="/">Explorar</a>
       <a href="#zonas">Zonas</a>
+      <a href="#mapa">Mapa</a>
       <a href="#imperdibles">Imperdibles</a>
     </div>
     <a class="nav-cta" href="#zonas">Conocé Jujuy</a>
@@ -74,6 +75,72 @@
     }
   </section>
 
+  <section class="section map-section" id="mapa" aria-labelledby="map-title">
+    <div class="section-heading">
+      <div>
+        <p class="kicker">Territorio vivo</p>
+        <h2 id="map-title">El mapa de <em>nuestras cuatro regiones</em></h2>
+      </div>
+      <p class="section-intro">
+        Pueblos, salares, quebradas y selva. Los 17 atractivos del catálogo georreferenciados con distancias y altitudes.
+      </p>
+    </div>
+
+    @if (!loading() && !errorMessage()) {
+      <div class="map-interactive-layout">
+        <!-- Componente de mapa Leaflet / OSM estilizado Yapa -->
+        <div class="map-container-wrap">
+          <yapa-mapa
+            [lugares]="lugares()"
+            [lugarSeleccionado]="lugarSeleccionado()"
+            (lugarSelected)="onLugarSelectedDelMapa($event)"
+            altura="540px"
+          ></yapa-mapa>
+        </div>
+
+        <!-- Directorio interactivo sincronizado con el mapa -->
+        <div class="map-places-sidebar" aria-label="Directorio territorial sincronizado">
+          <div class="map-places-header">
+            <span class="map-places-count">
+              <strong>{{ lugares().length }}</strong> lugares georreferenciados
+            </span>
+            <small class="map-hint">Pasá el cursor o tocá para ubicar</small>
+          </div>
+          <div class="map-places-list" role="list">
+            @for (lugar of lugares(); track lugar.slug) {
+              <div
+                class="map-place-card"
+                [id]="'lugar-item-' + lugar.slug"
+                [class.active]="lugarSeleccionado()?.slug === lugar.slug"
+                (mouseenter)="onHoverLugar(lugar)"
+                (click)="onClickLugarItem(lugar)"
+                tabindex="0"
+                role="listitem"
+                [attr.aria-label]="lugar.nombre + ', ' + lugar.zona"
+              >
+                <div class="map-card-info">
+                  <span class="map-card-kicker">{{ lugar.zona }} · {{ lugar.datos_json.localidad || 'Jujuy' }}</span>
+                  <strong class="map-card-title">{{ lugar.nombre }}</strong>
+                  @if (lugar.altitud_m) {
+                    <span class="map-card-alt">{{ lugar.altitud_m | number }} msnm</span>
+                  }
+                </div>
+                <a
+                  class="map-card-link"
+                  [routerLink]="['/lugares', lugar.slug]"
+                  [attr.aria-label]="'Ver detalle de ' + lugar.nombre"
+                  (click)="$event.stopPropagation()"
+                >
+                  Detalle →
+                </a>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </section>
+
   <section class="section highlights" id="imperdibles" aria-labelledby="highlights-title">
     <div class="section-heading">
       <div>
@@ -85,7 +152,12 @@
     @if (!loading() && !errorMessage()) {
       <div class="place-list">
         @for (lugar of lugares().slice(0, 6); track lugar.slug; let index = $index) {
-          <a class="place-row" [routerLink]="['/lugares', lugar.slug]">
+          <a
+            class="place-row"
+            [class.place-row-active]="lugarSeleccionado()?.slug === lugar.slug"
+            (mouseenter)="onHoverLugar(lugar)"
+            [routerLink]="['/lugares', lugar.slug]"
+          >
             <span class="place-number">{{ index + 1 | number:'2.0-0' }}</span>
             <span class="place-title">
               <strong>{{ lugar.nombre }}</strong>

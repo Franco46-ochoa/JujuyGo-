@@ -1,0 +1,306 @@
+{
+  "base": "http://127.0.0.1:4210",
+  "report": [
+    {
+      "route": "/",
+      "viewport": "390x844",
+      "screenshot": "C:\\Users\\Elect\\orca\\projects\\JujuyGo\\.slices\\05-mapa\\audit-salida\\home-390.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Las cuatro regiones",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Del altiplano a la selva. Elegí ",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Territorio vivo",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pueblos, salares, quebradas y se",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Imperdibles",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Con su dato honesto: cuánto toma",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "El extra que te regala Jujuy: lu",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Jujuy, Argentina",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "23.1858° S — 65.2995° O",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        }
+      ],
+      "smallText": [],
+      "overImage": 0,
+      "texts": 27,
+      "smallTargets": [],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 1,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 0
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 19.5,
+            "uses": 10
+          },
+          {
+            "value": 18,
+            "uses": 8
+          },
+          {
+            "value": 14,
+            "uses": 6
+          },
+          {
+            "value": 5,
+            "uses": 4
+          },
+          {
+            "value": 13,
+            "uses": 2
+          },
+          {
+            "value": 27.3,
+            "uses": 2
+          },
+          {
+            "value": 15,
+            "uses": 2
+          },
+          {
+            "value": 10,
+            "uses": 2
+          },
+          {
+            "value": 34,
+            "uses": 1
+          },
+          {
+            "value": 22,
+            "uses": 1
+          }
+        ],
+        "distinct": 21,
+        "total": 70,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [
+          {
+            "text": "Pueblos, salares, quebradas y se",
+            "chars": 38,
+            "lines": 3
+          }
+        ],
+        "blocks": 1,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 10,
+        "controls": 5
+      },
+      "focus": {
+        "walked": 5,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/",
+      "viewport": "1440x900",
+      "screenshot": "C:\\Users\\Elect\\orca\\projects\\JujuyGo\\.slices\\05-mapa\\audit-salida\\home-1440.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Las cuatro regiones",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Del altiplano a la selva. Elegí ",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Territorio vivo",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pueblos, salares, quebradas y se",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Imperdibles",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Con su dato honesto: cuánto toma",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "El extra que te regala Jujuy: lu",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Jujuy, Argentina",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "23.1858° S — 65.2995° O",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        }
+      ],
+      "smallText": [],
+      "overImage": 0,
+      "texts": 32,
+      "smallTargets": [],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 1,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 1
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 5,
+            "uses": 8
+          },
+          {
+            "value": 9,
+            "uses": 8
+          },
+          {
+            "value": 14,
+            "uses": 6
+          },
+          {
+            "value": 110,
+            "uses": 3
+          },
+          {
+            "value": 2,
+            "uses": 2
+          },
+          {
+            "value": 15,
+            "uses": 2
+          },
+          {
+            "value": 18,
+            "uses": 2
+          },
+          {
+            "value": 34,
+            "uses": 1
+          },
+          {
+            "value": 22,
+            "uses": 1
+          }
+        ],
+        "distinct": 21,
+        "total": 98,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [],
+        "blocks": 0,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 18,
+        "controls": 9
+      },
+      "focus": {
+        "walked": 9,
+        "missing": []
+      },
+      "moving": 0
+    }
+  ],
+  "errors": []
+}
