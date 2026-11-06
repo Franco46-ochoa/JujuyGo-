@@ -1,4 +1,5 @@
 import express from 'express';
+import transporteRouter from './routes/transporte.js';
 
 export function createApp() {
   const app = express();
@@ -7,6 +8,10 @@ export function createApp() {
   app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
   });
+
+  // Router de transporte registrado bajo /api (y también accesible directo para conveniencia)
+  app.use('/api', transporteRouter);
+  app.use(transporteRouter);
 
   return app;
 }

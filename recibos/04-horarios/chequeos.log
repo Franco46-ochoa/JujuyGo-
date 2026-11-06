@@ -1,0 +1,72 @@
+### tests: test ! -f package.json || npm test
+### fin tests (ok=true)
+
+### tests-front: test ! -d frontend || (cd frontend && npm test -- --watch=false)
+
+> frontend@0.0.0 test
+> ng test --watch=false
+
+❯ Building...
+✔ Building...
+Application bundle generation complete. [12.895 seconds] - 2026-11-06T10:49:22.191Z
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: All imports are unused[0m [1m[35m[plugin angular-compiler][0m
+
+    C:/Users/Elect/orca/projects/JujuyGo/.slices/04-horarios/frontend/src/app/app.ts:5:2:
+[37m      5 │   [32mimports[37m: [RouterOutlet],
+        ╵   [32m~~~~~~~[0m
+
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/Elect/orca/projects/JujuyGo/.slices/04-horarios/frontend[39m
+
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 07:49:24
+[2m   Duration [22m 9.36s[2m (environment 69%, setup 20%, tests 4%, transform 4%, import 2%, worker 1%)[22m
+
+### fin tests-front (ok=true)
+
+### tests-back: test ! -d backend || (cd backend && npm test)
+
+> jujuygo-backend@0.1.0 test
+> node --test
+
+✔ GET /health responde ok (141.7959ms)
+Seed de transporte RN9 completado con éxito.
+▶ Transporte y horarios RN9 (Slice 04)
+  ▶ Orden de paradas
+    ✔ GET /api/transporte/paradas devuelve lista completa en orden estricto de ruta (309.6561ms)
+    ✔ GET /api/transporte/paradas con línea inexistente devuelve 404 (23.5229ms)
+  ✔ Orden de paradas (337.7695ms)
+  ▶ Regla crítica: Cruce ≠ Pueblo
+    ✔ Purmamarca Cruce tiene tipo="cruce" y notas explicativas diferenciadas del pueblo (22.6683ms)
+    ✔ La base de datos rechaza tipos de parada no válidos (23.5685ms)
+  ✔ Regla crítica: Cruce ≠ Pueblo (48.1064ms)
+  ▶ Cálculo de próximos servicios
+    ✔ GET /api/transporte/proximos?origen=terminal-jjs&destino=tilcara devuelve servicios con hora estimada (204.4919ms)
+    ✔ GET /api/transporte/proximos dirección vuelta (Humahuaca -> SS.Jujuy) (20.0787ms)
+    ✔ GET /api/transporte/proximos con filtro ?hora=12:00 devuelve solo salidas posteriores (20.6326ms)
+    ✔ Validación de errores en parámetros origen y destino (37.1007ms)
+  ✔ Cálculo de próximos servicios (284.2853ms)
+  ▶ Confianza y fuente presente en cada horario
+    ✔ Ningún horario en la DB carece de fuente o confianza (4.1358ms)
+    ✔ Todos los valores de confianza son válidos ("publicado", "estimado" o "tiempo-real") (2.0338ms)
+    ✔ Tramos que incluyen paradas intermedias sin boletería oficial marcan confianza="estimado" (18.9464ms)
+  ✔ Confianza y fuente presente en cada horario (25.9716ms)
+Seed de transporte RN9 completado con éxito.
+  ▶ Idempotencia del seed
+    ✔ Ejecutar el seed nuevamente no duplica registros (387.9273ms)
+  ✔ Idempotencia del seed (388.5263ms)
+✔ Transporte y horarios RN9 (Slice 04) (2035.2212ms)
+ℹ tests 13
+ℹ suites 6
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4133.3332
+### fin tests-back (ok=true)
+
