@@ -25,7 +25,7 @@ Tesis (docs/research.md): el turista sin auto no puede armar un día real con tr
 | Code | Feature | Qué hace |
 |---|---|---|
 | ITI | Itinerario por rango de fechas | "Voy del 5 al 10" → plan de varios días que cierra: qué colectivo, cuánto tiempo en cada parada, a qué hora volvés |
-| REC | Recomendaciones IA estructuradas | "Un día en Tilcara sin auto" → JSON que el front convierte en plan, no chat |
+| REC | Yapas — IA omnipresente | Sugerencias por usuario/contexto/momento que se insertan en el plan ("estás de paso por Purmamarca") — memoria en Supabase, validador anti-boludeces, nunca plantillas ni chat |
 
 ### Llevarlo
 

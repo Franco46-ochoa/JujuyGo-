@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapa — Jujuy como se vive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta:#241610;--papel:#F4EDE3;--arena:#EDE2D0;
+  --oxido:#B5492A;--ocre:#C9A86A;--verde:#2E4A3E;
+  --t60:rgba(36,22,16,.62);--t30:rgba(36,22,16,.32);--t14:rgba(36,22,16,.14);
+}
+*{margin:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--papel);color:var(--tinta);font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.serif{font-family:"Fraunces",Georgia,serif}
+img{display:block}
+::selection{background:var(--oxido);color:#fff}
+
+/* grano sutil sobre todo */
+body::before{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E")}
+
+/* ═══ HERO — sangre completa ═══ */
+.hero{position:relative;height:100svh;min-height:640px;color:#fff;overflow:hidden}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02)}
+.hero .velo{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,10,6,.32) 0%,rgba(20,10,6,.06) 42%,rgba(20,10,6,.62) 100%)}
+/* líneas de guía finas como travel-sensations */
+.hero .linea{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.14)}
+.hero .linea:nth-of-type(1){left:12%}.hero .linea:nth-of-type(2){left:38%}.hero .linea:nth-of-type(3){left:62%}.hero .linea:nth-of-type(4){left:88%}
+
+.nav-hero{position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:28px 5%}
+.wordmark{font-family:"Fraunces",serif;font-weight:600;font-size:22px;letter-spacing:.5px;color:#fff;display:flex;align-items:baseline;gap:2px}
+.wordmark .punto{width:9px;height:9px;border-radius:50%;background:var(--ocre);display:inline-block;transform:translateY(-1px)}
+.pillnav{display:flex;gap:2px;background:rgba(255,255,255,.1);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px}
+.pillnav a{color:rgba(255,255,255,.9);text-decoration:none;font-size:13.5px;padding:8px 18px;border-radius:999px}
+.pillnav a.on{background:rgba(255,255,255,.92);color:var(--tinta)}
+.hero-cta-nav{border:1px solid rgba(255,255,255,.4);border-radius:999px;color:#fff;text-decoration:none;font-size:13.5px;padding:10px 22px;backdrop-filter:blur(10px)}
+
+.hero-centro{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 6%}
+.hero .eyebrow{font-size:12.5px;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.85);margin-bottom:auto;margin-top:auto;padding-top:16vh}
+.hero h1{font-family:"Fraunces",serif;font-weight:340;font-size:clamp(52px,8.2vw,118px);line-height:.98;letter-spacing:-.01em;text-shadow:0 2px 40px rgba(0,0,0,.3)}
+.hero h1 .it{font-style:italic;font-weight:400;color:var(--ocre)}
+.hero .sub{margin-top:26px;font-size:16.5px;color:rgba(255,255,255,.88);max-width:460px;font-weight:300;letter-spacing:.01em}
+.hero .cta{margin-top:38px;margin-bottom:auto;display:inline-flex;align-items:center;gap:14px;background:#fff;color:var(--tinta);border-radius:999px;padding:16px 34px;font-size:14.5px;font-weight:600;text-decoration:none;letter-spacing:.02em}
+.hero .cta svg{transition:transform .3s}.hero .cta:hover svg{transform:translateX(4px)}
+.hero .pie-hero{position:absolute;left:5%;bottom:34px;z-index:6;display:flex;gap:26px;align-items:center;font-size:12px;letter-spacing:.14em;color:rgba(255,255,255,.75);text-transform:uppercase}
+.hero .pie-hero .sep{width:60px;height:1px;background:rgba(255,255,255,.4)}
+.hero .tag-der{position:absolute;right:5%;bottom:34px;z-index:6;font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums}
+.scroll-hint{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);z-index:6;width:1px;height:56px;background:linear-gradient(rgba(255,255,255,.7),transparent)}
+
+/* ═══ secciones ═══ */
+.sec{max-width:1280px;margin:0 auto;padding:110px 5% 20px}
+.kick{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--oxido);font-weight:600}
+.sec h2{font-family:"Fraunces",serif;font-weight:400;font-size:clamp(36px,4.6vw,60px);letter-spacing:-.015em;line-height:1.05;margin-top:18px}
+.sec h2 .it{font-style:italic;color:var(--oxido)}
+.sec .sub{margin-top:16px;font-size:16px;color:var(--t60);max-width:480px;line-height:1.65;font-weight:300}
+.sec-head{display:grid;grid-template-columns:1.2fr .8fr;gap:60px;align-items:end;margin-bottom:64px}
+
+/* arco — columnas finas, no tarjeta */
+.arco{max-width:1280px;margin:100px auto 0;padding:0 5%;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.arco .paso{padding:34px 30px 34px 0;border-top:1px solid var(--t14);position:relative}
+.arco .paso+.paso{padding-left:30px;border-left:1px solid var(--t14)}
+.arco .n{font-family:"Fraunces",serif;font-style:italic;font-size:15px;color:var(--oxido);display:block;margin-bottom:18px}
+.arco b{font-family:"Fraunces",serif;font-weight:500;font-size:21px;display:block;margin-bottom:10px}
+.arco span{font-size:13.5px;color:var(--t60);line-height:1.6;display:block;font-weight:300}
+
+/* zonas — collage asimétrico, sin cards iguales */
+.zonas{max-width:1280px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:1.35fr 1fr;gap:24px}
+.zona-grande{position:relative;border-radius:4px;overflow:hidden;min-height:640px}
+.zona-lateral{display:grid;grid-template-rows:repeat(3,1fr);gap:24px}
+.zona{position:relative;border-radius:4px;overflow:hidden;min-height:200px}
+.zona img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.16,1,.3,1)}
+.zona:hover img{transform:scale(1.06)}
+.zona::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,10,6,0) 45%,rgba(20,10,6,.72))}
+.zona .zi{position:absolute;left:26px;right:26px;bottom:24px;z-index:2;color:#fff}
+.zona .zi b{font-family:"Fraunces",serif;font-weight:450;font-size:clamp(24px,2.6vw,36px);letter-spacing:-.01em}
+.zona .zi small{display:block;font-size:13px;opacity:.88;margin-top:6px;font-weight:300;line-height:1.5}
+.zona .zi .datos{display:flex;gap:18px;margin-top:14px;font-size:11px;letter-spacing:.18em;opacity:.85;font-variant-numeric:tabular-nums}
+.zona-grande .zi{padding-bottom:10px}
+
+/* imperdibles — filas editoriales */
+.lugares{max-width:1280px;margin:0 auto;padding:0 5%}
+.fila{display:grid;grid-template-columns:90px 1.15fr 1.35fr auto auto;gap:34px;align-items:baseline;padding:34px 4px;border-top:1px solid var(--t14)}
+.fila:last-child{border-bottom:1px solid var(--t14)}
+.fila:hover{background:rgba(180,73,42,.04);cursor:pointer}
+.fila .num{font-family:"Fraunces",serif;font-style:italic;font-size:22px;color:var(--t30)}
+.fila:hover .num{color:var(--oxido)}
+.fila b{font-family:"Fraunces",serif;font-weight:480;font-size:26px;letter-spacing:-.01em;line-height:1.15}
+.fila .tag{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--t30);display:block;margin-top:6px}
+.fila p{font-size:14px;color:var(--t60);line-height:1.6;font-weight:300}
+.fila .meta{text-align:right;font-size:12.5px;color:var(--t60);line-height:1.75;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fila .meta b{font-family:"Fraunces",serif;font-weight:500;color:var(--verde);font-size:13px}
+.fila .arr{font-size:20px;color:var(--t30);transition:transform .3s,color .3s}
+.fila:hover .arr{transform:translateX(6px);color:var(--oxido)}
+
+/* foto a sangre entre secciones */
+.pausa{position:relative;height:64vh;min-height:420px;margin-top:110px;overflow:hidden}
+.pausa img{width:100%;height:100%;object-fit:cover}
+.pausa .quote{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 10%}
+.pausa .quote b{font-family:"Fraunces",serif;font-weight:380;font-size:clamp(28px,3.8vw,48px);color:#fff;line-height:1.25;max-width:820px;text-shadow:0 2px 30px rgba(0,0,0,.4)}
+.pausa .quote .it{font-style:italic;color:var(--ocre)}
+.pausa .cap{position:absolute;bottom:26px;left:5%;font-size:11.5px;letter-spacing:.2em;color:rgba(255,255,255,.8);text-transform:uppercase}
+
+/* hoteles — dos columnas editorial */
+.dormir{max-width:1280px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:repeat(3,1fr);gap:44px}
+.hosp{border-top:1px solid var(--t14);padding-top:0}
+.hosp .foto{overflow:hidden;margin:0 0 22px;border-radius:3px}
+.hosp img{width:100%;height:260px;object-fit:cover;transition:transform 1.2s cubic-bezier(.16,1,.3,1)}
+.hosp:hover img{transform:scale(1.05)}
+.hosp .donde{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--t30);margin-bottom:10px}
+.hosp b{font-family:"Fraunces",serif;font-weight:480;font-size:24px;letter-spacing:-.01em}
+.hosp p{font-size:14px;color:var(--t60);line-height:1.6;margin-top:10px;font-weight:300}
+.hosp .precio{margin-top:16px;font-size:13.5px;color:var(--verde);font-variant-numeric:tabular-nums}
+
+/* guías — fila sobria */
+.guias{max-width:1280px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:repeat(4,1fr);gap:40px}
+.guia{border-top:1px solid var(--t14);padding-top:24px}
+.guia .ini{font-family:"Fraunces",serif;font-style:italic;font-size:34px;color:var(--oxido);margin-bottom:16px}
+.guia b{font-family:"Fraunces",serif;font-weight:520;font-size:19px}
+.guia p{font-size:13px;color:var(--t60);line-height:1.55;margin-top:8px;font-weight:300}
+.guia .reg{margin-top:14px;font-size:10.5px;letter-spacing:.22em;color:var(--verde);font-weight:600}
+
+/* la herramienta — sangre oscura */
+.tool{margin-top:110px;background:var(--verde);color:#EFE7D9;padding:100px 5%}
+.tool .inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.tool h2{font-family:"Fraunces",serif;font-weight:400;font-size:clamp(32px,4vw,52px);letter-spacing:-.015em;line-height:1.08;margin-top:16px}
+.tool h2 .it{font-style:italic;color:var(--ocre)}
+.tool p{font-size:15.5px;opacity:.82;line-height:1.7;margin-top:20px;font-weight:300;max-width:440px}
+.secuencia{border-left:1px solid rgba(239,231,217,.25);padding-left:34px}
+.secuencia li{list-style:none;position:relative;padding:16px 0 16px 8px;border-bottom:1px dashed rgba(239,231,217,.16);display:flex;align-items:baseline;gap:18px;font-size:15px}
+.secuencia li:last-child{border:none}
+.secuencia li::before{content:"";position:absolute;left:-38px;top:50%;width:7px;height:7px;border-radius:50%;background:var(--ocre);transform:translateY(-50%)}
+.secuencia .h{font-variant-numeric:tabular-nums;opacity:.65;width:52px;flex:none;font-size:13.5px}
+.secuencia .nota{margin-left:auto;font-size:12px;opacity:.7;font-style:italic;font-family:"Fraunces",serif;white-space:nowrap}
+.secuencia .aviso{color:var(--ocre)}
+
+/* footer */
+footer{max-width:1280px;margin:0 auto;padding:90px 5% 50px}
+footer .top{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--t14);padding-bottom:60px}
+footer .marca{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(60px,8vw,110px);letter-spacing:-.02em;line-height:.9;display:flex;align-items:baseline;gap:8px}
+footer .marca .punto{width:16px;height:16px;border-radius:50%;background:var(--oxido)}
+footer .frase{text-align:right;font-size:13px;color:var(--t60);line-height:1.8;max-width:280px;font-weight:300}
+footer .abajo{display:flex;justify-content:space-between;padding-top:26px;font-size:11.5px;letter-spacing:.14em;color:var(--t30);text-transform:uppercase}
+
+@media(max-width:960px){
+  .sec-head{grid-template-columns:1fr}
+  .arco,.guias{grid-template-columns:1fr 1fr}
+  .arco .paso+.paso{border-left:none;padding-left:0}
+  .zonas{grid-template-columns:1fr}
+  .dormir{grid-template-columns:1fr}
+  .tool .inner{grid-template-columns:1fr}
+  .fila{grid-template-columns:60px 1fr auto}
+  .fila p,.fila .meta{display:none}
+  .pillnav{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <img src="assets/purmamarca.jpg" alt="Cerro de los Siete Colores">
+  <div class="velo"></div>
+  <div class="linea"></div><div class="linea"></div><div class="linea"></div><div class="linea"></div>
+
+  <nav class="nav-hero">
+    <div class="wordmark">Yapa<span class="punto"></span></div>
+    <div class="pillnav">
+      <a href="#" class="on">Explorar</a><a href="#">Zonas</a><a href="#">Dormir</a><a href="#">Guías</a><a href="#">Cómo llegar</a>
+    </div>
+    <a class="hero-cta-nav" href="#">Armá tu travesía</a>
+  </nav>
+
+  <div class="hero-centro">
+    <div class="eyebrow">Tu yapa para recorrer Jujuy</div>
+    <h1>El norte que<br><span class="it">te queda</span></h1>
+    <p class="sub">Los lugares que se sueñan, los bondis que sí pasan y el día que cierra. Todo en un solo plan.</p>
+    <a class="cta" href="#">Empezá a imaginar <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><path d="M1 6h15M12 1l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+
+  <div class="pie-hero"><span>Quebrada de Humahuaca</span><span class="sep"></span><span>Patrimonio de la Humanidad</span></div>
+  <div class="scroll-hint"></div>
+  <div class="tag-der">23.1858° S — 65.2995° O · 2.324 m</div>
+</header>
+
+<!-- ═══ ARCO ═══ -->
+<section class="sec">
+  <div class="sec-head">
+    <div><div class="kick">Cómo funciona</div>
+      <h2>Un viaje en <span class="it">cuatro movimientos</span></h2></div>
+    <p class="sub">Ni folleto ni trámite: la historia completa, de la idea a la parada.</p>
+  </div>
+  <div class="arco">
+    <div class="paso"><span class="n">i.</span><b>Imaginá</b><span>Las cuatro regiones en capítulos: qué se ve, cuándo ir, qué no te podés perder.</span></div>
+    <div class="paso"><span class="n">ii.</span><b>Armalo</b><span>Elegí fechas; el plan se arma solo sobre los horarios reales del colectivo.</span></div>
+    <div class="paso"><span class="n">iii.</span><b>Vivilo</b><span>La guía en la parada: qué línea, a qué hora, dónde bajar, cuánto falta.</span></div>
+    <div class="paso"><span class="n">iv.</span><b>Acordate</b><span>Tu travesía guardada, compartible, con lo que viviste de verdad.</span></div>
+  </div>
+</section>
+
+<!-- ═══ ZONAS ═══ -->
+<section class="sec">
+  <div class="sec-head">
+    <div><div class="kick">Las cuatro regiones</div>
+      <h2>Cada zona es <span class="it">otro país</span></h2></div>
+    <p class="sub">Del altiplano a la selva en cien kilómetros. Elegí la que te llama; Yapa te dice cómo llegar.</p>
+  </div>
+  <div class="zonas">
+    <div class="zona zona-grande">
+      <img src="assets/hornocal.jpg" alt="Serranía de Hornocal">
+      <div class="zi"><b>La Quebrada</b><small>Humahuaca, Tilcara, Purmamarca. El paisaje del folleto, por la RN9 de punta a punta.</small>
+      <div class="datos"><span>155 KM</span><span>2.300–4.350 M</span><span>LA MÁS PEDIDA</span></div></div>
+    </div>
+    <div class="zona-lateral">
+      <div class="zona"><img src="assets/puna.jpg" alt="Vicuñas en la Puna">
+        <div class="zi"><b>La Puna</b><small>Salinas, vicuñas, cielo enorme.</small>
+        <div class="datos"><span>4.000 M</span><span>ALTIPLANO</span></div></div></div>
+      <div class="zona"><img src="assets/calilegua.jpg" alt="Yungas de Calilegua">
+        <div class="zi"><b>Las Yungas</b><small>Calilegua, selva de niebla.</small>
+        <div class="datos"><span>SELVA</span><span>NEBLINAS</span></div></div></div>
+      <div class="zona"><img src="assets/salsaju.jpg" alt="San Salvador de Jujuy">
+        <div class="zi"><b>Los Valles</b><small>Termas, ciudad, historia.</small>
+        <div class="datos"><span>1.200 M</span><span>TERMAS</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ IMPERDIBLES ═══ -->
+<section class="sec">
+  <div class="sec-head">
+    <div><div class="kick">Imperdibles</div>
+      <h2>Los lugares que <span class="it">se cuentan</span></h2></div>
+    <p class="sub">Con su dato honesto: cuánto toma, cómo se llega, cuándo conviene.</p>
+  </div>
+  <div class="lugares">
+    <div class="fila"><span class="num">01</span>
+      <div><b>Cerro de los Siete Colores</b><span class="tag">Purmamarca · Quebrada</span></div>
+      <p>El postal. Vista desde el pueblo o por el Paseo de los Colorados, cuarenta minutos caminando entre cardones.</p>
+      <div class="meta">2.324 m<br><b>se llega en combi</b></div><span class="arr">→</span></div>
+    <div class="fila"><span class="num">02</span>
+      <div><b>Garganta del Diablo</b><span class="tag">Tilcara · Quebrada</span></div>
+      <p>Cañón de ocho kilómetros hasta la cascada. A pie o en bici desde el centro de Tilcara.</p>
+      <div class="meta">8 km ida<br><b>medio día</b></div><span class="arr">→</span></div>
+    <div class="fila"><span class="num">03</span>
+      <div><b>Hornocal · 14 colores</b><span class="tag">Humahuaca · Quebrada</span></div>
+      <p>El cerro más fotografiado del norte. Solo con vehículo — combi compartida desde la plaza.</p>
+      <div class="meta">4.350 m<br><b>última combi 15:00</b></div><span class="arr">→</span></div>
+    <div class="fila"><span class="num">04</span>
+      <div><b>Salinas Grandes</b><span class="tag">Puna</span></div>
+      <p>Espejo de sal del tamaño de una provincia, por la Cuesta de Lipán desde Purmamarca.</p>
+      <div class="meta">3.450 m<br><b>día completo</b></div><span class="arr">→</span></div>
+    <div class="fila"><span class="num">05</span>
+      <div><b>Tren Solar de la Quebrada</b><span class="tag">Volcán · Quebrada</span></div>
+      <p>Tren histórico por el valle. Hay combi que frena en la estación — cuestión de cruzar horarios.</p>
+      <div class="meta">estación Volcán<br><b>se combina</b></div><span class="arr">→</span></div>
+    <div class="fila"><span class="num">06</span>
+      <div><b>Parque Nacional Calilegua</b><span class="tag">Yungas</span></div>
+      <p>Selva tupida, senderos, yaguareté si tenés suerte. Combi a Libertador General y traslado.</p>
+      <div class="meta">76.000 ha<br><b>día completo</b></div><span class="arr">→</span></div>
+  </div>
+</section>
+
+<!-- ═══ PAUSA FOTOGRÁFICA ═══ -->
+<div class="pausa">
+  <img src="assets/hornocal.jpg" alt="Hornocal">
+  <div class="quote"><b>“Un viaje no es una sucesión de visitas: es la historia que <span class="it">contás cuando volvés</span>.”</b></div>
+  <div class="cap">Serranía de Hornocal · 4.350 m</div>
+</div>
+
+<!-- ═══ DORMIR ═══ -->
+<section class="sec">
+  <div class="sec-head">
+    <div><div class="kick">Dónde dormir</div>
+      <h2>Base de <span class="it">operaciones</span></h2></div>
+    <p class="sub">Tilcara y Purmamarca son las bases más cómodas sin auto: todo sale de la ruta.</p>
+  </div>
+  <div class="dormir">
+    <div class="hosp">
+      <div class="foto"><img src="assets/artesanias.jpg" alt="Feria de artesanos"></div>
+      <div class="donde">Purmamarca · hostería</div><b>Los Colorados</b>
+      <p>Adobe, patio de cardones y la feria a dos cuadras. La base del amanecer sobre el cerro.</p>
+      <div class="precio">doble desde —</div>
+    </div>
+    <div class="hosp">
+      <div class="foto"><img src="assets/tilcara.jpg" alt="Pucará de Tilcara"></div>
+      <div class="donde">Tilcara · hostel</div><b>La Albahaca</b>
+      <p>Terraza con vista al Pucará y fogata los sábados. El clásico de los mochileros.</p>
+      <div class="precio">litera desde —</div>
+    </div>
+    <div class="hosp">
+      <div class="foto"><img src="assets/humahuaca.jpg" alt="Cabildo de Humahuaca"></div>
+      <div class="donde">Humahuaca · hotel</div><b>El Sol</b>
+      <p>Casona frente al Cabildo. Si Hornocal es tu plan, acá se duerme alto y cerca.</p>
+      <div class="precio">suite desde —</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ GUÍAS ═══ -->
+<section class="sec">
+  <div class="sec-head">
+    <div><div class="kick">Guías registrados</div>
+      <h2>Los que conocen <span class="it">el cerro</span></h2></div>
+    <p class="sub">Registro Provincial de Guías (Ley 6.308): los habilitados, por zona y especialidad.</p>
+  </div>
+  <div class="guias">
+    <div class="guia"><div class="ini">Ma</div><b>Mario A.</b><p>Trekking arqueológico · Pucará de Tilcara y Garganta del Diablo</p><div class="reg">REG. 042</div></div>
+    <div class="guia"><div class="ini">Lu</div><b>Lucía U.</b><p>Fotografía de paisaje · Hornocal y Salinas al amanecer</p><div class="reg">REG. 071</div></div>
+    <div class="guia"><div class="ini">Jo</div><b>Jorge O.</b><p>Comunidad y cultura viva · pueblos de la Quebrada</p><div class="reg">REG. 013</div></div>
+    <div class="guia"><div class="ini">An</div><b>Ana N.</b><p>Yungas y birdwatching · Calilegua y senderos</p><div class="reg">REG. 088</div></div>
+  </div>
+</section>
+
+<!-- ═══ LA HERRAMIENTA ═══ -->
+<div class="tool">
+  <div class="inner">
+    <div>
+      <div class="kick" style="color:var(--ocre)">Por eso funciona</div>
+      <h2>El plan que respeta <span class="it">el reloj del colectivo</span></h2>
+      <p>Cada atracción trae su forma de llegar: qué línea, desde qué parada, a qué hora vuelve la última. Si el plan no cierra, te avisamos antes de que estés en la ruta — no después.</p>
+    </div>
+    <ul class="secuencia">
+      <li><span class="h">9:40</span>Línea 3, sentido Humahuaca<span class="nota">horario publicado</span></li>
+      <li><span class="h">10:45</span>Hornocal · combi de la plaza<span class="nota">última 15:00</span></li>
+      <li><span class="h">17:10</span>Vuelta a Tilcara<span class="nota">último bondi 17:40</span></li>
+      <li class="aviso"><span class="h">—</span>No cierra → te proponemos el bondi de las 8:00</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="top">
+    <div class="marca">Yapa<span class="punto"></span></div>
+    <p class="frase">El extra que te regala Jujuy: lugares que se sueñan, bondis que sí pasan, días que cierran.</p>
+  </div>
+  <div class="abajo"><span>© Yapa — mock 04, dirección visual</span><span>23.1858° S — 65.2995° O</span></div>
+</footer>
+
+</body>
+</html>
