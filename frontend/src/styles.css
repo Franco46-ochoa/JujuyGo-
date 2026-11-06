@@ -14,6 +14,14 @@
   --t14: rgba(36, 22, 16, 0.14);
   --serif: "Fraunces", Georgia, serif;
   --sans: "Archivo", system-ui, sans-serif;
+
+  /* Proporción áurea: escala modular de texto, grillas y ratios de imagen */
+  --phi: 1.618;
+  --fs-1: 16px;        /* cuerpo */
+  --fs-2: 26px;        /* subtítulos */
+  --fs-3: 42px;        /* titulares de sección */
+  --fs-4: 68px;        /* titulares grandes */
+  --fs-5: 110px;       /* display hero/footer */
 }
 
 * { margin: 0; box-sizing: border-box; }
