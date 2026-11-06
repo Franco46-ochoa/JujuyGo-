@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 112" role="img" aria-label="Yapa">
+  <title>Yapa — símbolo</title>
+  <style>
+    .t1 { fill: #8C3524; stroke: #8C3524; }
+    polygon { stroke-width: 6; stroke-linejoin: round; }
+    @media (prefers-color-scheme: dark) {
+      .t1 { fill: #A8492F; stroke: #A8492F; }
+    }
+  </style>
+  <polygon class="t1" points="8,96 44,22 80,96"/>
+  <polygon points="40,96 76,34 112,96" fill="#B5492A" stroke="#B5492A"/>
+  <polygon points="68,96 100,56 132,96" fill="#D95D39" stroke="#D95D39"/>
+  <circle cx="110" cy="26" r="10" fill="#E0A458"/>
+</svg>

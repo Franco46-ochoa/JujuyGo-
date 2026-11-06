@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 120" role="img" aria-label="Yapa.">
+  <title>Yapa — lockup</title>
+  <style>
+    .ink { fill: #2B1B12; }
+    .t1 { fill: #8C3524; stroke: #8C3524; }
+    polygon { stroke-width: 6; stroke-linejoin: round; }
+    @media (prefers-color-scheme: dark) {
+      .ink { fill: #F2E3D3; }
+      .t1 { fill: #A8492F; stroke: #A8492F; }
+    }
+  </style>
+  <g transform="translate(8 20) scale(0.72)">
+    <polygon class="t1" points="8,96 44,22 80,96"/>
+    <polygon points="40,96 76,34 112,96" fill="#B5492A" stroke="#B5492A"/>
+    <polygon points="68,96 100,56 132,96" fill="#D95D39" stroke="#D95D39"/>
+    <circle cx="110" cy="26" r="10" fill="#E0A458"/>
+  </g>
+  <text x="126" y="88" class="ink"
+        font-family="Georgia, 'Times New Roman', 'Nimbus Roman', serif"
+        font-size="64" font-weight="bold" font-style="italic"
+        letter-spacing="1">Yapa</text>
+  <g transform="translate(296 78) scale(0.8)">
+    <circle r="10" fill="#E0A458"/>
+    <g stroke="#D95D39" stroke-width="3" stroke-linecap="round">
+      <line x1="0" y1="-14.5" x2="0" y2="-20"/>
+      <line x1="12.6" y1="-7.3" x2="17.3" y2="-10"/>
+      <line x1="12.6" y1="7.3" x2="17.3" y2="10"/>
+      <line x1="-12.6" y1="7.3" x2="-17.3" y2="10"/>
+      <line x1="-12.6" y1="-7.3" x2="-17.3" y2="-10"/>
+    </g>
+  </g>
+</svg>

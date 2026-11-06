@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapa — tu yapa para recorrer Jujuy</title>
+<style>
+  :root{
+    --tierra:#8C3B1B; --oxido:#B5492A; --terracota:#C96A3B;
+    --cerro1:#D95D39; --cerro2:#B54A32; --cerro3:#8C3524; --cerro4:#6B2A1D;
+    --ocre:#E0A458; --arena:#F5E8D8; --papel:#FBF3E8;
+    --tinta:#2B1B12; --tinta-60:rgba(43,27,18,.6); --tinta-40:rgba(43,27,18,.4);
+    --bondi:#2E5E4E; --caminata:#7A6A53;
+    --sol:#E8B44C; --cielo:#F3DFC0;
+    --radio:18px;
+  }
+  *{margin:0;box-sizing:border-box}
+  body{background:var(--papel);color:var(--tinta);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.5}
+  .serif{font-family:Georgia,"Times New Roman",serif}
+  .pagina{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* ── NAV ── */
+  nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+  .logo{font-family:Georgia,serif;font-size:26px;font-weight:700;letter-spacing:-.5px}
+  .logo em{color:var(--oxido);font-style:normal}
+  .nav-links{display:flex;gap:26px;font-size:14px;color:var(--tinta-60)}
+  .nav-links b{color:var(--tinta)}
+  .coords{font-size:11px;color:var(--tinta-40);letter-spacing:.14em;font-variant-numeric:tabular-nums}
+
+  /* ── HERO ── */
+  .hero{position:relative;padding:60px 0 0;min-height:520px}
+  .hero-kicker{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--tinta-60);margin-bottom:14px}
+  h1{font-family:Georgia,serif;font-size:clamp(44px,7vw,86px);line-height:.98;font-weight:700;letter-spacing:-1.5px;max-width:640px}
+  h1 em{font-style:italic;color:var(--oxido)}
+  .hero-sub{margin-top:22px;font-size:17px;max-width:420px;color:var(--tinta-60)}
+  .hero-cta{margin-top:30px;display:inline-flex;align-items:center;gap:10px;background:var(--tinta);color:var(--arena);border-radius:999px;padding:14px 26px;font-size:15px;text-decoration:none}
+  .hero-cta:hover{background:var(--bondi)}
+  .quebrada{position:absolute;right:-40px;top:8px;width:56%;max-width:620px}
+  .altitud{position:absolute;font-size:11px;letter-spacing:.12em;color:var(--tinta-40)}
+
+  /* ── PASO ACTIVO (citymapper) ── */
+  .seccion{padding:64px 0}
+  .seccion-kicker{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--oxido);margin-bottom:10px}
+  h2{font-family:Georgia,serif;font-size:34px;font-weight:700;letter-spacing:-.8px;margin-bottom:8px}
+  .seccion-sub{color:var(--tinta-60);max-width:520px;margin-bottom:34px}
+
+  .paso-activo{display:flex;gap:20px;align-items:center;background:var(--bondi);color:var(--arena);border-radius:var(--radio);padding:26px 30px;box-shadow:0 14px 30px -14px rgba(43,27,18,.45)}
+  .paso-activo .icono{font-size:34px}
+  .paso-activo .que{font-size:20px;font-weight:600}
+  .paso-activo .donde{font-size:14px;opacity:.85}
+  .paso-activo .count{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums}
+  .paso-activo .count b{font-size:26px;display:block;font-family:Georgia,serif}
+
+  /* ── STEPPER artesanal ── */
+  .rutas{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:start}
+  .stepper{position:relative;padding-left:52px}
+  .camino{position:absolute;left:17px;top:14px;bottom:14px;width:4px;border-radius:4px;
+    background:repeating-linear-gradient(180deg,var(--caminata) 0 10px,transparent 10px 16px)}
+  .camino .llena{position:absolute;inset:0;border-radius:4px;background:linear-gradient(var(--bondi),var(--bondi))}
+  .camino .punteada{position:absolute;inset:0;background:repeating-linear-gradient(180deg,var(--caminata) 0 8px,transparent 8px 15px)}
+  .paso{position:relative;margin-bottom:6px}
+  .nodo{position:absolute;left:-52px;top:16px;width:38px;height:38px;border-radius:50%;background:var(--papel);
+    border:2.5px solid var(--bondi);display:grid;place-items:center;font-size:17px;z-index:2}
+  .paso.walk .nodo{border-color:var(--caminata);border-style:dashed}
+  .tramo{background:#fff;border:1px solid rgba(43,27,18,.1);border-radius:var(--radio);padding:18px 22px;margin-bottom:14px;
+    box-shadow:0 4px 14px -8px rgba(43,27,18,.2)}
+  .tramo-head{display:flex;align-items:center;gap:12px}
+  .badge-linea{font-size:12px;font-weight:700;color:#fff;background:var(--bondi);border-radius:7px;padding:3px 9px;font-variant-numeric:tabular-nums}
+  .sentido{font-size:14px;font-weight:600}
+  .tramo .meta{margin-left:auto;font-size:12.5px;color:var(--tinta-60);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .subpasos{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(43,27,18,.15);font-size:14px;color:var(--tinta-60)}
+  .subpasos li{margin:6px 0 6px 4px;list-style:none;display:flex;gap:10px}
+  .subpasos li::before{content:"›";color:var(--tinta-40)}
+  .honesto{display:inline-flex;align-items:center;gap:7px;background:rgba(122,106,83,.12);color:var(--caminata);
+    font-size:12px;border-radius:999px;padding:4px 12px;margin-top:10px}
+
+  .mapa-card{position:sticky;top:24px;border-radius:var(--radio);overflow:hidden;border:1px solid rgba(43,27,18,.12);background:var(--cielo)}
+  .mapa-card .mapa-tit{padding:14px 18px;font-size:13px;color:var(--tinta-60);display:flex;justify-content:space-between}
+  svg{display:block;width:100%;height:auto}
+
+  /* ── ITINERARIO ── */
+  .iti{display:flex;flex-direction:column;gap:0;max-width:680px}
+  .dia{display:flex;gap:22px;padding:20px 0;border-bottom:1px solid rgba(43,27,18,.1)}
+  .dia-num{font-family:Georgia,serif;font-size:15px;font-weight:700;background:var(--oxido);color:#fff;
+    width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none}
+  .dia-body{flex:1}
+  .dia-titulo{font-weight:700;font-size:17px;margin-bottom:10px}
+  .evento{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid rgba(43,27,18,.1);border-radius:14px;padding:12px 16px;margin-bottom:8px}
+  .evento .hora{font-size:13px;font-variant-numeric:tabular-nums;color:var(--tinta-60);width:44px;flex:none}
+  .evento .tipo{font-size:15px}
+  .chip{margin-left:auto;font-size:12px;color:var(--bondi);background:rgba(46,94,78,.1);border-radius:999px;padding:3px 11px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .conflicto{display:flex;gap:12px;align-items:center;background:rgba(217,93,57,.1);border:1px dashed var(--cerro1);
+    border-radius:14px;padding:12px 16px;font-size:14px;color:var(--cerro3)}
+  footer{padding:50px 0 30px;font-size:13px;color:var(--tinta-40);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="pagina">
+
+<nav>
+  <div>
+    <div class="logo">Yapa<em>.</em></div>
+    <div class="coords">23.1858° S · 65.2995° O</div>
+  </div>
+  <div class="nav-links"><b>Explorar</b><span>Itinerario</span><span>Cómo llegar</span><span>Guías</span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-kicker">Tu yapa para recorrer Jujuy</div>
+  <h1>El plan que respeta <em>el reloj</em> del colectivo</h1>
+  <p class="hero-sub">Armá tu travesía por la Quebrada con horarios reales: qué bondi, a qué hora, cuánto te queda.</p>
+  <a class="hero-cta" href="#">Armá tu travesía →</a>
+
+  <!-- Mapa ilustrado de la Quebrada (N→S) -->
+  <svg class="quebrada" viewBox="0 0 620 560" xmlns="http://www.w3.org/2000/svg">
+    <!-- cielo y sol -->
+    <circle cx="500" cy="70" r="42" fill="var(--sol)" opacity=".85"/>
+    <!-- cerros fondo -->
+    <path d="M0 240 L110 110 L200 230 L290 120 L380 235 L470 130 L560 240 L620 190 L620 560 L0 560 Z" fill="var(--cerro4)"/>
+    <!-- cerros medios -->
+    <path d="M0 330 L90 200 L180 320 L270 210 L360 330 L450 220 L540 335 L620 260 L620 560 L0 560 Z" fill="var(--cerro2)"/>
+    <!-- paleta del cerro de los 7 colores -->
+    <path d="M60 560 L170 330 L280 560 Z" fill="var(--cerro1)"/>
+    <path d="M60 560 L170 330 L280 560 L240 560 L170 400 L100 560 Z" fill="var(--oxido)" opacity=".8"/>
+    <path d="M200 560 L330 320 L460 560 Z" fill="var(--ocre)"/>
+    <path d="M200 560 L330 320 L460 560 L400 560 L330 395 L260 560 Z" fill="var(--terracota)" opacity=".8"/>
+    <path d="M380 560 L500 350 L620 560 Z" fill="var(--cerro3)"/>
+    <!-- valle / río -->
+    <path d="M0 560 C160 520 300 505 620 545 L620 560 Z" fill="var(--arena)"/>
+    <path d="M0 545 C180 510 340 500 620 540" stroke="#7FA8A0" stroke-width="7" fill="none" stroke-linecap="round" opacity=".8"/>
+    <!-- RN9: la espina del turismo -->
+    <path d="M40 560 C140 500 200 430 260 360 C320 290 420 240 560 215" stroke="#FBF3E8" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="1 22"/>
+    <!-- pueblos sobre la RN9 -->
+    <g font-family="Segoe UI" font-size="13" font-weight="600">
+      <circle cx="70" cy="545" r="7" fill="#fff" stroke="var(--bondi)" stroke-width="3"/><text x="86" y="549" fill="var(--tinta)">S.S. Jujuy</text>
+      <circle cx="150" cy="490" r="7" fill="#fff" stroke="var(--bondi)" stroke-width="3"/><text x="166" y="494" fill="var(--tinta)">Volcán</text>
+      <circle cx="205" cy="440" r="7" fill="#fff" stroke="var(--bondi)" stroke-width="3"/><text x="221" y="444" fill="var(--tinta)">Purmamarca</text>
+      <circle cx="248" cy="390" r="7" fill="#fff" stroke="var(--bondi)" stroke-width="3"/><text x="264" y="394" fill="var(--tinta)">Maimará</text>
+      <circle cx="300" cy="335" r="7" fill="#fff" stroke="var(--bondi)" stroke-width="3"/><text x="316" y="339" fill="var(--tinta)">Tilcara</text>
+      <circle cx="470" cy="235" r="7" fill="var(--sol)" stroke="var(--tinta)" stroke-width="2.5"/><text x="486" y="239" fill="var(--tinta)">Humahuaca</text>
+    </g>
+    <text x="60" y="70" class="coords-svg" font-size="12" letter-spacing="2" fill="var(--tinta-40)">LA QUEBRADA · 155 km · RN9</text>
+  </svg>
+</section>
+
+<!-- CÓMO LLEGAR: paso activo + stepper + mapa -->
+<section class="seccion">
+  <div class="seccion-kicker">Cómo llegar · RUT</div>
+  <h2>Del avión al cerro, sin auto</h2>
+  <p class="seccion-sub">Aeropuerto El Cadillal → Terminal → Tilcara. Cada tramo en su tarjeta; el próximo hito siempre grande.</p>
+
+  <div class="paso-activo">
+    <span class="icono">🚌</span>
+    <div>
+      <div class="que">Subí a la Línea 3 · sentido Humahuaca</div>
+      <div class="donde">Terminal de Ómnibus — andén 6 · ~9:40 salida</div>
+    </div>
+    <div class="count"><b>12</b><span>paradas</span></div>
+  </div>
+
+  <div class="rutas" style="margin-top:36px">
+    <div class="stepper">
+      <div class="camino punteada"></div>
+
+      <div class="paso walk">
+        <div class="nodo">✈</div>
+        <div class="tramo">
+          <div class="tramo-head"><span class="sentido">Aeropuerto → Terminal</span><span class="meta">taxi/remis · 32 km · ~35 min</span></div>
+          <ul class="subpasos"><li>Salida de arribos — remises y combis en la puerta</li><li>Si hay combi compartida: ~la mitad del precio</li></ul>
+        </div>
+      </div>
+
+      <div class="paso walk">
+        <div class="nodo">🚶</div>
+        <div class="tramo">
+          <div class="tramo-head"><span class="sentido">Caminá al andén 6</span><span class="meta">4 min</span></div>
+          <ul class="subpasos"><li>Las líneas a la Quebrada salen del fondo de la terminal</li><li>Se paga al chofer — llevá efectivo</li></ul>
+          <span class="honesto">~ horario publicado, llegá 15 min antes</span>
+        </div>
+      </div>
+
+      <div class="paso">
+        <div class="nodo">🚌</div>
+        <div class="tramo">
+          <div class="tramo-head"><span class="badge-linea">L3</span><span class="sentido">Terminal → Tilcara</span><span class="meta">~1 h 40 · 12 paradas</span></div>
+          <ul class="subpasos">
+            <li>Pasa Volcán (estación Tren Solar), Purmamarca Cruce, Maimará</li>
+            <li>Ojo: <b>Purmamarca Cruce ≠ Pueblo</b> — son 3 km a pie</li>
+            <li>Avisale al chofer "Tilcara centro"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="paso walk">
+        <div class="nodo">📍</div>
+        <div class="tramo">
+          <div class="tramo-head"><span class="sentido">Llegaste</span><span class="meta">2.465 m s.n.m.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mapa-card">
+      <div class="mapa-tit"><span>La ruta sobre la Quebrada</span><span>modo operativo</span></div>
+      <svg viewBox="0 0 420 300">
+        <rect width="420" height="300" fill="var(--cielo)"/>
+        <path d="M0 90 L60 30 L120 85 L190 25 L260 90 L330 40 L420 95 L420 300 L0 300 Z" fill="var(--cerro4)" opacity=".85"/>
+        <path d="M0 160 L70 90 L150 160 L230 95 L310 165 L420 110 L420 300 L0 300 Z" fill="var(--cerro2)" opacity=".9"/>
+        <path d="M0 240 L90 160 L190 235 L290 165 L420 240 L420 300 L0 300 Z" fill="var(--cerro1)" opacity=".9"/>
+        <path d="M30 300 C110 250 160 210 210 170 C270 120 330 90 400 75" stroke="var(--papel)" stroke-width="7" fill="none" stroke-dasharray="1 16" stroke-linecap="round"/>
+        <path d="M30 300 C110 250 160 210 210 170 C270 120 330 90 400 75" stroke="var(--bondi)" stroke-width="4" fill="none" stroke-dasharray="12 10"/>
+        <g font-family="Segoe UI" font-size="11.5" font-weight="600">
+          <circle cx="30" cy="295" r="6" fill="#fff" stroke="var(--bondi)" stroke-width="3"/><text x="44" y="299">Aeropuerto</text>
+          <circle cx="110" cy="245" r="6" fill="#fff" stroke="var(--bondi)" stroke-width="3"/><text x="124" y="249">Terminal</text>
+          <circle cx="210" cy="170" r="6" fill="#fff" stroke="var(--bondi)" stroke-width="3"/><text x="224" y="174">Purmamarca</text>
+          <circle cx="400" cy="75" r="6" fill="var(--sol)" stroke="var(--tinta)" stroke-width="2.5"/><text x="330" y="65">Tilcara 2.465 m</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ITINERARIO de un día -->
+<section class="seccion">
+  <div class="seccion-kicker">Tu travesía · ITI</div>
+  <h2>Martes 9 — un día que cierra</h2>
+  <p class="seccion-sub">Tilcara de base. Sale el bondi, entra la tarde, vuelve el último.</p>
+
+  <div class="iti">
+    <div class="dia">
+      <div class="dia-num">1</div>
+      <div class="dia-body">
+        <div class="dia-titulo">Tilcara → Humahuaca</div>
+        <div class="evento"><span class="hora">9:40</span><span class="tipo">🚌 Línea 3 sentido Humahuaca</span><span class="chip">~55 min</span></div>
+        <div class="evento"><span class="hora">10:45</span><span class="tipo">Hornocal · cerro de los 14 colores</span><span class="chip">3 h · 4.350 m</span></div>
+        <div class="evento"><span class="hora">14:00</span><span class="tipo">Almuerzo en la plaza</span><span class="chip">$</span></div>
+        <div class="evento"><span class="hora">17:10</span><span class="tipo">🚌 vuelta Línea 3 sentido S.S. Jujuy</span><span class="chip">última 17:40</span></div>
+        <div class="conflicto">⚠ La última combi a Hornocal sale 15:00 — con la de las 9:40 llegás justo. Alternativa: bondi de las 8:00.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Yapa — el extra que te regala Jujuy</span>
+  <span class="coords">MOCK-01 · dirección visual, no producto final</span>
+</footer>
+</div>
+</body>
+</html>

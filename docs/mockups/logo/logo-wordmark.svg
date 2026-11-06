@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120" role="img" aria-label="Yapa.">
+  <title>Yapa — wordmark</title>
+  <style>
+    .ink { fill: #2B1B12; }
+    @media (prefers-color-scheme: dark) { .ink { fill: #F2E3D3; } }
+  </style>
+  <text x="42" y="88" class="ink"
+        font-family="Georgia, 'Times New Roman', 'Nimbus Roman', serif"
+        font-size="76" font-weight="bold" font-style="italic"
+        letter-spacing="1">Yapa</text>
+  <g transform="translate(246 78)">
+    <circle r="10" fill="#E0A458"/>
+    <g stroke="#D95D39" stroke-width="3" stroke-linecap="round">
+      <line x1="0" y1="-14.5" x2="0" y2="-20"/>
+      <line x1="12.6" y1="-7.3" x2="17.3" y2="-10"/>
+      <line x1="12.6" y1="7.3" x2="17.3" y2="10"/>
+      <line x1="-12.6" y1="7.3" x2="-17.3" y2="10"/>
+      <line x1="-12.6" y1="-7.3" x2="-17.3" y2="-10"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapa — Jujuy como se vive</title>
+<style>
+:root{
+  --tierra:#8C3B1B;--oxido:#B5492A;--terracota:#C96A3B;
+  --ocre:#E0A458;--sol:#E8B44C;--arena:#F5E8D8;--papel:#FBF3E8;
+  --bondi:#2E5E4E;--yungas:#3E6B48;
+  --tinta:#2B1B12;--t60:rgba(43,27,18,.62);--t40:rgba(43,27,18,.4);
+}
+*{margin:0;box-sizing:border-box}
+body{background:var(--papel);color:var(--tinta);font-family:"Segoe UI",system-ui,sans-serif}
+.pg{max-width:1180px;margin:0 auto;padding:0 28px}
+.kick{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--ocre)}
+.coords{font-size:11px;letter-spacing:.14em;color:var(--t40);font-variant-numeric:tabular-nums}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+nav img{height:44px}
+.nav{display:flex;gap:28px;font-size:14px;color:var(--t60)}.nav b{color:var(--tinta)}
+
+/* HERO full-foto */
+.hero{position:relative;border-radius:26px;overflow:hidden;min-height:560px;display:flex;align-items:flex-end}
+.hero img.foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(185deg,rgba(20,10,6,.15) 40%,rgba(20,10,6,.78))}
+.hero-in{position:relative;z-index:2;padding:44px 46px;color:#fff;max-width:660px}
+.hero h1{font-family:Georgia,serif;font-size:clamp(40px,5.4vw,72px);line-height:1.02;font-weight:700;letter-spacing:-1.4px}
+.hero h1 em{font-style:italic;color:var(--ocre)}
+.hero-sub{margin-top:16px;font-size:17px;opacity:.9;max-width:440px}
+.cta{display:inline-flex;gap:10px;align-items:center;margin-top:26px;background:var(--arena);color:var(--tinta);border-radius:999px;padding:14px 26px;font-size:15px;font-weight:600;text-decoration:none}
+.hero .tag{position:absolute;top:22px;right:26px;z-index:2;font-size:11px;letter-spacing:.16em;color:rgba(255,255,255,.85);font-variant-numeric:tabular-nums}
+
+/* arco */
+.arco{margin-top:26px;background:var(--tinta);color:var(--arena);border-radius:26px;display:grid;grid-template-columns:repeat(4,1fr)}
+.arco div{padding:28px 26px;border-left:1px solid rgba(245,232,216,.14)}.arco div:first-child{border:none;border-radius:26px 0 0 26px}
+.arco div:last-child{border-radius:0 26px 26px 0}
+.arco b{font-family:Georgia,serif;font-size:19px;display:block;margin-bottom:8px}
+.arco span{font-size:13.5px;opacity:.75;line-height:1.5;display:block}
+.arco .n{font-size:11px;letter-spacing:.2em;color:var(--ocre);display:block;margin-bottom:12px}
+
+.sec{padding:78px 0 8px}
+.sec h2{font-family:Georgia,serif;font-size:clamp(30px,4vw,44px);letter-spacing:-1px;margin:10px 0 8px;color:var(--tinta)}
+.sec .sub{color:var(--t60);max-width:560px;margin-bottom:34px}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:30px}
+.sec .kick{color:var(--oxido)}
+
+/* zonas con foto real */
+.zonas{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.zona{position:relative;border-radius:20px;overflow:hidden;min-height:340px;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;color:#fff}
+.zona img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s}
+.zona::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(20,10,6,.78))}
+.zona>*{position:relative;z-index:2}
+.zona b{font-family:Georgia,serif;font-size:24px}
+.zona small{font-size:12.5px;opacity:.92;margin-top:4px;display:block;line-height:1.4}
+.zona .km{font-size:10.5px;letter-spacing:.14em;opacity:.85;margin-top:12px;display:block;font-variant-numeric:tabular-nums}
+.zona:hover img{transform:scale(1.05)}
+
+/* imperdibles con thumb real */
+.lugares{display:flex;flex-direction:column;border-top:1px solid rgba(43,27,18,.15)}
+.lugar{display:grid;grid-template-columns:56px 96px 1fr 1fr auto;gap:22px;align-items:center;padding:20px 6px;border-bottom:1px solid rgba(43,27,18,.15)}
+.lugar:hover{background:rgba(224,164,88,.09)}
+.lugar .num{font-family:Georgia,serif;font-size:24px;color:var(--oxido);font-style:italic}
+.lugar .thumb{width:96px;height:72px;border-radius:12px;object-fit:cover}
+.lugar b{font-family:Georgia,serif;font-size:20px;font-weight:600}
+.lugar .zona-tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--t40);display:block;margin-top:3px}
+.lugar p{font-size:13.5px;color:var(--t60);line-height:1.5}
+.lugar .meta{text-align:right;font-size:12.5px;color:var(--t60);font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.7}
+.lugar .meta b{color:var(--bondi)}
+
+/* hoteles */
+.hots{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.hot{background:#fff;border:1px solid rgba(43,27,18,.1);border-radius:20px;overflow:hidden}
+.hot img{height:170px;width:100%;object-fit:cover}
+.hot .body{padding:18px 20px 20px}
+.hot b{font-family:Georgia,serif;font-size:18px}
+.hot .des{font-size:13.5px;color:var(--t60);margin:5px 0 12px}
+.hot .row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--t60)}
+.hot .row b{font-family:inherit;font-size:12.5px;color:var(--bondi)}
+
+/* guías */
+.guias{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.guia{background:#fff;border:1px solid rgba(43,27,18,.1);border-radius:20px;padding:22px;text-align:center}
+.guia .cara{width:76px;height:76px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;font-family:Georgia,serif;font-size:26px;color:#fff}
+.guia b{font-family:Georgia,serif;font-size:17px}
+.guia .es{font-size:12.5px;color:var(--t60);margin:6px 0 10px;line-height:1.45}
+.guia .reg{font-size:11px;color:var(--bondi);letter-spacing:.1em;font-weight:700}
+
+/* tool */
+.tool{margin-top:78px;background:var(--bondi);color:var(--arena);border-radius:26px;padding:46px 44px;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+.tool h2{font-family:Georgia,serif;font-size:34px;letter-spacing:-.8px;margin:10px 0 14px}
+.tool p{font-size:15px;opacity:.85;line-height:1.6}
+.pasos{background:rgba(251,243,232,.08);border:1px solid rgba(251,243,232,.2);border-radius:18px;padding:20px 22px;font-size:14px}
+.pasos li{list-style:none;display:flex;gap:12px;padding:8px 0;border-bottom:1px dashed rgba(251,243,232,.18)}
+.pasos li:last-child{border:none}
+.pasos .h{font-variant-numeric:tabular-nums;opacity:.75;width:42px;flex:none}
+.pasos .adv{background:rgba(232,180,76,.2);color:var(--sol);font-size:12px;border-radius:999px;padding:2px 10px;margin-left:auto;white-space:nowrap}
+
+.man{padding:88px 0;text-align:center}
+.man blockquote{font-family:Georgia,serif;font-size:clamp(26px,3.6vw,40px);font-style:italic;line-height:1.3;max-width:760px;margin:0 auto}
+.man .firma{margin-top:22px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--t40)}
+
+footer{padding:60px 0 40px;display:flex;justify-content:space-between;align-items:end;border-top:1px solid rgba(43,27,18,.15)}
+footer img{height:52px}
+@media(max-width:900px){.zonas,.guias,.hots{grid-template-columns:repeat(2,1fr)}.tool,.arco{grid-template-columns:1fr 1fr}.lugar{grid-template-columns:40px 1fr auto}.lugar .thumb,.lugar p{display:none}}
+</style>
+</head>
+<body>
+<div class="pg">
+
+<nav>
+  <img src="logo/logo-lockup.svg" alt="Yapa.">
+  <div class="nav"><b>Explorar</b><span>Zonas</span><span>Dormir</span><span>Guías</span><span>Cómo llegar</span></div>
+</nav>
+
+<section class="hero">
+  <img class="foto" src="assets/purmamarca.jpg" alt="Cerro de los Siete Colores, Purmamarca">
+  <span class="tag">PURMAMARCA · 2.324 M</span>
+  <div class="hero-in">
+    <div class="kick">Tu yapa para recorrer Jujuy</div>
+    <h1 style="margin-top:14px">Jujuy se recorre <em>despacio</em>, como su gente</h1>
+    <p class="hero-sub">Los lugares que se sueñan, los bondis que sí pasan, el día que cierra.</p>
+    <a class="cta" href="#">Empezá a imaginar →</a>
+  </div>
+</section>
+
+<div class="arco">
+  <div><span class="n">01</span><b>Imaginá</b><span>Las cuatro regiones en capítulos: qué se ve, cuándo ir, qué no te podes perder.</span></div>
+  <div><span class="n">02</span><b>Armalo</b><span>Elegí fechas y la app arma el plan que cierra con los bondis reales.</span></div>
+  <div><span class="n">03</span><b>Vivilo</b><span>La guía en la parada: qué colectivo, a qué hora, dónde bajar.</span></div>
+  <div><span class="n">04</span><b>Acordate</b><span>Tu travesía guardada, compartible, con lo que viviste de verdad.</span></div>
+</div>
+
+<section class="sec">
+  <div class="sec-head"><div><div class="kick">Las cuatro regiones</div><h2>Cada zona es otro país</h2></div>
+  <p class="sub">Del altiplano a la selva en 100 km. Elegí la que te llama y Yapa te dice cómo llegar.</p></div>
+  <div class="zonas">
+    <div class="zona"><img src="assets/hornocal.jpg" alt="Hornocal"><b>La Quebrada</b><small>Humahuaca, Tilcara, Purmamarca. El paisaje del folleto, por la RN9.</small><span class="km">155 KM · 2.300–4.350 M</span></div>
+    <div class="zona"><img src="assets/puna.jpg" alt="Vicuñas en la Puna"><b>La Puna</b><small>Salinas Grandes, Susques, vicuñas. Aire fino, cielo enorme.</small><span class="km">4.000 M · ALTIPLANO</span></div>
+    <div class="zona"><img src="assets/calilegua.jpg" alt="Calilegua"><b>Las Yungas</b><small>Calilegua, selva de niebla, cataratas. El Jujuy verde.</small><span class="km">SELVA · NEBLINAS</span></div>
+    <div class="zona"><img src="assets/salsaju.jpg" alt="San Salvador de Jujuy"><b>Los Valles</b><small>Termas de Reyes, San Salvador, San Lorenzo. Aguas, historia, ciudad.</small><span class="km">1.200 M · TERMAS</span></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="sec-head"><div><div class="kick">Imperdibles</div><h2>Los lugares que se cuentan</h2></div>
+  <p class="sub">Cada uno con su dato honesto: cuánto toma, cómo se llega, cuándo conviene.</p></div>
+  <div class="lugares">
+    <div class="lugar"><span class="num">01</span><img class="thumb" src="assets/purmamarca.jpg"><div><b>Cerro de los Siete Colores</b><span class="zona-tag">Purmamarca · Quebrada</span></div>
+      <p>Vista desde el pueblo o por el Paseo de los Colorados, 40 min caminando.</p>
+      <div class="meta">2.324 m<br>se llega <b>en combi</b></div></div>
+    <div class="lugar"><span class="num">02</span><img class="thumb" src="assets/garganta.jpg"><div><b>Garganta del Diablo</b><span class="zona-tag">Tilcara · Quebrada</span></div>
+      <p>Cañón de 8 km hasta la cascada. A pie o en bici desde el centro.</p>
+      <div class="meta">8 km ida<br>medio día</div></div>
+    <div class="lugar"><span class="num">03</span><img class="thumb" src="assets/hornocal.jpg"><div><b>Hornocal · 14 colores</b><span class="zona-tag">Humahuaca · Quebrada</span></div>
+      <p>El cerro más fotografiado del norte. Solo con vehículo — combi desde la plaza.</p>
+      <div class="meta">4.350 m<br><b>última combi 15:00</b></div></div>
+    <div class="lugar"><span class="num">04</span><img class="thumb" src="assets/salinas.jpg"><div><b>Salinas Grandes</b><span class="zona-tag">Puna</span></div>
+      <p>Espejo de sal por la Cuesta de Lipán, desde Purmamarca.</p>
+      <div class="meta">3.450 m<br>día completo</div></div>
+    <div class="lugar"><span class="num">05</span><img class="thumb" src="assets/tren.jpg"><div><b>Tren Solar de la Quebrada</b><span class="zona-tag">Volcán · Quebrada</span></div>
+      <p>Tren histórico por el valle. Hay combi que frena en la estación.</p>
+      <div class="meta">estación Volcán<br><b>coordinar horarios</b></div></div>
+    <div class="lugar"><span class="num">06</span><img class="thumb" src="assets/calilegua.jpg"><div><b>Parque Nacional Calilegua</b><span class="zona-tag">Yungas</span></div>
+      <p>Selva tupida, senderos, yaguareté si tenés suerte.</p>
+      <div class="meta">76.000 ha<br>día completo</div></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="sec-head"><div><div class="kick">Dónde dormir y comer</div><h2>Base de operaciones</h2></div>
+  <p class="sub">Tilcara y Purmamarca son las bases más cómodas sin auto — todo sale de la ruta.</p></div>
+  <div class="hots">
+    <div class="hot"><img src="assets/artesanias.jpg" alt="Feria de artesanos">
+      <div class="body"><b>Hostería Los Colorados</b><div class="des">Adobe, patio de cardones, la feria a dos cuadras.</div>
+      <div class="row"><span>Purmamarca · doble</span><b>desde $…</b></div></div></div>
+    <div class="hot"><img src="assets/tilcara.jpg" alt="Pucará de Tilcara">
+      <div class="body"><b>Hostel La Albahaca</b><div class="des">Terraza con vista al Pucará — el clásico mochilero.</div>
+      <div class="row"><span>Tilcara · litera</span><b>desde $…</b></div></div></div>
+    <div class="hot"><img src="assets/humahuaca.jpg" alt="Cabildo de Humahuaca">
+      <div class="body"><b>Hotel El Sol</b><div class="des">Casona frente al Cabildo — base perfecta para Hornocal.</div>
+      <div class="row"><span>Humahuaca · suite</span><b>desde $…</b></div></div></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="sec-head"><div><div class="kick">Guías registrados</div><h2>Los que conocen el cerro</h2></div>
+  <p class="sub">Registro Provincial de Guías (Ley 6.308) — los 96 habilitados, por zona y especialidad.</p></div>
+  <div class="guias">
+    <div class="guia"><div class="cara" style="background:#D95D39">MA</div><b>Mario A.</b><div class="es">Trekking arqueológico · Pucará y Garganta</div><div class="reg">REG. 042</div></div>
+    <div class="guia"><div class="cara" style="background:#2E5E4E">LU</div><b>Lucía U.</b><div class="es">Fotografía de paisaje · Hornocal y Salinas al amanecer</div><div class="reg">REG. 071</div></div>
+    <div class="guia"><div class="cara" style="background:#E0A458">JO</div><b>Jorge O.</b><div class="es">Comunidad y cultura · pueblos vivos</div><div class="reg">REG. 013</div></div>
+    <div class="guia"><div class="cara" style="background:#3E6B48">AN</div><b>Ana N.</b><div class="es">Yungas y birdwatching · Calilegua</div><div class="reg">REG. 088</div></div>
+  </div>
+</section>
+
+<div class="tool">
+  <div>
+    <div class="kick">Y por eso funciona</div>
+    <h2>El plan que respeta el reloj del colectivo</h2>
+    <p>Cada atracción trae su forma de llegar: qué línea, desde qué parada, a qué hora vuelve la última. Si el plan no cierra, te avisamos antes de que estés en la ruta, no después.</p>
+  </div>
+  <ul class="pasos">
+    <li><span class="h">9:40</span>🚌 Línea 3 sentido Humahuaca<span class="adv">~horario publicado</span></li>
+    <li><span class="h">10:45</span>⛰ Hornocal · combi local de la plaza<span class="adv">última 15:00</span></li>
+    <li><span class="h">17:10</span>🚌 vuelta a Tilcara<span class="adv">último bondi 17:40</span></li>
+    <li><span class="h">—</span>⚠ No cierra → te proponemos el bondi de las 8:00</li>
+  </ul>
+</div>
+
+<div class="man">
+  <blockquote>“Un viaje no es una sucesión de visitas: es la historia que contás cuando volvés.”</blockquote>
+  <div class="firma">— Yapa, el extra que te regala Jujuy</div>
+</div>
+
+<footer>
+  <img src="logo/logo-lockup.svg" alt="Yapa.">
+  <div class="coords">MOCK-03 · fotos Wikimedia Commons (assets/CREDITS.md)</div>
+</footer>
+</div>
+</body>
+</html>
