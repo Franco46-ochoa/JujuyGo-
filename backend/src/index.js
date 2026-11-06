@@ -2,6 +2,7 @@ import express from 'express';
 import pg from 'pg';
 import { createCatalogoRouter } from './routes/catalogo.js';
 import { createTravesiaRouter } from './routes/travesia.js';
+import { createHospedajeRouter } from './routes/hospedaje.js';
 import transporteRouter from './routes/transporte.js';
 
 export function createApp({ pool = new pg.Pool({
@@ -22,6 +23,7 @@ export function createApp({ pool = new pg.Pool({
     next();
   });
   app.use('/api', createCatalogoRouter(pool));
+  app.use('/api', createHospedajeRouter(pool));
   app.use('/api', createTravesiaRouter(pool));
   app.use('/api', transporteRouter);
   app.use(transporteRouter);

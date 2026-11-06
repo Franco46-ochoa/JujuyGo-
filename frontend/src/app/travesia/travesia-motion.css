@@ -1,0 +1,40 @@
+@keyframes travesia-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes conflicto-in { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+
+.travesia-shell .wizard-step { animation: travesia-in .34s ease both; }
+.travesia-shell .progreso li { position: relative; border-bottom-color: transparent; }
+.travesia-shell .progreso li::after {
+  position: absolute; right: 0; bottom: -1px; left: 0; height: 2px;
+  background: var(--oxido); content: ""; transform: scaleX(0); transform-origin: left;
+  transition: transform .3s ease;
+}
+.travesia-shell .progreso li.activo::after, .travesia-shell .progreso li.completo::after { transform: scaleX(1); }
+.travesia-shell .opcion { transition: background-color .18s ease; }
+.travesia-shell .opcion:hover { background: rgba(36,22,16,.035); }
+.travesia-shell .opcion.elegida { background: rgba(46,74,62,.07); }
+.travesia-shell .boton-principal, .travesia-shell .boton-secundario,
+.travesia-shell .volver-wizard, .travesia-shell .borrar-evento { transition: transform .16s ease, color .16s ease, background-color .16s ease; }
+.travesia-shell .boton-principal:hover { background: #3a5b4c; transform: translateY(-1px); }
+.travesia-shell .boton-principal:active, .travesia-shell .boton-secundario:active,
+.travesia-shell .volver-wizard:active { transform: translateY(1px); }
+.travesia-shell .boton-secundario:hover, .travesia-shell .volver-wizard:hover { color: var(--oxido); }
+.travesia-shell .borrar-evento:hover { color: var(--ocre); }
+.travesia-shell .boton-principal:focus-visible, .travesia-shell .boton-secundario:focus-visible,
+.travesia-shell .volver-wizard:focus-visible, .travesia-shell .borrar-evento:focus-visible { outline: 2px solid var(--oxido); outline-offset: 3px; }
+.travesia-shell .dia, .travesia-shell .evento { animation: travesia-in .38s ease both; }
+.travesia-shell .dia:nth-child(2) { animation-delay: 70ms; }
+.travesia-shell .dia:nth-child(3) { animation-delay: 140ms; }
+.travesia-shell .dia:nth-child(4) { animation-delay: 210ms; }
+.travesia-shell .evento { animation-delay: var(--evento-delay, 0ms); }
+.travesia-shell .conflicto {
+  border-left-color: var(--oxido); background: rgba(181,73,42,.12);
+  animation: conflicto-in .32s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .travesia-shell .wizard-step, .travesia-shell .dia, .travesia-shell .evento,
+  .travesia-shell .conflicto { animation: none; }
+  .travesia-shell .progreso li::after, .travesia-shell .opcion,
+  .travesia-shell .boton-principal, .travesia-shell .boton-secundario,
+  .travesia-shell .volver-wizard, .travesia-shell .borrar-evento { transition: none; }
+}

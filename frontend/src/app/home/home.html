@@ -8,6 +8,7 @@
       <a href="#zonas">Zonas</a>
       <a href="#mapa">Mapa</a>
       <a href="#imperdibles">Imperdibles</a>
+      <a href="#hospedajes">Dormir</a>
     </div>
     <a class="nav-cta" routerLink="/travesia">Armá tu travesía</a>
   </nav>
@@ -75,6 +76,38 @@
         }
       </div>
     }
+  </section>
+
+  <section class="section movements" aria-labelledby="movements-title">
+    <div class="section-heading">
+      <div>
+        <p class="kicker">Cómo funciona</p>
+        <h2 id="movements-title">Un viaje en <em>cuatro movimientos</em></h2>
+      </div>
+      <p class="section-intro">Ni folleto ni trámite: la historia completa, de la idea a la parada.</p>
+    </div>
+    <div class="movement-list">
+      <article class="movement">
+        <span class="movement-number">i.</span>
+        <h3>Imaginá</h3>
+        <p>Las cuatro regiones en capítulos: qué se ve, cuándo ir, qué no te podés perder.</p>
+      </article>
+      <article class="movement">
+        <span class="movement-number">ii.</span>
+        <h3>Armalo</h3>
+        <p>Elegí fechas; el plan se arma solo sobre los horarios reales del colectivo.</p>
+      </article>
+      <article class="movement">
+        <span class="movement-number">iii.</span>
+        <h3>Vivilo</h3>
+        <p>La guía en la parada: qué línea, a qué hora, dónde bajar, cuánto falta.</p>
+      </article>
+      <article class="movement">
+        <span class="movement-number">iv.</span>
+        <h3>Acordate</h3>
+        <p>Tu travesía guardada, compartible, con lo que viviste de verdad.</p>
+      </article>
+    </div>
   </section>
 
   <section class="section map-section" id="mapa" aria-labelledby="map-title">
@@ -178,6 +211,119 @@
         }
       </div>
     }
+  </section>
+
+  <figure class="photo-quote">
+    <img src="/img/puna.jpg" alt="Paisaje de altura en la Puna jujeña" loading="lazy">
+    <div class="photo-quote-veil" aria-hidden="true"></div>
+    <blockquote>“Un viaje no es una sucesión de visitas, es la historia que se cuenta después.”</blockquote>
+    <figcaption>Jujuy · una historia que sigue cuando volvés</figcaption>
+  </figure>
+
+  <section class="section stays" id="hospedajes" aria-labelledby="stays-title">
+    <div class="section-heading">
+      <div>
+        <p class="kicker">Dónde dormir</p>
+        <h2 id="stays-title">Base de <em>operaciones</em></h2>
+      </div>
+      <p class="section-intro">Una base en la Quebrada para salir a recorrer. Consultá disponibilidad directamente con cada alojamiento.</p>
+    </div>
+    @if (hospedajesLoading()) {
+      <p class="status" role="status">Cargando hospedajes…</p>
+    } @else if (hospedajesError()) {
+      <div class="status status-error" role="alert">
+        <p>{{ hospedajesError() }}</p>
+        <button type="button" (click)="cargarHospedajes()">Reintentar</button>
+      </div>
+    } @else {
+      <div class="stay-list">
+        @for (hospedaje of hospedajes(); track hospedaje.slug) {
+          <article class="stay">
+            <span class="stay-mark" aria-hidden="true">{{ iniciales(hospedaje.nombre) }}</span>
+            <div class="stay-info">
+              <p class="stay-location">{{ hospedaje.localidad }} · {{ etiquetaHospedaje(hospedaje.tipo) }}</p>
+              <h3>{{ hospedaje.nombre }}</h3>
+              @if (hospedaje.descripcion) { <p class="stay-description">{{ hospedaje.descripcion }}</p> }
+              <span class="stay-availability">Consultá disponibilidad</span>
+              <small class="data-source">{{ hospedaje.verificado ? 'Dato verificado' : 'Pendiente de verificar' }} · Fuente: {{ hospedaje.fuente }}</small>
+            </div>
+          </article>
+        } @empty {
+          <p class="status">Todavía no hay hospedajes cargados para esta zona.</p>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="section guides" id="guias" aria-labelledby="guides-title">
+    <div class="section-heading">
+      <div>
+        <p class="kicker">Guías registrados</p>
+        <h2 id="guides-title">Los que conocen <em>el cerro</em></h2>
+      </div>
+      <p class="section-intro">Guías registrados por zona y especialidad. Cada dato conserva su fuente y estado de verificación.</p>
+    </div>
+    @if (guiasLoading()) {
+      <p class="status" role="status">Consultando registros de guías…</p>
+    } @else if (guiasError()) {
+      <div class="status status-error" role="alert">
+        <p>{{ guiasError() }}</p>
+        <button type="button" (click)="cargarGuias()">Reintentar</button>
+      </div>
+    } @else if (guias().length) {
+      <div class="guide-list">
+        @for (guia of guias(); track guia.id) {
+          <article class="guide">
+            <span class="guide-mark" aria-hidden="true">{{ iniciales(guia.nombre) }}</span>
+            <div>
+              <h3>{{ guia.nombre }}</h3>
+              <p>{{ guia.especialidad || 'Especialidad no informada' }}</p>
+              <small class="data-source">{{ guia.verificado ? 'Dato verificado' : 'Pendiente de verificar' }} · Fuente: {{ guia.fuente }}</small>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="guides-empty">
+        <p>No mostramos nombres sin una fuente confiable. Consultá el registro provincial para encontrar guías habilitados.</p>
+        <a href="https://turismo.jujuy.gob.ar/" target="_blank" rel="noopener noreferrer">Registro Provincial de Guías <span aria-hidden="true">↗</span></a>
+      </div>
+    }
+  </section>
+
+  <section class="transport-band" aria-labelledby="transport-title">
+    <div class="transport-inner">
+      <div class="transport-copy">
+        <p class="kicker">Por eso funciona</p>
+        <h2 id="transport-title">El plan que respeta <em>el reloj del colectivo</em></h2>
+        <p>Cada tramo se apoya en horarios publicados. Si el día no cierra, te avisamos antes de salir.</p>
+        <a routerLink="/travesia">Armá tu travesía <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="transport-schedule">
+        <h3>Próximos servicios · Terminal a Tilcara</h3>
+        @if (transporteLoading()) {
+          <p role="status">Consultando horarios publicados…</p>
+        } @else if (transporteError()) {
+          <div class="transport-error" role="alert">
+            <p>{{ transporteError() }}</p>
+            <button type="button" (click)="cargarTransporte()">Reintentar</button>
+          </div>
+        } @else if (proximos()?.servicios?.length) {
+          <ol>
+            @for (servicio of proximos()!.servicios.slice(0, 3); track servicio.servicio_id + servicio.hora_salida) {
+              <li>
+                <strong>{{ servicio.hora_salida }}</strong>
+                <span>{{ servicio.linea_nombre }} · llegada {{ servicio.hora_llegada }}</span>
+                <small>{{ servicio.confianza }} · {{ servicio.fuente }}</small>
+              </li>
+            }
+          </ol>
+          <small class="schedule-note">Fuente y confianza corresponden al horario publicado; consultá vigencia antes de viajar.</small>
+        } @else {
+          <p>No hay más salidas publicadas para hoy en este tramo. Confirmá los horarios antes de viajar.</p>
+        }
+      </div>
+    </div>
   </section>
 </main>
 

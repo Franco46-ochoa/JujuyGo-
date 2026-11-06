@@ -20,13 +20,13 @@
       </div>
 
       <ol class="progreso" aria-label="Pasos del armado">
-        <li [class.activo]="paso() === 1" [class.completo]="paso() > 1"><span>01</span> Fechas</li>
-        <li [class.activo]="paso() === 2" [class.completo]="paso() > 2"><span>02</span> Llegada</li>
-        <li [class.activo]="paso() === 3"><span>03</span> Intereses</li>
+        <li [class.activo]="paso() === 1" [class.completo]="paso() > 1" [attr.aria-current]="paso() === 1 ? 'step' : null"><span>01</span> Fechas</li>
+        <li [class.activo]="paso() === 2" [class.completo]="paso() > 2" [attr.aria-current]="paso() === 2 ? 'step' : null"><span>02</span> Llegada</li>
+        <li [class.activo]="paso() === 3" [attr.aria-current]="paso() === 3 ? 'step' : null"><span>03</span> Intereses</li>
       </ol>
 
       @if (paso() === 1) {
-        <section class="pregunta" aria-labelledby="fechas-title">
+        <section class="pregunta wizard-step" aria-labelledby="fechas-title">
           <div class="numero-pregunta">01 / 03</div>
           <h2 id="fechas-title">¿Cuándo <em>vas?</em></h2>
           <p>Elegí el primer y el último día. La propuesta se organiza día por día.</p>
@@ -42,7 +42,7 @@
           </div>
         </section>
       } @else if (paso() === 2) {
-        <section class="pregunta" aria-labelledby="llegada-title">
+        <section class="pregunta wizard-step" aria-labelledby="llegada-title">
           <div class="numero-pregunta">02 / 03</div>
           <h2 id="llegada-title">¿Cómo <em>llegás?</em></h2>
           <p>Así ubicamos el comienzo de la travesía.</p>
@@ -65,7 +65,7 @@
           </div>
         </section>
       } @else {
-        <section class="pregunta" aria-labelledby="intereses-title">
+        <section class="pregunta wizard-step" aria-labelledby="intereses-title">
           <div class="numero-pregunta">03 / 03</div>
           <h2 id="intereses-title">¿Qué te <em>mueve?</em></h2>
           <p>Elegí uno o más intereses para priorizar lugares del catálogo.</p>
@@ -153,7 +153,7 @@
                 @for (tramo of tramosDelEvento(diaIndex + 1, eventoIndex); track tramo.servicio_id + tramo.dia) {
                   <ng-container [ngTemplateOutlet]="tramoVista" [ngTemplateOutletContext]="{ tramo: tramo }"></ng-container>
                 }
-                <article class="evento">
+                <article class="evento" [style.--evento-delay]="(eventoIndex * 90) + 'ms'">
                   <span class="evento-hora">{{ evento.hora }}</span>
                   <div class="evento-detalle">
                     <a [routerLink]="['/lugares', evento.lugar]">{{ evento.nombre || evento.lugar }}</a>

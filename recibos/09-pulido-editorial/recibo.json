@@ -1,0 +1,12 @@
+{
+  "slice": "09-pulido-editorial",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "26d5cb9",
+  "verificado": "2026-11-06T19:49:22-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 16,
+  "juez": "sin juez",
+  "cerrado": true,
+  "motivo": ""
+}
