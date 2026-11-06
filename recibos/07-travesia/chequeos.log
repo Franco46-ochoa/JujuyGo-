@@ -1,0 +1,89 @@
+### tests: test ! -f package.json || npm test
+### fin tests (ok=true)
+
+### tests-front: test ! -d frontend || (cd frontend && npm test -- --watch=false)
+
+> frontend@0.0.0 test
+> ng test --watch=false
+
+❯ Building...
+✔ Building...
+Application bundle generation complete. [9.442 seconds] - 2026-11-06T16:35:05.531Z
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/Elect/orca/projects/JujuyGo/.slices/07-travesia/frontend[39m
+
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+[2m   Start at [22m 13:35:07
+[2m   Duration [22m 25.37s[2m (environment 77%, setup 15%, transform 3%, tests 2%, import 2%)[22m
+
+### fin tests-front (ok=true)
+
+### tests-back: test ! -d backend || (cd backend && npm test)
+
+> jujuygo-backend@0.1.0 test
+> node --test
+
+sin migraciones nuevas
+▶ API de catálogo
+  ✔ lista las cuatro zonas con un lugar destacado (483.184ms)
+  ✔ el detalle de zona incluye sus lugares (37.2311ms)
+  ✔ lista todos los lugares sembrados (30.5002ms)
+  ✔ filtra lugares por zona (30.5503ms)
+  ✔ responde 404 para un lugar inexistente (23.4811ms)
+  ✔ detalle expone todos los campos de catálogo (21.7065ms)
+  ✔ el seed puede aplicarse varias veces sin duplicar registros (48.7096ms)
+✔ API de catálogo (1041.8362ms)
+✔ GET /health responde ok (141.2491ms)
+▶ motor de validación de travesía
+  ✔ valida un día que llega a Tilcara y toma el regreso dentro del horario (12.2313ms)
+  ✔ detecta que el regreso de Humahuaca no llega antes del cierre y sugiere una alternativa (2.4513ms)
+  ✔ mapea Purmamarca al cruce y nunca afirma que el colectivo llega al pueblo (0.9471ms)
+  ✔ advierte el traslado local desde Humahuaca hasta Hornocal (0.9004ms)
+  ✔ detecta eventos superpuestos aun cuando ocurren en la misma parada (2.1512ms)
+  ✔ no permite que una visita se prolongue al día siguiente (1.0859ms)
+  ✔ marca como conflicto un tramo para el que no hay servicio cargado (0.9164ms)
+✔ motor de validación de travesía (25.9866ms)
+Seed de transporte RN9 completado con éxito.
+▶ Transporte y horarios RN9 (Slice 04)
+  ▶ Orden de paradas
+    ✔ GET /api/transporte/paradas devuelve lista completa en orden estricto de ruta (262.3725ms)
+    ✔ GET /api/transporte/paradas con línea inexistente devuelve 404 (21.8911ms)
+  ✔ Orden de paradas (287.9682ms)
+  ▶ Regla crítica: Cruce ≠ Pueblo
+    ✔ Purmamarca Cruce tiene tipo="cruce" y notas explicativas diferenciadas del pueblo (18.9968ms)
+    ✔ La base de datos rechaza tipos de parada no válidos (11.6203ms)
+  ✔ Regla crítica: Cruce ≠ Pueblo (31.8504ms)
+  ▶ Cálculo de próximos servicios
+    ✔ GET /api/transporte/proximos?origen=terminal-jjs&destino=tilcara devuelve servicios con hora estimada (185.6734ms)
+    ✔ GET /api/transporte/proximos dirección vuelta (Humahuaca -> SS.Jujuy) (20.2158ms)
+    ✔ GET /api/transporte/proximos con filtro ?hora=12:00 devuelve solo salidas posteriores (19.8706ms)
+    ✔ Validación de errores en parámetros origen y destino (36.6216ms)
+  ✔ Cálculo de próximos servicios (263.9803ms)
+  ▶ Confianza y fuente presente en cada horario
+    ✔ Ningún horario en la DB carece de fuente o confianza (3.9991ms)
+    ✔ Todos los valores de confianza son válidos ("publicado", "estimado" o "tiempo-real") (2.1388ms)
+    ✔ Tramos que incluyen paradas intermedias sin boletería oficial marcan confianza="estimado" (19.1282ms)
+  ✔ Confianza y fuente presente en cada horario (26.0123ms)
+Seed de transporte RN9 completado con éxito.
+  ▶ Idempotencia del seed
+    ✔ Ejecutar el seed nuevamente no duplica registros (413.1792ms)
+  ✔ Idempotencia del seed (414.3275ms)
+✔ Transporte y horarios RN9 (Slice 04) (2075.5212ms)
+▶ POST /api/travesia/validar
+  ✔ devuelve los tramos RN9 reales que permiten completar el plan (283.1903ms)
+  ✔ propone una corrección cuando el regreso no llega antes de la hora de cierre (42.3279ms)
+  ✔ rechaza planes incompletos (40.7367ms)
+✔ POST /api/travesia/validar (372.9863ms)
+ℹ tests 30
+ℹ suites 9
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4245.0248
+### fin tests-back (ok=true)
+

@@ -1,0 +1,65 @@
+Sos el ejecutor del slice 07-travesia de este repo. Estás parado en el worktree del
+slice: trabajá acá y solo acá.
+
+Leé AGENTS.md y seguí sus reglas. Implementá el SPEC que sigue, completo:
+el código, y los tests que exige. Corré los chequeos del proyecto antes de
+terminar y arreglá lo que rompas.
+
+No hagas git commit ni git push. No toques archivos fuera del alcance.
+
+Terminá tu respuesta con este bloque, honesto:
+
+===RECIBO===
+hecho: <qué quedó implementado>
+archivos: <lista>
+chequeos: <qué corriste y con qué resultado>
+gaps: <qué NO quedó o no pudiste verificar; "ninguno" solo si es verdad>
+===FIN===
+
+Guardá ese mismo bloque en recibos/07-travesia/recibo-agente.md antes de terminar.
+
+
+──────────── SPEC ────────────
+# Slice 07 — Travesía por rango de fechas con validación de horarios (issue #7, feature ITI)
+
+**Depende de:** 03-catalogo + 04-horarios (ambos mergeados)
+**Fuente:** GitHub issue #7 — `gh issue view 7`
+**Alcance de archivos:** `backend/` (lógica de itinerario + endpoints), `frontend/` (wizard + vistas de plan), `backend/migrations/` solo si hace falta tabla `travesia`/`travesia_item` para persistencia mínima (si se incluye; si no, el estado vive en el front por ahora — decidir y justificar en el recibo). NO tocar `docs/`, `specs/`, `slices.conf`.
+
+## Contexto que hay que leer primero
+
+- `docs/design.md` — modelo de interacción (momentos 2-3: Armar/Viajar) y capa IA (yapas vienen en #8, NO implementarlas)
+- `docs/scope.md` — ITI
+- `docs/mockups/mock-04.html` — referencia visual
+- `backend/src/routes/catalogo.js` + `transporte.js` + `db.js` — patrones existentes (router + query)
+- `backend/migrations/001-zonas-lugares.sql` y `002-transporte.sql` — schema real disponible
+- Endpoints existentes: `/api/zonas`, `/api/lugares`, `/api/transporte/paradas`, `/api/transporte/proximos`
+
+## Qué tiene que pasar
+
+### Backend — motor de itinerario
+
+1. Lógica pura testeable (`backend/src/itinerario/` o similar): dado un plan (días × eventos con lugar+hora estimada) y los horarios RN9, valida que **cierre**: para cada tramo lugar→lugar calcula si hay transporte que llegue a tiempo (usando paradas/horarios reales del seed) y marca conflictos.
+2. Endpoint `POST /api/travesia/validar`: recibe el plan propuesto, devuelve plan validado + lista de conflictos con propuesta de corrección ("último bondi a Hornocal 15:00 → mové a la mañana").
+3. (Opcional, justificar) persistencia mínima de travesía si entra limpio; si no, skip.
+
+### Frontend — wizard + plan
+
+4. Ruta `/travesia` — wizard de 3 preguntas: fechas (rango) → llegada (avión/terminal/auto) → intereses (paisaje/cultura/aventura). Genera propuesta inicial de plan día por día con lugares del catálogo.
+5. Vista del plan: días como secciones editoriales; cada día = eventos con hora + transporte entre ellos (datos de `/api/transporte/proximos` donde aplique).
+6. Edición: mover evento entre días / borrar. Cada cambio llama a `/api/travesia/validar` y muestra conflictos inline con la propuesta de corrección.
+7. Estilo: patrones de mock-04 (filas editoriales, banda operativa verde para el día activo). SIN la IA de yapas (eso es #8).
+
+## Criterios de aceptación
+
+- [ ] `POST /api/travesia/validar` detecta al menos: evento que no llega a tiempo de vuelta, tramo sin transporte, y propone corrección
+- [ ] Tests del motor de validación (casos: plan que cierra, plan que no cierra, cruce≠pueblo respetado)
+- [ ] Wizard genera plan multi-día desde fechas+intereses
+- [ ] Editar el plan re-valida y muestra conflicto con propuesta
+- [ ] `npm test` verde en backend y frontend; `npm run build` OK
+- [ ] kero-audit del flujo wizard+plan
+
+## Fuera de alcance
+
+- Yapas/IA (#8), guardar/compartir (#10), mapa dentro del plan (#5 puede integrarse después), pagos, auth.
+- NO commitear.

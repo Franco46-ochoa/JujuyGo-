@@ -1,6 +1,7 @@
 import express from 'express';
 import pg from 'pg';
 import { createCatalogoRouter } from './routes/catalogo.js';
+import { createTravesiaRouter } from './routes/travesia.js';
 import transporteRouter from './routes/transporte.js';
 
 export function createApp({ pool = new pg.Pool({
@@ -15,12 +16,13 @@ export function createApp({ pool = new pg.Pool({
 
   app.use('/api', (req, res, next) => {
     res.set('Access-Control-Allow-Origin', '*');
-    res.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.set('Access-Control-Allow-Headers', 'Content-Type');
     if (req.method === 'OPTIONS') return res.sendStatus(204);
     next();
   });
   app.use('/api', createCatalogoRouter(pool));
+  app.use('/api', createTravesiaRouter(pool));
   app.use('/api', transporteRouter);
   app.use(transporteRouter);
   app.use((error, _req, res, _next) => {

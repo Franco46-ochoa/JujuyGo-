@@ -36,7 +36,8 @@ a:focus-visible, button:focus-visible {
   outline-offset: 4px;
 }
 
-a[href], button { touch-action: manipulation; }
+a[href], button, select, .mover-evento { touch-action: manipulation; }
+.status-error a { color: var(--oxido); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
