@@ -3,6 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { CatalogoService } from '../catalogo.service';
 import { Lugar, Zona } from '../catalogo.types';
+import { HospedajeService } from '../hospedaje.service';
+import { TravesiaService } from '../travesia/travesia.service';
 import { HomePage } from './home';
 
 const zonas: Zona[] = ['quebrada', 'puna', 'yungas', 'valles'].map((slug, index) => ({
@@ -36,6 +38,19 @@ const lugares: Lugar[] = [{
   datos_json: { localidad: 'Purmamarca' },
 }];
 
+const hospedajes = [{
+  id: 1,
+  nombre: 'Hotel de prueba',
+  slug: 'hotel-de-prueba',
+  tipo: 'hotel' as const,
+  localidad: 'Tilcara',
+  zona_slug: 'quebrada',
+  descripcion: null,
+  contacto_url: null,
+  fuente: 'por verificar',
+  verificado: false,
+}];
+
 describe('HomePage', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -47,6 +62,32 @@ describe('HomePage', () => {
           useValue: {
             getZonas: () => of(zonas),
             getLugares: () => of(lugares),
+          },
+        },
+        {
+          provide: HospedajeService,
+          useValue: {
+            getHospedajes: () => of(hospedajes),
+            getGuias: () => of([]),
+          },
+        },
+        {
+          provide: TravesiaService,
+          useValue: {
+            getProximos: () => of({
+              origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
+              destino: { slug: 'tilcara', nombre: 'Tilcara' },
+              direccion: 'ida',
+              servicios: [{
+                servicio_id: 'servicio-1',
+                linea_nombre: 'RN9',
+                hora_salida: '08:00',
+                hora_llegada: '09:35',
+                confianza: 'publicado',
+                fuente: 'horario de prueba',
+                duracion_minutos: 95,
+              }],
+            }),
           },
         },
       ],
@@ -123,5 +164,21 @@ describe('HomePage', () => {
 
     const imperdibleRow = fixture.nativeElement.querySelector('.place-row') as HTMLElement;
     expect(imperdibleRow.classList.contains('place-row-active')).toBe(true);
+  });
+
+  it('renders editorial moments and keeps lodging, guide and transit data honest', async () => {
+    const fixture = TestBed.createComponent(HomePage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Un viaje en cuatro movimientos');
+    expect(fixture.nativeElement.textContent).toContain('Un viaje no es una sucesión de visitas, es la historia que se cuenta después.');
+    expect(fixture.nativeElement.textContent).toContain('Hotel de prueba');
+    expect(fixture.nativeElement.textContent).toContain('Pendiente de verificar · Fuente: por verificar');
+    expect(fixture.nativeElement.textContent).toContain('No mostramos nombres sin una fuente confiable.');
+    expect(fixture.nativeElement.querySelector('.guides-empty a')?.getAttribute('href')).toBe('https://turismo.jujuy.gob.ar/');
+    expect(fixture.nativeElement.textContent).toContain('08:00');
+    expect(fixture.nativeElement.textContent).toContain('horario de prueba');
   });
 });

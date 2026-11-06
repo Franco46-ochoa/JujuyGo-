@@ -1,0 +1,17 @@
+ backend/migrations/003-hospedaje.sql          |  40 +++++
+ backend/src/index.js                          |   2 +
+ backend/src/routes/hospedaje.js               |  34 +++++
+ backend/test/hospedaje.test.js                |  67 +++++++++
+ frontend/src/app/home/home.css                | 202 ++++++++++++++++++++++++++
+ frontend/src/app/home/home.html               | 146 +++++++++++++++++++
+ frontend/src/app/home/home.spec.ts            |  57 ++++++++
+ frontend/src/app/home/home.ts                 |  90 ++++++++++++
+ frontend/src/app/hospedaje.service.ts         |  20 +++
+ frontend/src/app/hospedaje.types.ts           |  21 +++
+ frontend/src/app/travesia/travesia-motion.css |  40 +++++
+ frontend/src/app/travesia/travesia.css        |   1 +
+ frontend/src/app/travesia/travesia.html       |  14 +-
+ frontend/src/app/travesia/travesia.types.ts   |   1 +
+ frontend/src/styles.css                       |   1 +
+ specs/09-pulido-editorial.spec.md             |  80 ++++++++++
+ 16 files changed, 809 insertions(+), 7 deletions(-)

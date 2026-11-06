@@ -4,6 +4,10 @@ import { DecimalPipe } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { CatalogoService } from '../catalogo.service';
 import { Lugar, Zona } from '../catalogo.types';
+import { HospedajeService } from '../hospedaje.service';
+import { Guia, Hospedaje } from '../hospedaje.types';
+import { TravesiaService } from '../travesia/travesia.service';
+import { RespuestaProximos } from '../travesia/travesia.types';
 import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
 
 @Component({
@@ -17,17 +21,29 @@ import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
 })
 export class HomePage {
   private readonly catalogo = inject(CatalogoService);
+  private readonly hospedajeService = inject(HospedajeService);
+  private readonly travesiaService = inject(TravesiaService);
 
   protected readonly zonas = signal<Zona[]>([]);
   protected readonly lugares = signal<Lugar[]>([]);
+  protected readonly hospedajes = signal<Hospedaje[]>([]);
+  protected readonly guias = signal<Guia[]>([]);
+  protected readonly proximos = signal<RespuestaProximos | null>(null);
   protected readonly lugarSeleccionado = signal<Lugar | null>(null);
   protected readonly zonaAbierta = signal<Zona | null>(null);
   protected readonly navFijada = signal(false);
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal('');
+  protected readonly hospedajesLoading = signal(true);
+  protected readonly hospedajesError = signal('');
+  protected readonly guiasLoading = signal(true);
+  protected readonly guiasError = signal('');
+  protected readonly transporteLoading = signal(true);
+  protected readonly transporteError = signal('');
 
   constructor() {
     this.cargarCatalogo();
+    this.cargarDatosEditoriales();
   }
 
   protected cargarCatalogo(): void {
@@ -47,6 +63,65 @@ export class HomePage {
         this.loading.set(false);
       },
     });
+  }
+
+  protected cargarHospedajes(): void {
+    this.hospedajesLoading.set(true);
+    this.hospedajesError.set('');
+    this.hospedajeService.getHospedajes('quebrada').subscribe({
+      next: hospedajes => {
+        this.hospedajes.set(hospedajes);
+        this.hospedajesLoading.set(false);
+      },
+      error: () => {
+        this.hospedajesError.set('No pudimos cargar los hospedajes. Revisá tu conexión e intentá de nuevo.');
+        this.hospedajesLoading.set(false);
+      },
+    });
+  }
+
+  protected cargarGuias(): void {
+    this.guiasLoading.set(true);
+    this.guiasError.set('');
+    this.hospedajeService.getGuias().subscribe({
+      next: guias => {
+        this.guias.set(guias);
+        this.guiasLoading.set(false);
+      },
+      error: () => {
+        this.guiasError.set('No pudimos consultar los registros de guías. Revisá tu conexión e intentá de nuevo.');
+        this.guiasLoading.set(false);
+      },
+    });
+  }
+
+  protected cargarTransporte(): void {
+    this.transporteLoading.set(true);
+    this.transporteError.set('');
+    this.travesiaService.getProximos('terminal-jjs', 'tilcara', this.horaActualJujuy()).subscribe({
+      next: proximos => {
+        this.proximos.set(proximos);
+        this.transporteLoading.set(false);
+      },
+      error: () => {
+        this.transporteError.set('No pudimos cargar los próximos servicios publicados. Revisá tu conexión e intentá de nuevo.');
+        this.transporteLoading.set(false);
+      },
+    });
+  }
+
+  protected etiquetaHospedaje(tipo: Hospedaje['tipo']): string {
+    return {
+      hotel: 'Hotel',
+      hosteria: 'Hostería',
+      posada: 'Posada',
+      refugio: 'Refugio',
+      camping: 'Camping',
+    }[tipo];
+  }
+
+  protected iniciales(nombre: string): string {
+    return nombre.split(/\s+/).slice(0, 2).map(parte => parte[0]).join('');
   }
 
   protected fotoUrl(foto: string | null | undefined): string {
@@ -105,5 +180,20 @@ export class HomePage {
   protected lugaresDeZona(zona: Zona | null): Lugar[] {
     if (!zona) return [];
     return this.lugares().filter(lugar => lugar.zona_slug === zona.slug);
+  }
+
+  private cargarDatosEditoriales(): void {
+    this.cargarHospedajes();
+    this.cargarGuias();
+    this.cargarTransporte();
+  }
+
+  private horaActualJujuy(): string {
+    return new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'America/Argentina/Jujuy',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).format(new Date());
   }
 }

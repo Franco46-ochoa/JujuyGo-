@@ -1,0 +1,80 @@
+# Slice 09 — Pulido editorial: momentos mock-04 + interacciones + hospedaje/guías
+
+**Depende de:** todo lo mergeado hasta `26d5cb9` (master).
+**Alcance de archivos:** `frontend/` completo, `backend/migrations/` (solo ARCHIVO NUEVO `003-hospedaje.sql`), `backend/src/routes/` (archivo nuevo), `backend/src/index.js` (solo registrar router), `backend/test/` (archivos nuevos). NO tocar `docs/`, `specs/`, `slices.conf`, ni migraciones existentes.
+
+## Contexto que hay que leer primero
+
+- `docs/mockups/mock-04.html` — la referencia aprobada. El objetivo es FIDELIDAD editorial.
+- `docs/design.md` — tokens y tono.
+- `frontend/src/app/home/*` — Home actual (ya tiene hero, zonas con panel-overlay, mapa, imperdibles con thumbs).
+- `frontend/src/app/travesia/*` — wizard + plan a pulir con interacción.
+- `backend/src/routes/catalogo.js` + `transporte.js` — patrón de routers existente.
+- `backend/migrations/001-zonas-lugares.sql`, `002-transporte.sql` — patrón de migraciones (idempotentes).
+
+## Qué tiene que pasar
+
+### A. Momentos editoriales del mock-04 (Home)
+
+El home actual se siente "plano" porque perdió los momentos de revista del mock. Restaurar:
+
+1. **"Un viaje en cuatro movimientos"** — sección después del hero/zonas: 4 columnas numeradas
+   (Imaginá / Armalo / Vivilo / Acordate) con microcopy del mock. Tipográfica, sin cards.
+2. **Franja full-bleed con cita** — imagen grande (reusar `puna.jpg` u otra de `public/img/`)
+   con la cita del mock: "Un viaje no es una sucesión de visitas, es la historia que se cuenta
+   después." Texto serif grande centrado con velo legible.
+3. **"Base de operaciones"** — sección de hospedajes alimentada por la nueva API (ver B).
+   Estilo del mock: lista/cards editoriales con tipo, localidad y nombre serif. NO inventar
+   fotos de hoteles: diseño tipográfico (marca/iniciales como en los guías del mock) o
+   usando fotos de la zona solo como fondo atmosférico, nunca como "foto del hotel".
+4. **"Los que conocen el cerro"** — bloque de guías (ver B). Si hay datos: listado tipográfico
+   con iniciales grandes como el mock. SIEMPRE marcar la fuente/estado del dato.
+5. **Franja verde oscuro "El plan que respeta el reloj del colectivo"** — banda antes del footer
+   con fondo `--verde`, texto serif grande y una micro-tabla horaria real usando el endpoint
+   de transporte existente (los datos de ejemplo del mock están bien como decoración, pero
+   si se muestran horarios tienen que venir de `/api/transporte/...` o ir marcados como
+   "ejemplo"). Preferir consumir el endpoint real de próximos servicios.
+
+### B. Hospedaje y guías (datos reales, sin inventar)
+
+- Migración `003-hospedaje.sql` (idempotente): tabla `hospedaje`
+  (id, nombre, slug, tipo [hotel|hosteria|posada|refugio|camping], localidad, zona_slug,
+  descripcion, contacto_url, fuente, verificado boolean) y tabla `guia`
+  (id, nombre, zona_slug, especialidad, fuente, verificado).
+- Seed SOLO con datos que puedas verificar en conocimiento general sólido
+  (ej. Hotel Huacalera, Las Terrazas Purmamarca, La Comarca Purmamarca,
+  El Reposo del Diablo Tilcara, Posada Con Los Ángeles Tilcara, Vientonorte Tilcara).
+  Campos `verificado=false` y `fuente='por verificar'` si hay duda. PROHIBIDO inventar
+  precios, teléfonos, emails ni nombres de guías. Si no hay guías reales confiables, la
+  tabla queda con seed vacío o con una entrada apuntando al registro provincial de guías
+  (turismo.jujuy.gob.ar) como fuente.
+- GET `/api/hospedajes` y `/api/hospedajes?zona=`, GET `/api/guias` — mismo patrón que
+  catálogo (pool inyectado, CORS ya existe).
+- Frontend: service + types + secciones Home anteriores. Nombres reales solo;
+  "consultá disponibilidad" en vez de precios.
+
+### C. Interacción en `/travesia`
+
+- Transiciones de entrada entre pasos del wizard (fade+slide suave, respeta reduced-motion).
+- Animación de la barra/pasos del progreso al avanzar.
+- En el plan generado: entrada escalonada (stagger) de los días/eventos al aparecer.
+- Botones con feedback hover/active claro; los conflictos se destacan con una entrada
+   distinta (ej. borde óxido + aparición suave).
+- Mantener la estética editorial: nada de spinners genéricos ni confetti.
+
+## Criterios de aceptación
+
+- [ ] `npm test` frontend verde (incluye tests nuevos de lo que agregues)
+- [ ] `npm test` backend verde (tests del endpoint nuevo: 200 con datos, filtro por zona, vacío OK)
+- [ ] `npm run build` OK
+- [ ] Home muestra: movimientos, cita full-bleed, base de operaciones (con datos de la API),
+      guías, banda verde del reloj — todo legible y editorial
+- [ ] `/travesia` con transiciones visibles pero discretas
+- [ ] NINGÚN dato inventado como real (hoteles/guías con fuente honesta)
+- [ ] kero-audit de `/` y `/travesia` en 390x844 y 1440x900 sin hard fails ni errores de consola
+
+## Fuera de alcance
+
+- CRUD de hospedaje/guías, reservas, contacto directo (eso es #9 completo si hace falta después)
+- Login/persistencia
+- NO commitear.

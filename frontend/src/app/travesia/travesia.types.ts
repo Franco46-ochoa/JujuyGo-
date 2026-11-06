@@ -65,6 +65,7 @@ export interface ResultadoValidacion {
 
 export interface ServicioProximo {
   servicio_id: string;
+  linea_nombre?: string;
   hora_salida: string;
   hora_llegada: string;
   confianza: string;
