@@ -1,3 +1,5 @@
+@import './app/home/home.css';
+
 :root {
   --tinta: #241610;
   --papel: #F4EDE3;
@@ -15,6 +17,7 @@
 * { margin: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
+body { min-width: 320px; }
 
 body {
   background: var(--papel);
@@ -26,3 +29,14 @@ body {
 ::selection { background: var(--oxido); color: #fff; }
 
 .serif { font-family: var(--serif); }
+
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--oxido);
+  outline-offset: 4px;
+}
+
+a[href], button { touch-action: manipulation; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

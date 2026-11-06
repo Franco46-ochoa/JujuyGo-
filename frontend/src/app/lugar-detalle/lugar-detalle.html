@@ -1,0 +1,62 @@
+<main class="detail-page">
+  <nav class="detail-nav" aria-label="Navegación">
+    <a class="detail-brand" routerLink="/">Yapa<span></span></a>
+    <a class="back-link" routerLink="/">← Volver a explorar</a>
+  </nav>
+
+  @if (loading()) {
+    <p class="detail-status" role="status">Cargando lugar…</p>
+  } @else if (errorMessage()) {
+    <div class="detail-status detail-error" role="alert">
+      <h1 class="serif">No pudimos mostrar el lugar</h1>
+      <p>{{ errorMessage() }}</p>
+      @if (errorMessage().includes('conexión')) {
+        <button type="button" (click)="reintentar()">Reintentar</button>
+      }
+    </div>
+  } @else if (lugar(); as lugar) {
+    <article>
+      <header class="detail-hero">
+        @if (lugar.foto) {
+          <img [src]="fotoUrl(lugar.foto)" [alt]="lugar.nombre">
+        }
+        <div class="detail-veil"></div>
+        <div class="detail-title">
+          <p class="detail-kicker">{{ lugar.zona }} · {{ lugar.datos_json.localidad || 'Jujuy' }}</p>
+          <h1 class="serif">{{ lugar.nombre }}</h1>
+          @if (lugar.altitud_m) {
+            <p class="detail-altitude">{{ lugar.altitud_m | number }} m sobre el nivel del mar</p>
+          }
+        </div>
+      </header>
+
+      <div class="detail-content">
+        <p class="detail-description">{{ lugar.descripcion }}</p>
+        @if (lugar.datos_json.nota) {
+          <p class="detail-note">{{ lugar.datos_json.nota }}</p>
+        }
+
+        <section class="detail-facts" aria-label="Información del lugar">
+          <div class="detail-fact">
+            <h2>Cómo llegar</h2>
+            <p>{{ lugar.como_llegar }}</p>
+          </div>
+          <div class="detail-fact">
+            <h2>Mejor época</h2>
+            <p>{{ lugar.mejor_epoca }}</p>
+          </div>
+          <div class="detail-fact">
+            <h2>Ubicación</h2>
+            <p>{{ lugar.lat | number:'1.4-4' }}°, {{ lugar.lng | number:'1.4-4' }}°</p>
+          </div>
+          <div class="detail-fact">
+            <h2>Zona</h2>
+            <p>{{ lugar.zona }}</p>
+          </div>
+        </section>
+
+        <a class="detail-return" routerLink="/">Seguí explorando Jujuy <span aria-hidden="true">→</span></a>
+      </div>
+    </article>
+  }
+</main>
