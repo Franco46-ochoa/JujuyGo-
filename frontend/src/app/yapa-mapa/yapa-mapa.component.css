@@ -24,9 +24,9 @@
   background: var(--papel, #F4EDE3);
 }
 
-/* Filtro cálido sobre tiles (CARTO Positron) */
+/* Filtro cálido sobre tiles (raster OSM estándar) */
 :host ::ng-deep .leaflet-tile-pane {
-  filter: sepia(22%) saturate(82%) contrast(97%) brightness(99%);
+  filter: sepia(30%) saturate(76%) contrast(96%) brightness(99%) hue-rotate(-8deg);
 }
 
 /* Controles de zoom con contraste y tamaño táctil de 44px */

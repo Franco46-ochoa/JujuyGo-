@@ -10,6 +10,10 @@ import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
   imports: [DecimalPipe, RouterLink, YapaMapaComponent],
   selector: 'app-home',
   templateUrl: './home.html',
+  host: {
+    '(window:scroll)': 'onScroll()',
+    '(document:keydown.escape)': 'cerrarZona()',
+  },
 })
 export class HomePage {
   private readonly catalogo = inject(CatalogoService);
@@ -17,6 +21,8 @@ export class HomePage {
   protected readonly zonas = signal<Zona[]>([]);
   protected readonly lugares = signal<Lugar[]>([]);
   protected readonly lugarSeleccionado = signal<Lugar | null>(null);
+  protected readonly zonaAbierta = signal<Zona | null>(null);
+  protected readonly navFijada = signal(false);
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal('');
 
@@ -73,5 +79,31 @@ export class HomePage {
    */
   protected onClickLugarItem(lugar: Lugar): void {
     this.lugarSeleccionado.set(lugar);
+  }
+
+  /**
+   * La píldora de navegación acompaña el scroll: cambia de estilo hero
+   * (blanco sobre foto) a estilo papel (blur + tinta) al bajar.
+   */
+  protected onScroll(): void {
+    const y = typeof window === 'undefined' ? 0 : window.scrollY;
+    const fijada = y > 24;
+    if (fijada !== this.navFijada()) this.navFijada.set(fijada);
+  }
+
+  /**
+   * Abre el panel de zona en la misma página (sobre-ventana editorial).
+   */
+  protected abrirZona(zona: Zona): void {
+    this.zonaAbierta.set(zona);
+  }
+
+  protected cerrarZona(): void {
+    this.zonaAbierta.set(null);
+  }
+
+  protected lugaresDeZona(zona: Zona | null): Lugar[] {
+    if (!zona) return [];
+    return this.lugares().filter(lugar => lugar.zona_slug === zona.slug);
   }
 }

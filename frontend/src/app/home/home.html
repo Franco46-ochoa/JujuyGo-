@@ -1,7 +1,7 @@
 <header class="hero">
   <img class="hero-image" src="/img/purmamarca.jpg" alt="Cerro de los Siete Colores en Purmamarca">
   <div class="hero-veil" aria-hidden="true"></div>
-  <nav class="hero-nav" aria-label="Navegación principal">
+  <nav class="hero-nav" [class.fijada]="navFijada()" aria-label="Navegación principal">
     <a class="brand" routerLink="/" aria-label="Yapa, inicio">Yapa<span></span></a>
     <div class="pillnav">
       <a class="active" routerLink="/">Explorar</a>
@@ -44,11 +44,13 @@
     } @else {
       <div class="zone-collage">
         @for (zona of zonas(); track zona.slug; let index = $index) {
-          <a
+          <button
+            type="button"
             class="zone-card"
             [class.zone-card-large]="index === 0"
-            [routerLink]="zona.lugar_destacado ? ['/lugares', zona.lugar_destacado.slug] : ['/']"
+            (click)="abrirZona(zona)"
             [attr.aria-label]="'Explorar ' + zona.nombre"
+            [attr.aria-haspopup]="'dialog'"
           >
             <img
               [src]="fotoUrl(zona.lugar_destacado?.foto)"
@@ -67,7 +69,7 @@
               }
             </span>
             <span class="zone-arrow" aria-hidden="true">↗</span>
-          </a>
+          </button>
         } @empty {
           <p class="status">Todavía no hay zonas para mostrar.</p>
         }
@@ -159,6 +161,7 @@
             [routerLink]="['/lugares', lugar.slug]"
           >
             <span class="place-number">{{ index + 1 | number:'2.0-0' }}</span>
+            <img class="place-thumb" [src]="fotoUrl(lugar.foto)" [alt]="lugar.nombre" loading="lazy">
             <span class="place-title">
               <strong>{{ lugar.nombre }}</strong>
               <small>{{ lugar.zona }} · {{ lugar.datos_json.localidad || 'Jujuy' }}</small>
@@ -177,6 +180,40 @@
     }
   </section>
 </main>
+
+<!-- Panel de zona: se abre en la misma página, sin navegar -->
+@if (zonaAbierta(); as zona) {
+  <div class="zona-backdrop" (click)="cerrarZona()" aria-hidden="true"></div>
+  <aside class="zona-panel" role="dialog" aria-modal="true" [attr.aria-labelledby]="'panel-zona-' + zona.slug">
+    <button type="button" class="zona-cerrar" (click)="cerrarZona()" aria-label="Cerrar panel">×</button>
+
+    <div class="zona-panel-hero">
+      <img [src]="fotoUrl(zona.lugar_destacado?.foto)" [alt]="zona.lugar_destacado?.nombre || zona.nombre">
+      <div class="zona-panel-veil" aria-hidden="true"></div>
+      <div class="zona-panel-titulo">
+        <p class="kicker">Región · {{ lugaresDeZona(zona).length }} lugares</p>
+        <h2 [id]="'panel-zona-' + zona.slug">{{ zona.nombre }}</h2>
+        <p>{{ zona.descripcion }}</p>
+      </div>
+    </div>
+
+    <div class="zona-panel-lista">
+      <p class="zona-lista-titulo">Qué ver en {{ zona.nombre }}</p>
+      @for (lugar of lugaresDeZona(zona); track lugar.slug) {
+        <a class="zona-lugar" [routerLink]="['/lugares', lugar.slug]" (click)="cerrarZona()">
+          <img class="zona-lugar-foto" [src]="fotoUrl(lugar.foto)" [alt]="lugar.nombre" loading="lazy">
+          <span class="zona-lugar-info">
+            <strong>{{ lugar.nombre }}</strong>
+            <small>{{ lugar.datos_json.localidad || 'Jujuy' }}@if (lugar.altitud_m) { · {{ lugar.altitud_m | number }} msnm }</small>
+          </span>
+          <span class="zona-lugar-arrow" aria-hidden="true">→</span>
+        </a>
+      } @empty {
+        <p class="status">Todavía no hay lugares cargados en esta región.</p>
+      }
+    </div>
+  </aside>
+}
 
 <footer class="site-footer">
   <div class="footer-top">

@@ -108,16 +108,13 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
         zoomControl: !this.modoMini(),
       });
 
-      // CARTO Positron: estética editorial, clara, sobria; sin saturación chillona
-      L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: 'abcd',
-          maxZoom: 19,
-        },
-      ).addTo(this.map);
+      // Tiles raster de OpenStreetMap (CARTO Positron pasó a requerir API key);
+      // el tinte hacia la paleta Yapa se aplica con filtro CSS sobre .leaflet-tile-pane
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(this.map);
 
       this.markersLayer = L.layerGroup().addTo(this.map);
 

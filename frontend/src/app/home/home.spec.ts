@@ -58,12 +58,34 @@ describe('HomePage', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
-    const cards = fixture.nativeElement.querySelectorAll('.zone-card') as NodeListOf<HTMLAnchorElement>;
+    const cards = fixture.nativeElement.querySelectorAll('.zone-card') as NodeListOf<HTMLButtonElement>;
 
     expect(cards.length).toBe(4);
     expect(cards[0].textContent).toContain('quebrada');
     expect(cards[0].textContent).toContain('Consultá los horarios vigentes.');
-    expect(cards[0].getAttribute('href')).toBe('/lugares/lugar-quebrada');
+    expect(cards[0].getAttribute('aria-haspopup')).toBe('dialog');
+  });
+
+  it('opens the zone panel in place when a zone card is clicked', async () => {
+    const fixture = TestBed.createComponent(HomePage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const card = fixture.nativeElement.querySelector('.zone-card') as HTMLButtonElement;
+    card.click();
+    fixture.detectChanges();
+
+    const panel = fixture.nativeElement.querySelector('.zona-panel') as HTMLElement;
+    expect(panel).toBeTruthy();
+    expect(panel.getAttribute('role')).toBe('dialog');
+    expect(panel.textContent).toContain('quebrada');
+    expect(panel.textContent).toContain('Cerro de prueba');
+
+    const cerrar = panel.querySelector('.zona-cerrar') as HTMLButtonElement;
+    cerrar.click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.zona-panel')).toBeNull();
   });
 
   it('renders a place detail link in the highlights list', async () => {
