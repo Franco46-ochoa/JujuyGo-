@@ -1,0 +1,28 @@
+:root {
+  --tinta: #241610;
+  --papel: #F4EDE3;
+  --arena: #EDE2D0;
+  --oxido: #B5492A;
+  --ocre: #C9A86A;
+  --verde: #2E4A3E;
+  --t60: rgba(36, 22, 16, 0.62);
+  --t30: rgba(36, 22, 16, 0.32);
+  --t14: rgba(36, 22, 16, 0.14);
+  --serif: "Fraunces", Georgia, serif;
+  --sans: "Archivo", system-ui, sans-serif;
+}
+
+* { margin: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--oxido); color: #fff; }
+
+.serif { font-family: var(--serif); }
