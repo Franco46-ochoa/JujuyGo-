@@ -1,0 +1,118 @@
+<header class="hero">
+  <img class="hero-image" src="/img/purmamarca.jpg" alt="Cerro de los Siete Colores en Purmamarca">
+  <div class="hero-veil" aria-hidden="true"></div>
+  <nav class="hero-nav" aria-label="Navegación principal">
+    <a class="brand" routerLink="/" aria-label="Yapa, inicio">Yapa<span></span></a>
+    <div class="pillnav">
+      <a class="active" routerLink="/">Explorar</a>
+      <a href="#zonas">Zonas</a>
+      <a href="#imperdibles">Imperdibles</a>
+    </div>
+    <a class="nav-cta" href="#zonas">Conocé Jujuy</a>
+  </nav>
+  <div class="hero-content">
+    <p class="eyebrow">Tu yapa para recorrer Jujuy</p>
+    <h1>El norte que<br><em>te queda</em></h1>
+    <p class="hero-copy">Los lugares que se sueñan, los bondis que sí pasan y el día que cierra. Todo en un solo plan.</p>
+    <a class="hero-cta" href="#zonas">Empezá a imaginar <span aria-hidden="true">→</span></a>
+  </div>
+  <div class="hero-caption">
+    <span>Quebrada de Humahuaca</span><span class="caption-rule" aria-hidden="true"></span>
+    <span>Patrimonio de la Humanidad</span>
+  </div>
+  <p class="hero-coordinates">23.1858° S — 65.2995° O · 2.324 m</p>
+</header>
+
+<main>
+  <section class="section" id="zonas" aria-labelledby="zones-title">
+    <div class="section-heading">
+      <div>
+        <p class="kicker">Las cuatro regiones</p>
+        <h2 id="zones-title">Cada zona es <em>otro país</em></h2>
+      </div>
+      <p class="section-intro">Del altiplano a la selva. Elegí la que te llama; cada lugar cuenta cómo llegar.</p>
+    </div>
+
+    @if (loading()) {
+      <p class="status" role="status">Cargando las zonas de Jujuy…</p>
+    } @else if (errorMessage()) {
+      <div class="status status-error" role="alert">
+        <p>{{ errorMessage() }}</p>
+        <button type="button" (click)="cargarCatalogo()">Reintentar</button>
+      </div>
+    } @else {
+      <div class="zone-collage">
+        @for (zona of zonas(); track zona.slug; let index = $index) {
+          <a
+            class="zone-card"
+            [class.zone-card-large]="index === 0"
+            [routerLink]="zona.lugar_destacado ? ['/lugares', zona.lugar_destacado.slug] : ['/']"
+            [attr.aria-label]="'Explorar ' + zona.nombre"
+          >
+            <img
+              [src]="fotoUrl(zona.lugar_destacado?.foto)"
+              [alt]="zona.lugar_destacado?.nombre || zona.nombre"
+              [attr.loading]="index === 0 ? 'eager' : 'lazy'"
+            >
+            <span class="zone-content">
+              <span class="zone-name">{{ zona.nombre }}</span>
+              <span class="zone-description">{{ zona.descripcion }}</span>
+              @if (zona.lugar_destacado; as lugar) {
+                <span class="zone-facts">
+                  @if (lugar.altitud_m) { <span>{{ lugar.altitud_m | number }} m</span> }
+                  <span>{{ lugar.nombre }}</span>
+                </span>
+                <span class="zone-arrival">{{ lugar.como_llegar }}</span>
+              }
+            </span>
+            <span class="zone-arrow" aria-hidden="true">↗</span>
+          </a>
+        } @empty {
+          <p class="status">Todavía no hay zonas para mostrar.</p>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="section highlights" id="imperdibles" aria-labelledby="highlights-title">
+    <div class="section-heading">
+      <div>
+        <p class="kicker">Imperdibles</p>
+        <h2 id="highlights-title">Los lugares que <em>se cuentan</em></h2>
+      </div>
+      <p class="section-intro">Con su dato honesto: cuánto toma, cómo se llega y cuándo conviene.</p>
+    </div>
+    @if (!loading() && !errorMessage()) {
+      <div class="place-list">
+        @for (lugar of lugares().slice(0, 6); track lugar.slug; let index = $index) {
+          <a class="place-row" [routerLink]="['/lugares', lugar.slug]">
+            <span class="place-number">{{ index + 1 | number:'2.0-0' }}</span>
+            <span class="place-title">
+              <strong>{{ lugar.nombre }}</strong>
+              <small>{{ lugar.zona }} · {{ lugar.datos_json.localidad || 'Jujuy' }}</small>
+            </span>
+            <span class="place-description">{{ lugar.descripcion }}</span>
+            <span class="place-meta">
+              <strong>{{ lugar.altitud_m ? (lugar.altitud_m | number) + ' m' : '—' }}</strong>
+              <span>{{ lugar.mejor_epoca }}</span>
+            </span>
+            <span class="place-arrow" aria-hidden="true">→</span>
+          </a>
+        } @empty {
+          <p class="status">Todavía no hay lugares para mostrar.</p>
+        }
+      </div>
+    }
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="footer-brand" routerLink="/">Yapa<span></span></a>
+    <p>El extra que te regala Jujuy: lugares que se sueñan, bondis que sí pasan, días que cierran.</p>
+  </div>
+  <div class="footer-bottom">
+    <span>Jujuy, Argentina</span>
+    <span>23.1858° S — 65.2995° O</span>
+  </div>
+</footer>

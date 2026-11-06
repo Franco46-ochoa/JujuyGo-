@@ -1,0 +1,72 @@
+Sos el ejecutor del slice 03-catalogo de este repo. Estás parado en el worktree del
+slice: trabajá acá y solo acá.
+
+Leé AGENTS.md y seguí sus reglas. Implementá el SPEC que sigue, completo:
+el código, y los tests que exige. Corré los chequeos del proyecto antes de
+terminar y arreglá lo que rompas.
+
+No hagas git commit ni git push. No toques archivos fuera del alcance.
+
+Terminá tu respuesta con este bloque, honesto:
+
+===RECIBO===
+hecho: <qué quedó implementado>
+archivos: <lista>
+chequeos: <qué corriste y con qué resultado>
+gaps: <qué NO quedó o no pudiste verificar; "ninguno" solo si es verdad>
+===FIN===
+
+Guardá ese mismo bloque en recibos/03-catalogo/recibo-agente.md antes de terminar.
+
+
+──────────── SPEC ────────────
+# Slice 03 — Catálogo: zonas + lugares (issue #3, feature ZON)
+
+**Depende de:** 01-andamio (mergeado)
+**Fuente:** GitHub issue #3 — `gh issue view 3`
+**Alcance de archivos:** `backend/` (migrations, src, test), `frontend/src/app/` (componentes nuevos, rutas, styles), `frontend/src/assets/` si hacen falta imágenes. NO tocar `docs/`, `specs/`, `slices.conf`, ni archivos del otro slice en paralelo.
+
+## Contexto que hay que leer primero
+
+- `docs/design.md` — sistema visual Yapa (tokens ya están en `frontend/src/styles.css`)
+- `docs/scope.md` — feature ZON
+- `docs/mockups/mock-04.html` — referencia visual de las secciones
+- `docs/mockups/assets/` — fotos reales ya descargadas (usar `assets/<nombre>.jpg`, copiar las necesarias a `frontend/src/assets/img/`)
+- `docs/mockups/assets/CREDITS.md` — licencias (mantener atribución si se usa una foto)
+- `backend/src/migrate.js` — runner de migraciones: agregá `backend/migrations/NNN-*.sql`
+- `backend/.env` — `DATABASE_URL` (dev) y `DATABASE_URL_TEST` (tests)
+
+## Qué tiene que pasar
+
+### Backend
+
+1. Migración `001-zonas-lugares.sql`: tablas `zona` (id, nombre, slug, descripcion, orden) y `lugar` (id, zona_id FK, nombre, slug, coords lat/lng, altitud_m, descripcion, como_llegar, mejor_epoca, foto, datos_json).
+2. Seed idempotente (`INSERT ... ON CONFLICT`) con:
+   - 4 zonas: Quebrada, Puna, Yungas, Valles
+   - ≥15 lugares reales: Cerro 7 Colores (Purmamarca), Garganta del Diablo (Tilcara), Pucará de Tilcara, Hornocal (Humahuaca), Salinas Grandes, Tren Solar (estación Volcán), Calilegua, Termas de Reyes/Jujuy, etc. Datos honestos: altitud, cómo se llega en transporte público, mejor época.
+3. Endpoints: `GET /api/zonas`, `GET /api/zonas/:slug`, `GET /api/lugares`, `GET /api/lugares?zona=<slug>`, `GET /api/lugares/:slug`. 404 correcto.
+4. Estructura: router en `backend/src/routes/catalogo.js`, registrado en `index.js` bajo `/api`.
+5. Tests con `node --test` contra `DATABASE_URL_TEST` (levantar schema con migrate.js apuntando a esa DB en el test o en `pretest`). Tests: listar zonas, filtrar lugares por zona, detalle 404, seed idempotente.
+
+### Frontend
+
+6. Home `/`: hero (foto Purmamarca a sangre + titular serif + pillnav + CTA, versión simplificada del mock-04 — sin mapa todavía) + collage asimétrico de zonas (1 grande + 3 laterales) con datos honestos.
+7. `/lugares/:slug`: página detalle con todos los campos del catálogo + mini-sección "cómo llegar" (texto por ahora; la ruta real es issue #6).
+8. Servicio Angular que consuma la API (`environment` o constante `API_URL` desde `src/environments/`).
+9. Assets: copiar a `frontend/src/assets/img/` solo las fotos usadas; guardar `CREDITS.md` junto a ellas.
+
+## Criterios de aceptación
+
+- [ ] `cd backend && npm run migrate` aplica la migración en dev y test DBs
+- [ ] `cd backend && npm test` verde (incluye tests de API con DB de test)
+- [ ] `cd frontend && npm test` verde
+- [ ] `npm start` en backend + `curl localhost:3000/api/zonas` devuelve las 4 zonas
+- [ ] Home muestra las 4 zonas con datos reales
+- [ ] Detalle de lugar renderiza descripción, altitud, cómo llegar, mejor época
+- [ ] Seed corre dos veces sin duplicar (idempotente)
+
+## Fuera de alcance
+
+- Mapa (issue #5), rutas de transporte (issue #4/#6), lodging/guias (#9), auth, deploy.
+- NO modificar `slices.conf`, `specs/`, `docs/` ni `docker-compose.yml`.
+- NO commitear: `./slices` se encarga.

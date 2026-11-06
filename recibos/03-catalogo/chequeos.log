@@ -1,0 +1,49 @@
+### tests: test ! -f package.json || npm test
+### fin tests (ok=true)
+
+### tests-front: test ! -d frontend || (cd frontend && npm test -- --watch=false)
+
+> frontend@0.0.0 test
+> ng test --watch=false
+
+❯ Building...
+✔ Building...
+Application bundle generation complete. [5.884 seconds] - 2026-11-06T13:33:55.749Z
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/Elect/orca/projects/JujuyGo/.slices/03-catalogo/frontend[39m
+
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m   Start at [22m 10:33:56
+[2m   Duration [22m 8.21s[2m (environment 62%, setup 20%, tests 7%, import 6%, transform 4%, worker 1%)[22m
+
+### fin tests-front (ok=true)
+
+### tests-back: test ! -d backend || (cd backend && npm test)
+
+> jujuygo-backend@0.1.0 test
+> node --test
+
+sin migraciones nuevas
+▶ API de catálogo
+  ✔ lista las cuatro zonas con un lugar destacado (177.8852ms)
+  ✔ el detalle de zona incluye sus lugares (20.3201ms)
+  ✔ lista todos los lugares sembrados (14.1204ms)
+  ✔ filtra lugares por zona (16.0006ms)
+  ✔ responde 404 para un lugar inexistente (12.372ms)
+  ✔ detalle expone todos los campos de catálogo (12.1492ms)
+  ✔ el seed puede aplicarse varias veces sin duplicar registros (50.4474ms)
+✔ API de catálogo (508.8267ms)
+✔ GET /health responde ok (85.4399ms)
+ℹ tests 8
+ℹ suites 1
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1569.0391
+### fin tests-back (ok=true)
+

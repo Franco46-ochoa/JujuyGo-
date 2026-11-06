@@ -1,0 +1,12 @@
+{
+  "slice": "03-catalogo",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "f37d147",
+  "verificado": "2026-11-06T10:34:10-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 33,
+  "juez": "sin juez",
+  "cerrado": true,
+  "motivo": ""
+}
