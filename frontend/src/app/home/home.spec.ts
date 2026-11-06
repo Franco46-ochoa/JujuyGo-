@@ -76,4 +76,30 @@ describe('HomePage', () => {
     expect(link.getAttribute('href')).toBe('/lugares/cerro-de-prueba');
     expect(link.textContent).toContain('Cerro de prueba');
   });
+
+  it('renders the interactive map section with the catalog places and syncs cross-selection', async () => {
+    const fixture = TestBed.createComponent(HomePage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const mapSection = fixture.nativeElement.querySelector('#mapa');
+    expect(mapSection).toBeTruthy();
+    expect(mapSection.textContent).toContain('El mapa de nuestras cuatro regiones');
+
+    const mapa = fixture.nativeElement.querySelector('yapa-mapa');
+    expect(mapa).toBeTruthy();
+
+    const placeCard = fixture.nativeElement.querySelector('.map-place-card') as HTMLElement;
+    expect(placeCard).toBeTruthy();
+    expect(placeCard.textContent).toContain('Cerro de prueba');
+
+    // Hover sincroniza selección Lista -> Mapa
+    placeCard.dispatchEvent(new MouseEvent('mouseenter'));
+    fixture.detectChanges();
+    expect(placeCard.classList.contains('active')).toBe(true);
+
+    const imperdibleRow = fixture.nativeElement.querySelector('.place-row') as HTMLElement;
+    expect(imperdibleRow.classList.contains('place-row-active')).toBe(true);
+  });
 });

@@ -30,7 +30,13 @@ describe('LugarDetallePage', () => {
       providers: [
         provideRouter([]),
         { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ slug: lugar.slug })) } },
-        { provide: CatalogoService, useValue: { getLugar: () => of(lugar) } },
+        {
+          provide: CatalogoService,
+          useValue: {
+            getLugar: () => of(lugar),
+            getLugares: () => of([lugar]),
+          },
+        },
       ],
     }).compileComponents();
   });
@@ -47,5 +53,17 @@ describe('LugarDetallePage', () => {
     expect(content).toContain('2,324 m');
     expect(content).toContain('23.7448');
     expect(content).toContain(lugar.datos_json.nota);
+  });
+
+  it('renders the mini-map section with the place coordinates and context', () => {
+    const fixture = TestBed.createComponent(LugarDetallePage);
+    fixture.detectChanges();
+
+    const mapSection = fixture.nativeElement.querySelector('.detail-map-section');
+    expect(mapSection).toBeTruthy();
+    expect(mapSection.textContent).toContain('En el mapa');
+
+    const mapaEl = fixture.nativeElement.querySelector('yapa-mapa');
+    expect(mapaEl).toBeTruthy();
   });
 });

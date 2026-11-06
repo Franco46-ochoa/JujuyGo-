@@ -1,0 +1,33 @@
+<div
+  class="yapa-mapa-container"
+  [class.yapa-mapa-mini]="modoMini()"
+  [style.height]="altura()"
+>
+  <div
+    #mapCanvas
+    class="yapa-mapa-canvas"
+    [attr.aria-label]="modoMini() ? 'Mini-mapa de ubicación territorial' : 'Mapa interactivo de lugares de Jujuy'"
+    role="region"
+  ></div>
+
+  <!-- Fallback semántico accesible para lectores de pantalla y navegación por teclado -->
+  <div class="sr-only" aria-live="polite">
+    <p>{{ lugares().length }} lugares en el mapa.</p>
+    <ul>
+      @for (cluster of clustersActivos(); track cluster.id) {
+        <li>
+          @if (cluster.isCluster) {
+            <button type="button" (click)="onClusterClick(cluster)">
+              Grupo {{ cluster.nombre }} ({{ cluster.count }} lugares). Clic para ampliar.
+            </button>
+          } @else if (cluster.lugares[0]; as lugar) {
+            <button type="button" (click)="seleccionarLugar(lugar)">
+              {{ lugar.nombre }} en {{ lugar.zona }}
+              @if (lugar.altitud_m) { ({{ lugar.altitud_m }} msnm) }
+            </button>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+### tests: test ! -f package.json || npm test
+### fin tests (ok=true)
+
+### tests-front: test ! -d frontend || (cd frontend && npm test -- --watch=false)
+
+> frontend@0.0.0 test
+> ng test --watch=false
+
+❯ Building...
+✔ Building...
+Application bundle generation complete. [5.608 seconds] - 2026-11-06T16:34:14.286Z
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/Elect/orca/projects/JujuyGo/.slices/05-mapa/frontend[39m
+
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m 13:34:15
+[2m   Duration [22m 12.47s[2m (environment 58%, setup 17%, tests 15%, transform 5%, import 5%)[22m
+
+### fin tests-front (ok=true)
+
+### tests-back: test ! -d backend || (cd backend && npm test)
+
+> jujuygo-backend@0.1.0 test
+> node --test
+
+sin migraciones nuevas
+▶ API de catálogo
+  ✔ lista las cuatro zonas con un lugar destacado (626.1086ms)
+  ✔ el detalle de zona incluye sus lugares (74.2685ms)
+  ✔ lista todos los lugares sembrados (83.3204ms)
+  ✔ filtra lugares por zona (86.4278ms)
+  ✔ responde 404 para un lugar inexistente (60.7068ms)
+  ✔ detalle expone todos los campos de catálogo (62.8083ms)
+  ✔ el seed puede aplicarse varias veces sin duplicar registros (54.5381ms)
+✔ API de catálogo (1833.9421ms)
+✔ GET /health responde ok (450.4786ms)
+Seed de transporte RN9 completado con éxito.
+▶ Transporte y horarios RN9 (Slice 04)
+  ▶ Orden de paradas
+    ✔ GET /api/transporte/paradas devuelve lista completa en orden estricto de ruta (457.6825ms)
+    ✔ GET /api/transporte/paradas con línea inexistente devuelve 404 (35.545ms)
+  ✔ Orden de paradas (500.785ms)
+  ▶ Regla crítica: Cruce ≠ Pueblo
+    ✔ Purmamarca Cruce tiene tipo="cruce" y notas explicativas diferenciadas del pueblo (52.4904ms)
+    ✔ La base de datos rechaza tipos de parada no válidos (18.669ms)
+  ✔ Regla crítica: Cruce ≠ Pueblo (74.1434ms)
+  ▶ Cálculo de próximos servicios
+    ✔ GET /api/transporte/proximos?origen=terminal-jjs&destino=tilcara devuelve servicios con hora estimada (374.5231ms)
+    ✔ GET /api/transporte/proximos dirección vuelta (Humahuaca -> SS.Jujuy) (43.6444ms)
+    ✔ GET /api/transporte/proximos con filtro ?hora=12:00 devuelve solo salidas posteriores (140.2965ms)
+    ✔ Validación de errores en parámetros origen y destino (59.6931ms)
+  ✔ Cálculo de próximos servicios (620.3662ms)
+  ▶ Confianza y fuente presente en cada horario
+    ✔ Ningún horario en la DB carece de fuente o confianza (5.7555ms)
+    ✔ Todos los valores de confianza son válidos ("publicado", "estimado" o "tiempo-real") (3.5465ms)
+    ✔ Tramos que incluyen paradas intermedias sin boletería oficial marcan confianza="estimado" (28.7286ms)
+  ✔ Confianza y fuente presente en cada horario (39.1808ms)
+Seed de transporte RN9 completado con éxito.
+  ▶ Idempotencia del seed
+    ✔ Ejecutar el seed nuevamente no duplica registros (533.9706ms)
+  ✔ Idempotencia del seed (534.9333ms)
+✔ Transporte y horarios RN9 (Slice 04) (3302.1754ms)
+ℹ tests 20
+ℹ suites 7
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6862.2231
+### fin tests-back (ok=true)
+
