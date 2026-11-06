@@ -17,13 +17,14 @@ Tesis (docs/research.md): el turista sin auto no puede armar un día real con tr
 | Code | Feature | Qué hace |
 |---|---|---|
 | MOV | Colectivos con horarios reales | Saber qué línea sirve el tramo, a qué hora pasa y cuándo vuelve |
+| RUT | "Cómo llegar" guiado | Paso a paso atractivo (aeropuerto/terminal → pueblo): qué colectivo tomar, dónde bajar, cuánto falta — como las indicaciones de un mapa pero para turista |
 | MAP | Mapa OSM/Leaflet | Ver atractivos, paradas y el itinerario sobre el mapa |
 
-### Armar el día
+### Armar el viaje
 
 | Code | Feature | Qué hace |
 |---|---|---|
-| ITI | Itinerario por día | Armar un día que cierra: qué colectivo, cuánto tiempo en cada parada, a qué hora volvés |
+| ITI | Itinerario por rango de fechas | "Voy del 5 al 10" → plan de varios días que cierra: qué colectivo, cuánto tiempo en cada parada, a qué hora volvés |
 | REC | Recomendaciones IA estructuradas | "Un día en Tilcara sin auto" → JSON que el front convierte en plan, no chat |
 
 ### Llevarlo
