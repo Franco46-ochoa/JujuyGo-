@@ -1,0 +1,4 @@
+ divide.js      | 9 +++++++++
+ divide.test.js | 6 ++++++
+ package.json   | 7 +++++++
+ 3 files changed, 22 insertions(+)
