@@ -1,0 +1,42 @@
+# Slice 04 — Horarios de colectivos RN9 (issue #4, feature MOV)
+
+**Depende de:** 01-andamio (mergeado)
+**Fuente:** GitHub issue #4 — `gh issue view 4`
+**Alcance de archivos:** `backend/` (migrations, src, test, scripts de seed). NO tocar `frontend/`, `docs/`, `specs/`, `slices.conf`.
+
+## Contexto que hay que leer primero
+
+- `docs/scope.md` — feature MOV
+- `docs/research.md` — fuentes de horarios (terminal provincial, horario-quebrada.netlify.app)
+- `docs/agents/orquestacion.md` — convenciones
+- `backend/src/migrate.js` — runner: agregá `backend/migrations/NNN-*.sql` (usá el siguiente número libre: 002 si 001 ya existe, o el que corresponda)
+- `backend/.env` — `DATABASE_URL` y `DATABASE_URL_TEST`
+
+## Qué tiene que pasar
+
+### Backend solamente (el front consume esto en issues #6+)
+
+1. Migración `NNN-transporte.sql`: tablas `linea` (id, nombre, descripcion), `parada` (id, linea_id FK, nombre, slug, orden_en_linea, coords lat/lng, tipo: `parada|cruce|terminal`, notas), `horario` (id, linea_id FK, parada_id FK, hora_saliente, direccion: `ida|vuelta`, frecuencia_dias: texto o tabla, fuente, confianza: `publicado|estimado|tiempo-real`, vigente_desde/hasta).
+2. Seed idempotente de la línea RN9 San Salvador de Jujuy → La Quiaca con paradas reales en orden: Terminal de Ómnibus SS.Jujuy, Volcán, Purmamarca **Cruce**, Maimará, Tilcara, Humahuaca, (seguir hasta La Quiaca si hay datos).
+   - **Regla crítica: "Cruce ≠ Pueblo"** — Purmamarca Cruce es la parada en la ruta, NO el pueblo. El modelo debe distinguirlo (`tipo='cruce'` + notas).
+   - Horarios: usar los publicados reales que encuentres en las fuentes del research (horario-quebrada.netlify.app tiene la RN9 documentada). Si un horario exacto no es verificable, marcar `confianza='estimado'` con `fuente` indicando de dónde sale la estimación. NUNCA inventar precisión falsa.
+   - Cada horario lleva `fuente` (URL o nombre) y `confianza`.
+3. Endpoint `GET /api/transporte/proximos?origen=<slug>&destino=<slug>`: dado origen y destino (slugs de parada), devuelve los próximos servicios con hora estimada de llegada, duración aproximada entre paradas, y la confianza del dato. Formato pensado para la timeline de "cómo llegar".
+4. `GET /api/transporte/paradas?linea=rn9` — lista de paradas en orden.
+5. Router en `backend/src/routes/transporte.js` registrado en `index.js` bajo `/api`.
+6. Tests `node --test` contra `DATABASE_URL_TEST`: cálculo de próximos servicios, orden de paradas, cruce≠pueblo, confianza presente en cada horario.
+
+## Criterios de aceptación
+
+- [ ] Migración aplica en dev y test DBs
+- [ ] Seed idempotente con paradas RN9 reales y horarios con fuente+confianza
+- [ ] `GET /api/transporte/proximos?origen=terminal-jjs&destino=tilcara` devuelve servicios con hora estimada
+- [ ] Distinción cruce/pueblo testeada
+- [ ] `cd backend && npm test` verde
+- [ ] Ningún horario sin `fuente` ni `confianza`
+
+## Fuera de alcance
+
+- Frontend, mapa, rutas visuales, otras líneas (solo RN9), tiempo real (eso es spike #11), auth, deploy.
+- NO modificar `slices.conf`, `specs/`, `docs/`, `frontend/`.
+- NO commitear.
