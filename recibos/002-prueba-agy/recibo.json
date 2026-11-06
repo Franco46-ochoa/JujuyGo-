@@ -1,0 +1,12 @@
+{
+  "slice": "002-prueba-agy",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "ece5a23",
+  "verificado": "2026-11-05T21:15:05-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 3,
+  "juez": "sin juez",
+  "cerrado": true,
+  "motivo": ""
+}
