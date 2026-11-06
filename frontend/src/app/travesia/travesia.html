@@ -1,0 +1,194 @@
+<main class="travesia-shell">
+  <header class="travesia-nav">
+    <a class="brand" routerLink="/" aria-label="Yapa, inicio">Yapa<span></span></a>
+    <a class="volver-inicio" routerLink="/">Volver a explorar <span aria-hidden="true">↗</span></a>
+  </header>
+
+  @if (cargando()) {
+    <p class="mensaje-carga status" role="status">Cargando lugares para tu viaje…</p>
+  } @else if (error() && !plan()) {
+    <div class="status status-error" role="alert">
+      <p>{{ error() }}</p>
+      <a routerLink="/">Volver a explorar el catálogo</a>
+    </div>
+  } @else if (!plan()) {
+    <section class="wizard" aria-labelledby="wizard-title">
+      <div class="wizard-intro">
+        <p class="kicker">Armá tu travesía</p>
+        <h1 id="wizard-title">Un viaje que <em>cierra.</em></h1>
+        <p>Fechas, forma de llegada e intereses. El plan se comprueba con los horarios publicados.</p>
+      </div>
+
+      <ol class="progreso" aria-label="Pasos del armado">
+        <li [class.activo]="paso() === 1" [class.completo]="paso() > 1"><span>01</span> Fechas</li>
+        <li [class.activo]="paso() === 2" [class.completo]="paso() > 2"><span>02</span> Llegada</li>
+        <li [class.activo]="paso() === 3"><span>03</span> Intereses</li>
+      </ol>
+
+      @if (paso() === 1) {
+        <section class="pregunta" aria-labelledby="fechas-title">
+          <div class="numero-pregunta">01 / 03</div>
+          <h2 id="fechas-title">¿Cuándo <em>vas?</em></h2>
+          <p>Elegí el primer y el último día. La propuesta se organiza día por día.</p>
+          <div class="campo-fechas">
+            <label>
+              <span>Llegada</span>
+              <input type="date" [value]="fechaInicio()" (input)="actualizarFecha('inicio', $event)">
+            </label>
+            <label>
+              <span>Regreso</span>
+              <input type="date" [value]="fechaFin()" (input)="actualizarFecha('fin', $event)">
+            </label>
+          </div>
+        </section>
+      } @else if (paso() === 2) {
+        <section class="pregunta" aria-labelledby="llegada-title">
+          <div class="numero-pregunta">02 / 03</div>
+          <h2 id="llegada-title">¿Cómo <em>llegás?</em></h2>
+          <p>Así ubicamos el comienzo de la travesía.</p>
+          <div class="opciones llegada-opciones">
+            <label class="opcion" [class.elegida]="llegada() === 'avion'">
+              <input type="radio" name="llegada" [checked]="llegada() === 'avion'" (change)="seleccionarLlegada('avion')">
+              <span class="opcion-numero">A</span>
+              <span><strong>En avión</strong><small>La conexión aeropuerto–terminal no está incluida en los horarios RN9.</small></span>
+            </label>
+            <label class="opcion" [class.elegida]="llegada() === 'terminal'">
+              <input type="radio" name="llegada" [checked]="llegada() === 'terminal'" (change)="seleccionarLlegada('terminal')">
+              <span class="opcion-numero">B</span>
+              <span><strong>En la terminal</strong><small>El plan parte de la Terminal de Ómnibus de San Salvador.</small></span>
+            </label>
+            <label class="opcion" [class.elegida]="llegada() === 'auto'">
+              <input type="radio" name="llegada" [checked]="llegada() === 'auto'" (change)="seleccionarLlegada('auto')">
+              <span class="opcion-numero">C</span>
+              <span><strong>En auto</strong><small>La propuesta empieza en el primer destino; los tramos entre visitas se validan igual.</small></span>
+            </label>
+          </div>
+        </section>
+      } @else {
+        <section class="pregunta" aria-labelledby="intereses-title">
+          <div class="numero-pregunta">03 / 03</div>
+          <h2 id="intereses-title">¿Qué te <em>mueve?</em></h2>
+          <p>Elegí uno o más intereses para priorizar lugares del catálogo.</p>
+          <div class="opciones intereses-opciones">
+            <label class="opcion" [class.elegida]="intereses().includes('paisaje')">
+              <input type="checkbox" [checked]="intereses().includes('paisaje')" (change)="alternarInteresDesdeEvento('paisaje', $event)">
+              <span class="opcion-numero">01</span><strong>Paisaje</strong>
+            </label>
+            <label class="opcion" [class.elegida]="intereses().includes('cultura')">
+              <input type="checkbox" [checked]="intereses().includes('cultura')" (change)="alternarInteresDesdeEvento('cultura', $event)">
+              <span class="opcion-numero">02</span><strong>Cultura</strong>
+            </label>
+            <label class="opcion" [class.elegida]="intereses().includes('aventura')">
+              <input type="checkbox" [checked]="intereses().includes('aventura')" (change)="alternarInteresDesdeEvento('aventura', $event)">
+              <span class="opcion-numero">03</span><strong>Aventura</strong>
+            </label>
+          </div>
+        </section>
+      }
+
+      @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+
+      <div class="wizard-actions">
+        @if (paso() > 1) {
+          <button class="boton-secundario" type="button" (click)="volver()">← Atrás</button>
+        } @else {
+          <span></span>
+        }
+        @if (paso() < 3) {
+          <button class="boton-principal" type="button" (click)="avanzar()">Siguiente <span aria-hidden="true">→</span></button>
+        } @else {
+          <button class="boton-principal" type="button" (click)="armar()">Ver mi propuesta <span aria-hidden="true">→</span></button>
+        }
+      </div>
+    </section>
+  } @else {
+    <section class="plan-shell" aria-labelledby="plan-title">
+      <div class="plan-heading">
+        <button class="volver-wizard" type="button" (click)="editarRespuestas()">← Cambiar respuestas</button>
+        <p class="kicker">Tu propuesta · {{ etiquetaLlegada(plan()!.llegada) }}</p>
+        <h1 id="plan-title">Días para <em>quedarte.</em></h1>
+        <p class="plan-intro">Un primer recorrido según tus fechas e intereses. Mové o quitá lugares; cada cambio vuelve a comprobar los horarios.</p>
+        @if (plan()!.llegada === 'avion') {
+          <p class="nota-acceso">La conexión desde el aeropuerto hasta la terminal no está incluida en los horarios RN9.</p>
+        }
+      </div>
+
+      @if (validando()) {
+        <p class="validando" role="status">Comprobando que el día cierre con los horarios publicados…</p>
+      }
+      @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+      @if (errorTransporte()) { <p class="aviso-transporte" role="status">{{ errorTransporte() }}</p> }
+
+      @if (validacion(); as resultado) {
+        <div class="estado-plan" [class.estado-ok]="resultado.validado" [class.estado-atencion]="!resultado.validado" role="status">
+          <strong>{{ resultado.validado ? 'El plan cierra con los horarios cargados.' : 'Hay tramos para ajustar antes de salir.' }}</strong>
+          <span>{{ resultado.validado ? 'Revisá la fuente y el nivel de confianza de cada servicio.' : 'Cada aviso propone una alternativa concreta.' }}</span>
+        </div>
+      }
+
+      <ng-template #tramoVista let-tramo="tramo">
+        <div class="tramo" [class.tramo-regreso]="tramo.etiqueta === 'regreso'">
+          <span class="tramo-nodo" aria-hidden="true"></span>
+          <span>{{ tramo.etiqueta === 'regreso' ? 'Regreso' : 'RN9' }} · {{ tramo.hora_salida }} → {{ tramo.hora_llegada }}</span>
+          <small>{{ tramo.origen }} — {{ tramo.destino }} · {{ tramo.confianza }} · {{ tramo.fuente }}</small>
+          @if (transporteDelTramo(tramo); as proximos) {
+            @if (proximos.servicios.length) {
+              <small class="proximo-servicio">Próximo servicio: {{ proximos.servicios[0].hora_salida }} → {{ proximos.servicios[0].hora_llegada }}</small>
+            }
+          }
+        </div>
+      </ng-template>
+
+      <div class="dias">
+        @for (dia of plan()!.dias; track dia.fecha; let diaIndex = $index) {
+          <section class="dia" [class.dia-activo]="diaIndex === 0" [attr.aria-labelledby]="'dia-' + diaIndex">
+            <header class="dia-cabecera">
+              <p class="dia-numero">Día {{ (diaIndex + 1).toString().padStart(2, '0') }}</p>
+              <h2 [id]="'dia-' + diaIndex">{{ fechaLegible(dia.fecha) }}</h2>
+              <span class="dia-estado">{{ conflictosDelDia(diaIndex + 1).length ? 'Revisar horarios' : 'En ruta' }}</span>
+            </header>
+
+            <div class="dia-cuerpo">
+              @for (evento of dia.eventos; track evento.id; let eventoIndex = $index) {
+                @for (tramo of tramosDelEvento(diaIndex + 1, eventoIndex); track tramo.servicio_id + tramo.dia) {
+                  <ng-container [ngTemplateOutlet]="tramoVista" [ngTemplateOutletContext]="{ tramo: tramo }"></ng-container>
+                }
+                <article class="evento">
+                  <span class="evento-hora">{{ evento.hora }}</span>
+                  <div class="evento-detalle">
+                    <a [routerLink]="['/lugares', evento.lugar]">{{ evento.nombre || evento.lugar }}</a>
+                    <p>{{ lugares().find(lugar => lugar.slug === evento.lugar)?.datos_json?.localidad || 'Jujuy' }}</p>
+                    @if (evento.acceso_local) { <p class="acceso-local">{{ evento.acceso_local }}</p> }
+                  </div>
+                  <label class="mover-evento">
+                    <span class="solo-lector">Mover {{ evento.nombre || evento.lugar }} a otro día</span>
+                    <select [value]="diaIndex" (change)="moverEvento(diaIndex, eventoIndex, $event)">
+                      @for (opcion of plan()!.dias; track opcion.fecha; let opcionIndex = $index) {
+                        <option [value]="opcionIndex" [disabled]="opcionIndex === diaIndex">Mover al día {{ opcionIndex + 1 }}</option>
+                      }
+                    </select>
+                  </label>
+                  <button class="borrar-evento" type="button" (click)="borrarEvento(diaIndex, eventoIndex)" [attr.aria-label]="'Quitar ' + (evento.nombre || evento.lugar)">Quitar</button>
+                </article>
+              } @empty {
+                <p class="dia-vacio">Todavía no hay lugares en este día. Podés mover uno desde otra fecha.</p>
+              }
+
+              @for (conflicto of conflictosDelDia(diaIndex + 1); track $index) {
+                <aside class="conflicto" role="alert">
+                  <strong>{{ conflicto.mensaje }}</strong>
+                  <p>{{ conflicto.propuesta }}</p>
+                </aside>
+              }
+
+              @for (tramo of tramosDeRegreso(diaIndex + 1); track tramo.servicio_id + tramo.dia) {
+                <ng-container [ngTemplateOutlet]="tramoVista" [ngTemplateOutletContext]="{ tramo: tramo }"></ng-container>
+              }
+            </div>
+          </section>
+        }
+      </div>
+      <button class="boton-principal nueva-travesia" type="button" (click)="nuevaTravesia()">Armar otra travesía</button>
+    </section>
+  }
+</main>
