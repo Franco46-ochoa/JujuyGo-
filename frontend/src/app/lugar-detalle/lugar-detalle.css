@@ -19,6 +19,9 @@
 .detail-content { max-width: 1000px; margin: 0 auto; padding: 72px 5% 96px; }
 .detail-description { max-width: 760px; font: 400 clamp(24px, 3vw, 34px)/1.38 var(--serif); }
 .detail-note { margin-top: 20px; color: var(--t60); font-size: 14px; line-height: 1.6; }
+.detail-directions { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; margin-top: 26px; padding: 0 20px; border-radius: 999px; background: var(--verde); color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; transition: background-color .18s ease, transform .18s ease; }
+.detail-directions:hover { background: #233a31; transform: translateY(-2px); }
+.detail-directions span { font-size: 18px; }
 .detail-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 0 56px; margin-top: 56px; }
 .detail-fact { padding: 24px 0; border-top: 1px solid var(--t14); }
 .detail-fact h2 { font: 500 21px var(--serif); text-wrap: balance; }

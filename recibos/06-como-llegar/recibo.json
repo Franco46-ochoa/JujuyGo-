@@ -1,0 +1,12 @@
+{
+  "slice": "06-como-llegar",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "dc22b49",
+  "verificado": "2026-11-09T20:14:55-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 16,
+  "juez": "devin: CIERRA",
+  "cerrado": true,
+  "motivo": ""
+}

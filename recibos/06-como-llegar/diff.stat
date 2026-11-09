@@ -1,0 +1,17 @@
+ backend/src/routes/transporte.js                   | 447 ++++++++++++++++++++-
+ backend/test/como-llegar.test.js                   | 127 ++++++
+ frontend/src/app/app.routes.ts                     |   3 +
+ frontend/src/app/como-llegar/como-llegar.css       |  65 +++
+ frontend/src/app/como-llegar/como-llegar.html      | 125 ++++++
+ frontend/src/app/como-llegar/como-llegar.spec.ts   | 159 ++++++++
+ frontend/src/app/como-llegar/como-llegar.ts        | 219 ++++++++++
+ frontend/src/app/como-llegar/como-llegar.types.ts  |  81 ++++
+ frontend/src/app/lugar-detalle/lugar-detalle.css   |   3 +
+ frontend/src/app/lugar-detalle/lugar-detalle.html  |   4 +
+ .../src/app/lugar-detalle/lugar-detalle.spec.ts    |   8 +
+ frontend/src/app/transporte.service.ts             |  20 +
+ frontend/src/app/yapa-mapa/yapa-mapa.component.css |  37 ++
+ frontend/src/app/yapa-mapa/yapa-mapa.component.ts  |  83 +++-
+ frontend/src/app/yapa-mapa/yapa-mapa.types.ts      |   7 +
+ specs/06-como-llegar.spec.md                       |  48 +++
+ 16 files changed, 1432 insertions(+), 4 deletions(-)

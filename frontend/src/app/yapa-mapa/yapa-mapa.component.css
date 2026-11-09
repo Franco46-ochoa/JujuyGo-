@@ -68,6 +68,43 @@
   border: none !important;
 }
 
+/* Pins del relato de viaje */
+:host ::ng-deep .yapa-route-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+:host ::ng-deep .yapa-route-pin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  max-width: 152px;
+  padding: 7px 12px;
+  overflow: hidden;
+  border: 1px solid var(--tinta, #241610);
+  border-radius: 999px;
+  background: var(--papel, #F4EDE3);
+  color: var(--tinta, #241610);
+  box-shadow: 0 2px 8px rgba(36, 22, 16, 0.18);
+  font: 600 12px/1.2 var(--sans, "Archivo", sans-serif);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .yapa-route-origin,
+:host ::ng-deep .yapa-route-destination {
+  border-color: var(--oxido, #B5492A);
+  background: var(--oxido, #B5492A);
+  color: #fff;
+}
+
+:host ::ng-deep .yapa-route-crossing {
+  border-color: var(--verde, #2E4A3E);
+  background: var(--verde, #2E4A3E);
+  color: #fff;
+}
+
 /* Clusters ("Tilcara · 2") */
 :host ::ng-deep .yapa-cluster-pin {
   display: inline-flex;

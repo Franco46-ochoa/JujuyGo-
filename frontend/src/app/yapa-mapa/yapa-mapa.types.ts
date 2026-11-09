@@ -18,3 +18,10 @@ export interface MapBounds {
   minLng: number;
   maxLng: number;
 }
+
+export interface RutaMapaPunto {
+  nombre: string;
+  tipo: string;
+  lat: number;
+  lng: number;
+}

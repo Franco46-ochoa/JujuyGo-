@@ -1,0 +1,48 @@
+# Slice 06 — Cómo llegar (RUT): guía de movimiento sobre mapa
+
+**Depende de:** 03, 04, 05 mergeados. Master actual ~`97a7ce0`.
+**Alcance:** `frontend/src/app/como-llegar/` (nuevo), `frontend/src/app/app.routes.ts` (agregar ruta), `frontend/src/app/lugar-detalle/` (solo agregar link "Cómo llegar"), `frontend/src/app/yapa-mapa/` (solo inputs nuevos si hace falta dibujar origen→destino), `frontend/src/app/transporte.service.ts` (nuevo), `backend/src/routes/` (solo si falta endpoint), `backend/test/` (nuevos). NO tocar travesia/ (otro worker lo está editando), home, migraciones, docs, specs.
+
+## Contexto
+
+- Issue #6: "guía tipo Google Maps pero más linda" para cómo ir de A a B en transporte público por la RN9.
+- `backend/src/routes/transporte.js` — endpoints de paradas y próximos servicios ya existen (verificar forma de respuesta).
+- `frontend/src/app/yapa-mapa/` — componente mapa reusable (pins, clusters, centro, zoom).
+- `lugar.lat/lng`, `parada` RN9 con slug/orden.
+- La distinción cruce≠pueblo (Purmamarca Cruce a 3 km del pueblo) YA modelada.
+
+## Qué tiene que pasar
+
+1. Página `/como-llegar` (o `/como-llegar/:slugLugar`) — layout editorial tipo guía de viaje:
+   - Origen: selector con lugares/paradas base (Terminal SS.Jujuy, aeropuerto, o lugar del
+     catálogo). Si viene con `:slugLugar` el destino queda fijado.
+   - Resultado como **relato de viaje paso a paso** (no tabla fría): "Tomás el colectivo de
+     las 07:20 en la Terminal · bajás en Purmamarca Cruce · caminás/traslado 3 km al pueblo".
+   - Datos siempre marcados: horario publicado vs estimado, con su `fuente`.
+   - Accesos locales explícitos (la brecha parada→lugar real).
+2. Mapa: origen + destino + parada intermedia marcados; línea simple entre puntos
+   (dibujar tramo RN9 como polyline entre paradas es suficiente para MVP — NO enrutado
+   por calles). Estilo Yapa existente.
+3. Si un tramo no tiene servicio RN9: decirlo claro + sugerir alternativa honesta
+   (traslado local, otro origen) — nunca inventar.
+4. En `lugar-detalle`: botón "Cómo llegar" que lleva a la página con destino prefijado.
+5. Tests: componente renderiza, arma pasos del relato, estado sin-servicio; tests de
+   servicio/endpoint si se agrega lógica en backend.
+
+## Criterios
+
+- [ ] `npm test` front verde con tests nuevos
+- [ ] `npm test` back verde
+- [ ] `npm run build` OK
+- [ ] `/como-llegar/cerro-siete-colores` desde Terminal: pasos correctos incluyendo
+      traslado del cruce al pueblo
+- [ ] Estilo editorial coherente (serif, papel, números tabular)
+- [ ] kero-audit 390x844 + 1440x900 sin hard fails ni console errors
+- [ ] Nada de datos inventados: todo tramo proviene de la API de transporte
+
+## Fuera de alcance
+
+- Tiempo real GPS (sin datos — Santa Ana requiere auth)
+- Routing por calles (OSRM), caminata exacta
+- Edición de la travesía (slice 10 en curso)
+- NO commitear.

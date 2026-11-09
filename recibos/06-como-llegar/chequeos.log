@@ -1,0 +1,97 @@
+### tests: test ! -f package.json || npm test
+### fin tests (ok=true)
+
+### tests-front: test ! -d frontend || (cd frontend && npm test -- --watch=false)
+
+> frontend@0.0.0 test
+> ng test --watch=false
+
+❯ Building...
+✔ Building...
+Application bundle generation complete. [7.895 seconds] - 2026-11-09T23:14:25.086Z
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/Elect/orca/projects/JujuyGo/.slices/06-como-llegar/frontend[39m
+
+
+[2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[32m23 passed[39m[22m[90m (23)[39m
+[2m   Start at [22m 20:14:27
+[2m   Duration [22m 17.57s[2m (environment 68%, setup 13%, tests 12%, transform 4%, import 3%, worker 1%)[22m
+
+### fin tests-front (ok=true)
+
+### tests-back: test ! -d backend || (cd backend && npm test)
+
+> jujuygo-backend@0.1.0 test
+> node --test
+
+﹣ API de catálogo (2.277ms) # requiere DATABASE_URL_TEST
+Seed de transporte RN9 completado con éxito.
+▶ API Cómo Llegar (Slice 06)
+  ✔ GET /api/transporte/como-llegar desde Terminal a Cerro de los Siete Colores (267.6423ms)
+  ✔ GET /api/transporte/como-llegar desde Aeropuerto Jujuy incluye transfer inicial a Terminal (33.3036ms)
+  ✔ GET /api/transporte/como-llegar a Salinas Grandes advierte sin servicio directo RN9 y da alternativa honesta (25.611ms)
+  ✔ GET /api/transporte/como-llegar a Yungas (Parque Calilegua) advierte corredor RN34 (19.2348ms)
+  ✔ GET /api/transporte/como-llegar con mismo origen y destino (17.6436ms)
+  ✔ GET /api/transporte/como-llegar con destino inexistente responde 404 (19.1777ms)
+✔ API Cómo Llegar (Slice 06) (1512.641ms)
+✔ GET /health responde ok (166.156ms)
+sin migraciones nuevas
+▶ API de hospedajes y guías
+  ✔ lista hospedajes con fuente y estado de verificación (387.4355ms)
+  ✔ filtra hospedajes por zona (43.2051ms)
+  ✔ responde una lista vacía si no hay hospedajes en la zona (21.1145ms)
+  ✔ la lista de guías vacía responde correctamente (21.1337ms)
+  ✔ la migración puede aplicarse varias veces sin duplicar hospedajes (51.6143ms)
+✔ API de hospedajes y guías (905.6764ms)
+▶ motor de validación de travesía
+  ✔ valida un día que llega a Tilcara y toma el regreso dentro del horario (20.215ms)
+  ✔ detecta que el regreso de Humahuaca no llega antes del cierre y sugiere una alternativa (3.3082ms)
+  ✔ mapea Purmamarca al cruce y nunca afirma que el colectivo llega al pueblo (1.3995ms)
+  ✔ advierte el traslado local desde Humahuaca hasta Hornocal (0.8629ms)
+  ✔ detecta eventos superpuestos aun cuando ocurren en la misma parada (2.0331ms)
+  ✔ no permite que una visita se prolongue al día siguiente (1.5292ms)
+  ✔ marca como conflicto un tramo para el que no hay servicio cargado (6.0948ms)
+✔ motor de validación de travesía (41.2125ms)
+Seed de transporte RN9 completado con éxito.
+▶ Transporte y horarios RN9 (Slice 04)
+  ▶ Orden de paradas
+    ✔ GET /api/transporte/paradas devuelve lista completa en orden estricto de ruta (254.1603ms)
+    ✔ GET /api/transporte/paradas con línea inexistente devuelve 404 (19.114ms)
+  ✔ Orden de paradas (276.7117ms)
+  ▶ Regla crítica: Cruce ≠ Pueblo
+    ✔ Purmamarca Cruce tiene tipo="cruce" y notas explicativas diferenciadas del pueblo (18.9166ms)
+    ✔ La base de datos rechaza tipos de parada no válidos (9.3299ms)
+  ✔ Regla crítica: Cruce ≠ Pueblo (29.3642ms)
+  ▶ Cálculo de próximos servicios
+    ✔ GET /api/transporte/proximos?origen=terminal-jjs&destino=tilcara devuelve servicios con hora estimada (154.311ms)
+    ✔ GET /api/transporte/proximos dirección vuelta (Humahuaca -> SS.Jujuy) (17.2691ms)
+    ✔ GET /api/transporte/proximos con filtro ?hora=12:00 devuelve solo salidas posteriores (16.3963ms)
+    ✔ Validación de errores en parámetros origen y destino (28.7539ms)
+  ✔ Cálculo de próximos servicios (218.7888ms)
+  ▶ Confianza y fuente presente en cada horario
+    ✔ Ningún horario en la DB carece de fuente o confianza (6.9314ms)
+    ✔ Todos los valores de confianza son válidos ("publicado", "estimado" o "tiempo-real") (2.0404ms)
+    ✔ Tramos que incluyen paradas intermedias sin boletería oficial marcan confianza="estimado" (19.0526ms)
+  ✔ Confianza y fuente presente en cada horario (28.7966ms)
+Seed de transporte RN9 completado con éxito.
+  ▶ Idempotencia del seed
+    ✔ Ejecutar el seed nuevamente no duplica registros (325.7231ms)
+  ✔ Idempotencia del seed (326.1484ms)
+✔ Transporte y horarios RN9 (Slice 04) (1679.0502ms)
+▶ POST /api/travesia/validar
+  ✔ devuelve los tramos RN9 reales que permiten completar el plan (152.0855ms)
+  ✔ propone una corrección cuando el regreso no llega antes de la hora de cierre (27.0628ms)
+  ✔ rechaza planes incompletos (20.7629ms)
+✔ POST /api/travesia/validar (203.6367ms)
+ℹ tests 34
+ℹ suites 11
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4921.2509
+### fin tests-back (ok=true)
+
