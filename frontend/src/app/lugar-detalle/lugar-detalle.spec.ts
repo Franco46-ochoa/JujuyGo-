@@ -66,4 +66,12 @@ describe('LugarDetallePage', () => {
     const mapaEl = fixture.nativeElement.querySelector('yapa-mapa');
     expect(mapaEl).toBeTruthy();
   });
+
+  it('links to the travel guide with the place preselected as destination', () => {
+    const fixture = TestBed.createComponent(LugarDetallePage);
+    fixture.detectChanges();
+    const link = fixture.nativeElement.querySelector('.detail-directions') as HTMLAnchorElement;
+
+    expect(link.getAttribute('href')).toBe(`/como-llegar/${lugar.slug}`);
+  });
 });

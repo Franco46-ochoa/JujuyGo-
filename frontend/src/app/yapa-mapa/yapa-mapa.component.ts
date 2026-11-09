@@ -15,7 +15,7 @@ import { isPlatformBrowser } from '@angular/common';
 import * as L from 'leaflet';
 import { Lugar } from '../catalogo.types';
 import { computeClusters } from './yapa-mapa.clustering';
-import { MapCluster } from './yapa-mapa.types';
+import { MapCluster, RutaMapaPunto } from './yapa-mapa.types';
 
 @Component({
   selector: 'yapa-mapa',
@@ -35,6 +35,8 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
   readonly altura = input<string>('500px');
   readonly modoMini = input<boolean>(false);
   readonly interactive = input<boolean>(true);
+  readonly rutaPuntos = input<RutaMapaPunto[]>([]);
+  readonly rutaPolyline = input<[number, number][]>([]);
 
   // Outputs
   readonly lugarSelected = output<Lugar>();
@@ -45,6 +47,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
 
   private map?: L.Map;
   private markersLayer?: L.LayerGroup;
+  private routeLayer?: L.LayerGroup;
   private markersMap = new Map<string, L.Marker>();
   private isBrowser = false;
 
@@ -65,6 +68,12 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
       if (!selected || !this.map) return;
 
       this.focusLugar(selected);
+    });
+
+    effect(() => {
+      this.rutaPuntos();
+      this.rutaPolyline();
+      this.renderRoute();
     });
   }
 
@@ -117,6 +126,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
       }).addTo(this.map);
 
       this.markersLayer = L.layerGroup().addTo(this.map);
+      this.routeLayer = L.layerGroup().addTo(this.map);
 
       this.map.on('zoomend', () => {
         if (!this.map) return;
@@ -128,12 +138,13 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
 
       this.clustersActivos.set(computeClusters(this.lugares(), initialZoom));
       this.renderMarkers();
+      this.renderRoute();
 
       // Si hay un centro o lugar seleccionado inicial, enfocarlo
       const selected = this.lugarSeleccionado();
       if (selected) {
         this.focusLugar(selected);
-      } else if (!this.centro() && this.lugares().length > 1 && !this.modoMini()) {
+      } else if (!this.fitRouteBounds() && !this.centro() && this.lugares().length > 1 && !this.modoMini()) {
         this.fitLugaresBounds();
       }
     } catch {
@@ -235,6 +246,74 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
         }
       }
     }
+  }
+
+  private renderRoute(): void {
+    if (!this.map || !this.routeLayer) return;
+
+    this.routeLayer.clearLayers();
+    const coordinates = this.rutaPolyline().filter(([lat, lng]) =>
+      Number.isFinite(lat) && Number.isFinite(lng),
+    );
+
+    if (coordinates.length > 1) {
+      L.polyline(coordinates, {
+        color: '#B5492A',
+        opacity: 0.88,
+        weight: 4,
+      }).addTo(this.routeLayer);
+    }
+
+    for (const punto of this.rutaPuntos()) {
+      const icon = L.divIcon({
+        className: 'yapa-route-div-icon',
+        html: `<span class="yapa-route-pin yapa-route-${this.routePointClass(punto.tipo)}">${this.escapeHtml(punto.nombre)}</span>`,
+        iconSize: [152, 44],
+        iconAnchor: [76, 22],
+      });
+
+      L.marker([punto.lat, punto.lng], {
+        icon,
+        keyboard: true,
+        title: punto.nombre,
+        alt: punto.nombre,
+      }).addTo(this.routeLayer);
+    }
+  }
+
+  private routePointClass(tipo: string): string {
+    if (tipo === 'origen') return 'origin';
+    if (tipo === 'destino') return 'destination';
+    if (tipo === 'cruce') return 'crossing';
+    return 'stop';
+  }
+
+  private escapeHtml(value: string): string {
+    const escaped: Record<string, string> = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    };
+    return value.replace(/[&<>"']/g, character => escaped[character] ?? character);
+  }
+
+  private fitRouteBounds(): boolean {
+    if (!this.map) return false;
+    const coordinates: [number, number][] = [
+      ...this.rutaPolyline(),
+      ...this.rutaPuntos().map(({ lat, lng }) => [lat, lng] as [number, number]),
+    ].filter(([lat, lng]) => Number.isFinite(lat) && Number.isFinite(lng));
+
+    if (coordinates.length === 0) return false;
+    if (coordinates.length === 1) {
+      this.map.setView(coordinates[0], 12);
+      return true;
+    }
+
+    this.map.fitBounds(L.latLngBounds(coordinates), { padding: [48, 48], maxZoom: 12 });
+    return true;
   }
 
   /**

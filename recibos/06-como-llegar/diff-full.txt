@@ -1,0 +1,1621 @@
+diff --git a/backend/src/routes/transporte.js b/backend/src/routes/transporte.js
+index 7111e4e..b78292f 100644
+--- a/backend/src/routes/transporte.js
++++ b/backend/src/routes/transporte.js
+@@ -92,8 +92,7 @@ router.get(['/transporte/proximos', '/proximos'], async (req, res) => {
+     const direccion = pOrigen.orden_en_linea < pDestino.orden_en_linea ? 'ida' : 'vuelta';
+ 
+     const { rows: horariosRaw } = await query(
+-      `SELECT 
+-         h1.id AS horario_origen_id,
++      `SELECT h1.id AS horario_origen_id,
+          h2.id AS horario_destino_id,
+          h1.servicio_id,
+          h1.linea_id,
+@@ -191,4 +190,446 @@ router.get(['/transporte/proximos', '/proximos'], async (req, res) => {
+   }
+ });
+ 
++const BASE_ORIGINS = {
++  'terminal-jjs': {
++    slug: 'terminal-jjs',
++    nombre: 'Terminal de Ómnibus SS.Jujuy',
++    tipo: 'terminal',
++    lat: -24.2128,
++    lng: -65.2891,
++    parada_slug: 'terminal-jjs',
++  },
++  'aeropuerto-jujuy': {
++    slug: 'aeropuerto-jujuy',
++    nombre: 'Aeropuerto Jujuy (Dr. Horacio Guzmán)',
++    tipo: 'aeropuerto',
++    lat: -24.3928,
++    lng: -65.0978,
++    parada_slug: 'terminal-jjs',
++    traslado_inicial: {
++      titulo: 'Traslado al corredor troncal RN9',
++      tipo: 'transfer-aeropuerto',
++      distancia_km: 33,
++      duracion_estimada: '35-40 min',
++      descripcion: 'Tomá un taxi, remise oficial o transfer privado desde el Aeropuerto hasta la Terminal de Ómnibus SS.Jujuy (33 km por autopista RN66).'
++    }
++  }
++};
++
++const LUGAR_PARADA_MAPPING = {
++  'cerro-siete-colores': {
++    parada_slug: 'purmamarca-cruce',
++    traslado_final: {
++      tipo: 'cruce-a-pueblo',
++      distancia_km: 3,
++      duracion_estimada: '5-10 min en vehículo / 35-40 min a pie',
++      descripcion: 'Purmamarca Cruce queda sobre la RN9, a 3 km del pueblo. Los colectivos troncales de la RN9 no entran al pueblo; tomá un remise local en el cruce o caminá los 3 km por RN52 hacia la plaza y el Cerro de los Siete Colores.'
++    }
++  },
++  'garganta-del-diablo-tilcara': {
++    parada_slug: 'tilcara',
++    traslado_final: {
++      tipo: 'acceso-montaña',
++      distancia_km: 5,
++      duracion_estimada: '15 min en vehículo / 1h 30m a pie',
++      descripcion: 'El colectivo llega a la Terminal de Tilcara. El acceso a la Garganta del Diablo es por un camino de montaña y ripio (caminata exigente con desnivel o remise local contratado en el pueblo).'
++    }
++  },
++  'pucara-de-tilcara': {
++    parada_slug: 'tilcara',
++    traslado_final: {
++      tipo: 'caminata-urbana',
++      distancia_km: 1.5,
++      duracion_estimada: '15-20 min a pie',
++      descripcion: 'Desde la Terminal de Tilcara caminás hacia el sur atravesando el casco urbano y cruzando el río Huasamayo hasta el acceso al Pucará.'
++    }
++  },
++  'paleta-del-pintor': {
++    parada_slug: 'maimara',
++    traslado_final: {
++      tipo: 'caminata-mirador',
++      distancia_km: 0.5,
++      duracion_estimada: '5-10 min a pie',
++      descripcion: 'La parada sobre RN9 queda frente a Maimará. La Paleta del Pintor se aprecia directamente desde la ruta y desde miradores del pueblo a pocos minutos a pie.'
++    }
++  },
++  'monumento-independencia-humahuaca': {
++    parada_slug: 'humahuaca',
++    traslado_final: {
++      tipo: 'caminata-urbana',
++      distancia_km: 0.6,
++      duracion_estimada: '10 min a pie',
++      descripcion: 'Desde la Terminal de Humahuaca caminás hacia la plaza central y subís las escalinatas hacia el Monumento a los Héroes de la Independencia.'
++    }
++  },
++  'serrania-del-hornocal': {
++    parada_slug: 'humahuaca',
++    traslado_final: {
++      tipo: 'traslado-altura',
++      distancia_km: 25,
++      duracion_estimada: '45-50 min en vehículo 4x4/remise',
++      descripcion: 'El colectivo de línea RN9 llega únicamente hasta la Terminal de Humahuaca. El mirador del Hornocal queda a 25 km al este por camino sinuoso de ripio a 4.350 msnm; contratá una excursión o remise local en Humahuaca.'
++    }
++  },
++  'tren-solar-estacion-volcan': {
++    parada_slug: 'volcan',
++    traslado_final: {
++      tipo: 'caminata-estacion',
++      distancia_km: 0.3,
++      duracion_estimada: '5 min a pie',
++      descripcion: 'Bajás en la parada Volcán sobre la RN9; la estación del Tren Solar está a unos 300 metros hacia el cuadro de estación.'
++    }
++  },
++  'salinas-grandes': {
++    tiene_servicio_rn9: false,
++    parada_conexion: 'purmamarca-cruce',
++    motivo: 'Las Salinas Grandes se encuentran en la Puna sobre la RN52 a 3.450 msnm, fuera de la traza troncal de la RN9.',
++    alternativa_honesta: 'Tomá el colectivo troncal RN9 hasta Purmamarca Cruce (o Tilcara) y continuá en excursión o traslado particular subiendo por la RN52 y la Cuesta de Lipán (aprox. 65 km de camino de alta montaña).'
++  },
++  'laguna-de-los-pozuelos': {
++    tiene_servicio_rn9: false,
++    parada_conexion: 'abra-pampa',
++    motivo: 'La Laguna de los Pozuelos queda a 50 km al oeste de la RN9 por caminos secundarios de ripio (RP 7 y RP 69) sin transporte regular.',
++    alternativa_honesta: 'Tomá el colectivo RN9 hasta la Terminal de Abra Pampa. Desde allí, contratá un remise particular o vehículo 4x4 local para el trayecto ida y vuelta.'
++  },
++  'parque-nacional-calilegua': {
++    tiene_servicio_rn9: false,
++    motivo: 'El Parque Nacional Calilegua está en las Yungas (corredor RN34), no en la Quebrada ni Puna (RN9).',
++    alternativa_honesta: 'Desde la Terminal de San Salvador de Jujuy, tomá un transporte interurbano por RN34 hacia Libertador General San Martín / San Pedro, y desde allí un remise o servicio local al parque.'
++  },
++  'termas-de-caimancito': {
++    tiene_servicio_rn9: false,
++    motivo: 'Las Termas de Caimancito están en las Yungas (corredor RN34), no en el corredor RN9.',
++    alternativa_honesta: 'Desde la Terminal de San Salvador de Jujuy, tomá un transporte interurbano por RN34 hacia Caimancito / Ledesma, y desde allí coordiná acceso a las termas.'
++  }
++};
++
++// GET /api/transporte/como-llegar?origen=<slug>&destino=<slug>[&hora=HH:MM]
++// Guía integral de viaje: resuelve origen, parada RN9, servicios reales,
++// traslados locales (cruce≠pueblo), alternativa honesta si no hay RN9, y polyline.
++router.get(['/transporte/como-llegar', '/como-llegar'], async (req, res) => {
++  try {
++    const origenParam = (req.query.origen || 'terminal-jjs').trim();
++    const destinoParam = (req.query.destino || 'cerro-siete-colores').trim();
++    const hora = req.query.hora;
++
++    if (!origenParam || !destinoParam) {
++      return res.status(400).json({ error: 'Se requieren origen y destino' });
++    }
++
++    if (origenParam === destinoParam) {
++      return res.json({
++        mismo_punto: true,
++        mensaje: 'El origen y el destino son el mismo punto.',
++        servicios: [],
++        puntos: [],
++        polyline: []
++      });
++    }
++
++    // Resolver Entidad Origen (Base / Parada / Lugar)
++    let entidadOrigen = null;
++    let trasladoInicial = null;
++    let paradaOrigenSlug = null;
++
++    if (BASE_ORIGINS[origenParam]) {
++      entidadOrigen = BASE_ORIGINS[origenParam];
++      paradaOrigenSlug = entidadOrigen.parada_slug;
++      trasladoInicial = entidadOrigen.traslado_inicial || null;
++    } else {
++      // Buscar en tabla parada
++      const { rows: paradasOrig } = await query('SELECT * FROM parada WHERE slug = $1', [origenParam]);
++      if (paradasOrig.length > 0) {
++        const p = paradasOrig[0];
++        entidadOrigen = {
++          slug: p.slug,
++          nombre: p.nombre,
++          tipo: p.tipo,
++          lat: p.lat !== null ? Number(p.lat) : null,
++          lng: p.lng !== null ? Number(p.lng) : null,
++          parada_slug: p.slug
++        };
++        paradaOrigenSlug = p.slug;
++      } else {
++        // Buscar en tabla lugar
++        const { rows: lugaresOrig } = await query('SELECT * FROM lugar WHERE slug = $1', [origenParam]);
++        if (lugaresOrig.length > 0) {
++          const l = lugaresOrig[0];
++          entidadOrigen = {
++            slug: l.slug,
++            nombre: l.nombre,
++            tipo: 'lugar',
++            lat: Number(l.lat),
++            lng: Number(l.lng)
++          };
++          const mapping = LUGAR_PARADA_MAPPING[l.slug];
++          if (mapping?.parada_slug) {
++            paradaOrigenSlug = mapping.parada_slug;
++            if (mapping.traslado_final) {
++              trasladoInicial = {
++                titulo: 'Traslado inicial a la parada RN9',
++                tipo: mapping.traslado_final.tipo,
++                distancia_km: mapping.traslado_final.distancia_km,
++                duracion_estimada: mapping.traslado_final.duracion_estimada,
++                descripcion: `Desde ${l.nombre}, trasladate hacia la parada ${mapping.parada_slug} sobre la RN9.`
++              };
++            }
++          }
++        }
++      }
++    }
++
++    if (!entidadOrigen) {
++      return res.status(404).json({ error: `Origen no encontrado: ${origenParam}` });
++    }
++
++    // Resolver Entidad Destino (Lugar / Parada)
++    let entidadDestino = null;
++    let paradaDestinoSlug = null;
++    let trasladoFinal = null;
++    let tieneServicioRN9 = true;
++    let motivoSinServicio = null;
++    let alternativaHonesta = null;
++
++    const { rows: lugaresDest } = await query('SELECT * FROM lugar WHERE slug = $1', [destinoParam]);
++    if (lugaresDest.length > 0) {
++      const l = lugaresDest[0];
++      entidadDestino = {
++        slug: l.slug,
++        nombre: l.nombre,
++        tipo: 'lugar',
++        lat: Number(l.lat),
++        lng: Number(l.lng),
++        altitud_m: l.altitud_m,
++        descripcion: l.descripcion,
++        como_llegar: l.como_llegar,
++        localidad: l.datos_json?.localidad || null
++      };
++
++      const mapping = LUGAR_PARADA_MAPPING[l.slug];
++      if (mapping) {
++        if (mapping.tiene_servicio_rn9 === false) {
++          tieneServicioRN9 = false;
++          motivoSinServicio = mapping.motivo;
++          alternativaHonesta = mapping.alternativa_honesta;
++          paradaDestinoSlug = mapping.parada_conexion || null;
++        } else {
++          paradaDestinoSlug = mapping.parada_slug;
++          trasladoFinal = mapping.traslado_final || null;
++        }
++      } else {
++        // Fallback por localidad
++        const loc = l.datos_json?.localidad?.toLowerCase() || '';
++        const { rows: paradasLoc } = await query('SELECT slug FROM parada WHERE LOWER(nombre) LIKE $1 LIMIT 1', [`%${loc}%`]);
++        if (paradasLoc.length > 0) {
++          paradaDestinoSlug = paradasLoc[0].slug;
++        } else {
++          tieneServicioRN9 = false;
++          motivoSinServicio = 'Destino fuera del corredor troncal de la RN9.';
++          alternativaHonesta = 'Consultá opciones de transporte interurbano o traslados locales desde San Salvador de Jujuy.';
++        }
++      }
++    } else {
++      // Buscar en tabla parada
++      const { rows: paradasDest } = await query('SELECT * FROM parada WHERE slug = $1', [destinoParam]);
++      if (paradasDest.length > 0) {
++        const p = paradasDest[0];
++        entidadDestino = {
++          slug: p.slug,
++          nombre: p.nombre,
++          tipo: p.tipo,
++          lat: p.lat !== null ? Number(p.lat) : null,
++          lng: p.lng !== null ? Number(p.lng) : null
++        };
++        paradaDestinoSlug = p.slug;
++      }
++    }
++
++    if (!entidadDestino) {
++      return res.status(404).json({ error: `Destino no encontrado: ${destinoParam}` });
++    }
++
++    // Traer información de las paradas RN9 involucradas
++    let paradaOrigen = null;
++    let paradaDestino = null;
++    let paradasTramo = [];
++    let servicios = [];
++    let direccion = null;
++
++    if (paradaOrigenSlug && paradaDestinoSlug && paradaOrigenSlug !== paradaDestinoSlug) {
++      const { rows: pRows } = await query(
++        'SELECT id, linea_id, nombre, slug, orden_en_linea, lat, lng, tipo, notas FROM parada WHERE slug IN ($1, $2)',
++        [paradaOrigenSlug, paradaDestinoSlug]
++      );
++      paradaOrigen = pRows.find(p => p.slug === paradaOrigenSlug);
++      paradaDestino = pRows.find(p => p.slug === paradaDestinoSlug);
++
++      if (paradaOrigen && paradaDestino) {
++        paradaOrigen = { ...paradaOrigen, lat: Number(paradaOrigen.lat), lng: Number(paradaOrigen.lng) };
++        paradaDestino = { ...paradaDestino, lat: Number(paradaDestino.lat), lng: Number(paradaDestino.lng) };
++
++        direccion = paradaOrigen.orden_en_linea < paradaDestino.orden_en_linea ? 'ida' : 'vuelta';
++
++        // Obtener todas las paradas intermedias del tramo RN9 en orden
++        const minOrden = Math.min(paradaOrigen.orden_en_linea, paradaDestino.orden_en_linea);
++        const maxOrden = Math.max(paradaOrigen.orden_en_linea, paradaDestino.orden_en_linea);
++        const orderDir = direccion === 'ida' ? 'ASC' : 'DESC';
++
++        const { rows: tramoRows } = await query(
++          `SELECT id, nombre, slug, orden_en_linea, lat, lng, tipo, notas
++           FROM parada
++           WHERE linea_id = 'rn9' AND orden_en_linea >= $1 AND orden_en_linea <= $2
++           ORDER BY orden_en_linea ${orderDir}`,
++          [minOrden, maxOrden]
++        );
++
++        paradasTramo = tramoRows.map(r => ({
++          ...r,
++          lat: r.lat !== null ? Number(r.lat) : null,
++          lng: r.lng !== null ? Number(r.lng) : null
++        }));
++
++        // Obtener servicios reales de transporte
++        const { rows: horariosRaw } = await query(
++          `SELECT h1.id AS horario_origen_id,
++             h2.id AS horario_destino_id,
++             h1.servicio_id,
++             h1.linea_id,
++             l.nombre AS linea_nombre,
++             h1.hora_saliente AS hora_salida,
++             h2.hora_saliente AS hora_llegada,
++             h1.frecuencia_dias,
++             h1.fuente AS fuente_origen,
++             h2.fuente AS fuente_destino,
++             h1.confianza AS confianza_origen,
++             h2.confianza AS confianza_destino
++           FROM horario h1
++           JOIN horario h2 ON h1.servicio_id = h2.servicio_id AND h1.direccion = h2.direccion
++           JOIN linea l ON l.id = h1.linea_id
++           WHERE h1.parada_id = $1
++             AND h2.parada_id = $2
++             AND h1.direccion = $3
++           ORDER BY h1.hora_saliente ASC`,
++          [paradaOrigen.id, paradaDestino.id, direccion]
++        );
++
++        servicios = horariosRaw.map(row => {
++          const minSalida = timeToMinutes(row.hora_salida);
++          const minLlegada = timeToMinutes(row.hora_llegada);
++          let duracionMinutos = minLlegada - minSalida;
++          if (duracionMinutos < 0) duracionMinutos += 24 * 60;
++
++          let confianza = 'publicado';
++          if (row.confianza_origen === 'estimado' || row.confianza_destino === 'estimado') {
++            confianza = 'estimado';
++          }
++          if (row.confianza_origen === 'tiempo-real' || row.confianza_destino === 'tiempo-real') {
++            confianza = 'tiempo-real';
++          }
++
++          const fuente = row.fuente_origen === row.fuente_destino
++            ? row.fuente_origen
++            : `${row.fuente_origen} / ${row.fuente_destino}`;
++
++          const duracionTexto = formatMinutes(duracionMinutos);
++          const horaSalidaFmt = formatTime(row.hora_salida);
++          const horaLlegadaFmt = formatTime(row.hora_llegada);
++
++          return {
++            servicio_id: row.servicio_id,
++            linea_id: row.linea_id,
++            linea_nombre: row.linea_nombre,
++            hora_salida: horaSalidaFmt,
++            hora_llegada: horaLlegadaFmt,
++            hora_estimada_llegada: horaLlegadaFmt,
++            duracion_minutos: duracionMinutos,
++            duracion_estimada: duracionTexto,
++            duracion_aproximada: duracionTexto,
++            confianza,
++            fuente,
++            frecuencia_dias: row.frecuencia_dias
++          };
++        });
++
++        if (hora) {
++          const minFiltro = timeToMinutes(hora);
++          servicios = servicios.filter(s => timeToMinutes(s.hora_salida) >= minFiltro);
++        }
++      }
++    }
++
++    // Armar Polyline para el mapa
++    const polyline = [];
++    if (entidadOrigen.lat && entidadOrigen.lng) {
++      polyline.push([entidadOrigen.lat, entidadOrigen.lng]);
++    }
++
++    for (const p of paradasTramo) {
++      if (p.lat && p.lng) {
++        // Evitar duplicar punto si es casi idéntico al origen
++        const last = polyline[polyline.length - 1];
++        if (!last || Math.abs(last[0] - p.lat) > 0.0001 || Math.abs(last[1] - p.lng) > 0.0001) {
++          polyline.push([p.lat, p.lng]);
++        }
++      }
++    }
++
++    if (entidadDestino.lat && entidadDestino.lng) {
++      const last = polyline[polyline.length - 1];
++      if (!last || Math.abs(last[0] - entidadDestino.lat) > 0.0001 || Math.abs(last[1] - entidadDestino.lng) > 0.0001) {
++        polyline.push([entidadDestino.lat, entidadDestino.lng]);
++      }
++    }
++
++    // Puntos clave para pins en el mapa
++    const puntos = [];
++    puntos.push({
++      nombre: entidadOrigen.nombre,
++      tipo: 'origen',
++      lat: entidadOrigen.lat,
++      lng: entidadOrigen.lng,
++      detalle: 'Punto de partida'
++    });
++
++    if (paradaDestino && paradaDestino.slug !== entidadDestino.slug) {
++      puntos.push({
++        nombre: paradaDestino.nombre,
++        tipo: paradaDestino.tipo === 'cruce' ? 'cruce' : 'parada',
++        lat: paradaDestino.lat,
++        lng: paradaDestino.lng,
++        detalle: paradaDestino.tipo === 'cruce'
++          ? 'Descenso sobre RN9 (Cruce: requiere traslado local)'
++          : `Descenso en ${paradaDestino.nombre}`
++      });
++    }
++
++    puntos.push({
++      nombre: entidadDestino.nombre,
++      tipo: 'destino',
++      lat: entidadDestino.lat,
++      lng: entidadDestino.lng,
++      detalle: entidadDestino.tipo === 'lugar' ? 'Destino final' : 'Destino terminal'
++    });
++
++    res.json({
++      origen: entidadOrigen,
++      destino: entidadDestino,
++      paradaOrigen,
++      paradaDestino,
++      direccion,
++      tiene_servicio_rn9: tieneServicioRN9,
++      motivo_sin_servicio: motivoSinServicio,
++      alternativa_honesta: alternativaHonesta,
++      traslado_inicial: trasladoInicial,
++      traslado_final: trasladoFinal,
++      servicios,
++      paradas_tramo: paradasTramo,
++      polyline,
++      puntos
++    });
++  } catch (err) {
++    res.status(500).json({ error: err.message });
++  }
++});
++
+ export default router;
+diff --git a/backend/test/como-llegar.test.js b/backend/test/como-llegar.test.js
+new file mode 100644
+index 0000000..d031fb3
+--- /dev/null
++++ b/backend/test/como-llegar.test.js
+@@ -0,0 +1,127 @@
++import { test, before, after, describe } from 'node:test';
++import assert from 'node:assert/strict';
++import request from 'supertest';
++import pg from 'pg';
++import { readFileSync, readdirSync } from 'node:fs';
++import { join, dirname } from 'node:path';
++import { fileURLToPath } from 'node:url';
++import { createApp } from '../src/index.js';
++import { closePool } from '../src/db.js';
++import { seed } from '../src/seed.js';
++
++process.env.NODE_ENV = 'test';
++const testDbUrl = process.env.DATABASE_URL_TEST || 'postgres://jujuygo:jujuygo@localhost:5432/jujuygo_test';
++const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'migrations');
++
++async function applyMigrations(url) {
++  const client = new pg.Client({ connectionString: url });
++  await client.connect();
++  try {
++    await client.query(`CREATE TABLE IF NOT EXISTS _migrations (name text PRIMARY KEY, applied_at timestamptz DEFAULT now())`);
++    const { rows } = await client.query('SELECT name FROM _migrations');
++    const done = new Set(rows.map(r => r.name));
++    const files = readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
++    for (const f of files) {
++      if (done.has(f)) continue;
++      const sql = readFileSync(join(migrationsDir, f), 'utf8');
++      await client.query('BEGIN');
++      try {
++        await client.query(sql);
++        await client.query('INSERT INTO _migrations (name) VALUES ($1)', [f]);
++        await client.query('COMMIT');
++      } catch (e) {
++        await client.query('ROLLBACK');
++        throw e;
++      }
++    }
++  } finally {
++    await client.end();
++  }
++}
++
++describe('API Cómo Llegar (Slice 06)', () => {
++  let app;
++
++  before(async () => {
++    await applyMigrations(testDbUrl);
++    await seed(testDbUrl);
++    app = createApp();
++  });
++
++  after(async () => {
++    await closePool();
++  });
++
++  test('GET /api/transporte/como-llegar desde Terminal a Cerro de los Siete Colores', async () => {
++    const res = await request(app).get('/api/transporte/como-llegar?origen=terminal-jjs&destino=cerro-siete-colores');
++    assert.equal(res.status, 200);
++    assert.equal(res.body.tiene_servicio_rn9, true);
++    assert.equal(res.body.origen.slug, 'terminal-jjs');
++    assert.equal(res.body.destino.slug, 'cerro-siete-colores');
++
++    // Regla crucial: parada de descenso es Purmamarca Cruce (no pueblo)
++    assert.equal(res.body.paradaDestino.slug, 'purmamarca-cruce');
++    assert.equal(res.body.paradaDestino.tipo, 'cruce');
++
++    // Traslado local de 3 km del cruce al pueblo
++    assert.ok(res.body.traslado_final, 'Debe incluir traslado final local');
++    assert.equal(res.body.traslado_final.distancia_km, 3);
++    assert.match(res.body.traslado_final.descripcion, /3 km/);
++
++    // Servicios con datos reales de la DB de transporte
++    assert.ok(Array.isArray(res.body.servicios));
++    assert.ok(res.body.servicios.length > 0, 'Debe devolver servicios');
++    for (const s of res.body.servicios) {
++      assert.ok(s.hora_salida);
++      assert.ok(s.hora_llegada);
++      assert.ok(s.duracion_estimada);
++      assert.ok(['publicado', 'estimado', 'tiempo-real'].includes(s.confianza));
++      assert.ok(s.fuente && s.fuente.length > 0, 'Cada servicio debe tener fuente declarada');
++    }
++
++    // Polyline y puntos para el mapa
++    assert.ok(Array.isArray(res.body.polyline));
++    assert.ok(res.body.polyline.length >= 3, 'Debe contener coordenadas del recorrido');
++    assert.ok(Array.isArray(res.body.puntos));
++    assert.ok(res.body.puntos.some(p => p.tipo === 'origen'));
++    assert.ok(res.body.puntos.some(p => p.tipo === 'cruce' || p.tipo === 'parada'));
++    assert.ok(res.body.puntos.some(p => p.tipo === 'destino'));
++  });
++
++  test('GET /api/transporte/como-llegar desde Aeropuerto Jujuy incluye transfer inicial a Terminal', async () => {
++    const res = await request(app).get('/api/transporte/como-llegar?origen=aeropuerto-jujuy&destino=cerro-siete-colores');
++    assert.equal(res.status, 200);
++    assert.equal(res.body.origen.tipo, 'aeropuerto');
++    assert.ok(res.body.traslado_inicial, 'Debe incluir traslado inicial desde aeropuerto');
++    assert.equal(res.body.traslado_inicial.distancia_km, 33);
++    assert.equal(res.body.paradaOrigen.slug, 'terminal-jjs');
++    assert.equal(res.body.paradaDestino.slug, 'purmamarca-cruce');
++  });
++
++  test('GET /api/transporte/como-llegar a Salinas Grandes advierte sin servicio directo RN9 y da alternativa honesta', async () => {
++    const res = await request(app).get('/api/transporte/como-llegar?origen=terminal-jjs&destino=salinas-grandes');
++    assert.equal(res.status, 200);
++    assert.equal(res.body.tiene_servicio_rn9, false);
++    assert.ok(res.body.motivo_sin_servicio);
++    assert.ok(res.body.alternativa_honesta);
++    assert.match(res.body.alternativa_honesta, /Cuesta de Lipán|Purmamarca/i);
++  });
++
++  test('GET /api/transporte/como-llegar a Yungas (Parque Calilegua) advierte corredor RN34', async () => {
++    const res = await request(app).get('/api/transporte/como-llegar?origen=terminal-jjs&destino=parque-nacional-calilegua');
++    assert.equal(res.status, 200);
++    assert.equal(res.body.tiene_servicio_rn9, false);
++    assert.match(res.body.alternativa_honesta, /RN34|Libertador General San Martín/i);
++  });
++
++  test('GET /api/transporte/como-llegar con mismo origen y destino', async () => {
++    const res = await request(app).get('/api/transporte/como-llegar?origen=terminal-jjs&destino=terminal-jjs');
++    assert.equal(res.status, 200);
++    assert.equal(res.body.mismo_punto, true);
++  });
++
++  test('GET /api/transporte/como-llegar con destino inexistente responde 404', async () => {
++    const res = await request(app).get('/api/transporte/como-llegar?origen=terminal-jjs&destino=inexistente-1234');
++    assert.equal(res.status, 404);
++  });
++});
+diff --git a/frontend/src/app/app.routes.ts b/frontend/src/app/app.routes.ts
+index 888f569..64a243f 100644
+--- a/frontend/src/app/app.routes.ts
++++ b/frontend/src/app/app.routes.ts
+@@ -2,10 +2,13 @@ import { Routes } from '@angular/router';
+ import { HomePage } from './home/home';
+ import { LugarDetallePage } from './lugar-detalle/lugar-detalle';
+ import { TravesiaPage } from './travesia/travesia';
++import { ComoLlegarPage } from './como-llegar/como-llegar';
+ 
+ export const routes: Routes = [
+   { path: '', component: HomePage, title: 'Yapa — Jujuy como se vive' },
+   { path: 'lugares/:slug', component: LugarDetallePage, title: 'Lugar — Yapa' },
++  { path: 'como-llegar', component: ComoLlegarPage, title: 'Cómo llegar — Yapa' },
++  { path: 'como-llegar/:slugLugar', component: ComoLlegarPage, title: 'Cómo llegar — Yapa' },
+   { path: 'travesia', component: TravesiaPage, title: 'Armá tu travesía — Yapa' },
+   { path: '**', redirectTo: '' },
+ ];
+diff --git a/frontend/src/app/como-llegar/como-llegar.css b/frontend/src/app/como-llegar/como-llegar.css
+new file mode 100644
+index 0000000..cc600ae
+--- /dev/null
++++ b/frontend/src/app/como-llegar/como-llegar.css
+@@ -0,0 +1,65 @@
++:host { display: block; min-height: 100vh; }
++
++.como-llegar-shell { max-width: 1280px; margin: 0 auto; padding: 0 5% 96px; }
++.como-llegar-nav { display: flex; align-items: center; justify-content: space-between; min-height: 80px; border-bottom: 1px solid var(--t14); }
++.como-llegar-brand { display: inline-flex; align-items: baseline; gap: 5px; padding: 12px 0; color: var(--tinta); font: 600 24px var(--serif); text-decoration: none; }
++.como-llegar-brand span { width: 8px; height: 8px; border-radius: 50%; background: var(--oxido); }
++.volver-inicio { display: inline-flex; align-items: center; min-height: 44px; color: var(--t60); font-size: 14px; text-decoration: none; }
++
++.como-llegar-intro { max-width: 820px; padding: 68px 0 42px; }
++.kicker { color: var(--oxido); font-size: 14px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
++.como-llegar-intro h1 { margin-top: 16px; font: 400 clamp(44px, 7vw, 78px)/1.04 var(--serif); letter-spacing: -.03em; text-wrap: balance; }
++.como-llegar-intro h1 em { color: var(--oxido); font-weight: 400; }
++.como-llegar-intro > p:last-child { max-width: 540px; margin-top: 20px; color: var(--t60); font-size: 16px; line-height: 1.65; }
++
++.seleccion-recorrido { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: end; gap: 20px; padding: 24px 0; border-top: 1px solid var(--t14); border-bottom: 1px solid var(--t14); }
++.campo-recorrido { display: grid; gap: 9px; min-width: 0; }
++.campo-recorrido label, .campo-label { color: var(--t60); font-size: 14px; font-weight: 600; }
++.campo-recorrido select { width: 100%; min-height: 52px; padding: 10px 38px 10px 14px; border: 1px solid var(--t30); border-radius: 3px; background: var(--papel); color: var(--tinta); font: 15px var(--sans); }
++.campo-recorrido select:focus-visible { outline: 2px solid var(--oxido); outline-offset: 3px; }
++.destino-fijo { display: flex; align-items: center; min-height: 52px; color: var(--tinta); font: 500 21px/1.2 var(--serif); }
++.boton-recorrido { min-height: 52px; padding: 12px 24px; border: 0; border-radius: 999px; background: var(--verde); color: #fff; font: 600 14px var(--sans); cursor: pointer; transition: background-color .18s ease, transform .18s ease; }
++.boton-recorrido:hover:not(:disabled) { background: #233a31; transform: translateY(-2px); }
++.boton-recorrido:active:not(:disabled) { transform: translateY(0); }
++.boton-recorrido:disabled { cursor: not-allowed; opacity: .55; }
++
++.mensaje-estado, .mensaje-error, .aviso-recorrido { margin: 30px 0; padding: 18px 20px; border-left: 3px solid var(--ocre); background: var(--arena); color: var(--tinta); font-size: 15px; line-height: 1.6; }
++.mensaje-error { border-left-color: var(--oxido); }
++.boton-reintentar { min-height: 44px; margin-top: 10px; padding: 8px 0; border: 0; background: transparent; color: var(--oxido); font: 600 14px var(--sans); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
++.aviso-sin-servicio { margin-top: 48px; padding: 28px 32px; border-left: 3px solid var(--oxido); background: #eee2d5; }
++.aviso-sin-servicio h2 { max-width: 780px; margin-top: 10px; font-size: clamp(24px, 3vw, 34px); font-weight: 400; line-height: 1.22; text-wrap: balance; }
++.aviso-sin-servicio > p:last-child { max-width: 720px; margin-top: 14px; color: var(--t60); font-size: 15px; line-height: 1.65; }
++
++.relato-section { padding-top: 54px; }
++.relato-heading h2, .mapa-heading h2 { margin-top: 8px; font: 400 clamp(30px, 4vw, 46px)/1.12 var(--serif); text-wrap: balance; }
++.relato-pasos { max-width: 900px; margin: 32px 0 0; padding: 0; list-style: none; }
++.relato-paso { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 18px; padding: 24px 0; border-top: 1px solid var(--t14); }
++.paso-numero { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--ocre); border-radius: 50%; color: var(--verde); font-size: 15px; font-variant-numeric: tabular-nums; }
++.paso-contenido h3 { font: 500 24px/1.2 var(--serif); }
++.paso-contenido > p:not(.dato-fuente) { max-width: 700px; margin-top: 9px; color: var(--t60); font-size: 15px; line-height: 1.65; }
++.dato-fuente { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 12px; color: var(--verde); font-size: 14px; font-variant-numeric: tabular-nums; }
++.dato-fuente span + span::before { content: "·"; margin-right: 20px; color: var(--ocre); }
++
++.mapa-section { margin-top: 54px; padding-top: 34px; border-top: 1px solid var(--t14); }
++.mapa-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 20px; }
++.mapa-heading > p { max-width: 360px; color: var(--t60); font-size: 14px; line-height: 1.55; }
++
++@media (max-width: 720px) {
++  .como-llegar-shell { padding-inline: 24px; padding-bottom: 64px; }
++  .como-llegar-nav { min-height: 70px; }
++  .como-llegar-intro { padding-top: 42px; }
++  .seleccion-recorrido { grid-template-columns: 1fr; gap: 16px; }
++  .boton-recorrido { width: 100%; }
++  .aviso-sin-servicio { margin-top: 32px; padding: 22px 20px; }
++  .relato-section { padding-top: 38px; }
++  .relato-pasos { margin-top: 22px; }
++  .relato-paso { grid-template-columns: 38px minmax(0, 1fr); gap: 12px; padding: 20px 0; }
++  .paso-numero { width: 32px; height: 32px; }
++  .paso-contenido h3 { font-size: 21px; }
++  .mapa-heading { display: block; }
++  .mapa-heading > p { margin-top: 10px; }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  .boton-recorrido { transition: none; }
++}
+diff --git a/frontend/src/app/como-llegar/como-llegar.html b/frontend/src/app/como-llegar/como-llegar.html
+new file mode 100644
+index 0000000..881a7ed
+--- /dev/null
++++ b/frontend/src/app/como-llegar/como-llegar.html
+@@ -0,0 +1,125 @@
++<main class="como-llegar-shell">
++  <nav class="como-llegar-nav" aria-label="Navegación">
++    <a class="como-llegar-brand" routerLink="/">Yapa<span aria-hidden="true"></span></a>
++    <a class="volver-inicio" routerLink="/">Volver a explorar</a>
++  </nav>
++
++  <header class="como-llegar-intro">
++    <p class="kicker">Jujuy · guía de viaje</p>
++    <h1 class="serif">Cómo llegar a <em>{{ nombreDestino() }}</em></h1>
++    <p>Un recorrido explicado paso a paso, con horarios y accesos locales informados.</p>
++  </header>
++
++  <section class="seleccion-recorrido" aria-label="Elegir recorrido">
++    <div class="campo-recorrido">
++      <label for="origen">Salís desde</label>
++      <select id="origen" [value]="origen()" (change)="seleccionarOrigen($event)">
++        @for (opcion of origenes(); track opcion.slug) {
++          <option [value]="opcion.slug">{{ etiquetaGrupo(opcion) }} · {{ opcion.nombre }}</option>
++        }
++      </select>
++    </div>
++    <div class="campo-recorrido">
++      @if (destinoFijado()) {
++        <span class="campo-label">Vas a</span>
++        <p class="destino-fijo">{{ nombreDestino() }}</p>
++      } @else {
++        <label for="destino">Vas a</label>
++        <select id="destino" [value]="destino()" (change)="seleccionarDestino($event)">
++          <option value="">Elegí un lugar</option>
++          @for (lugar of lugares(); track lugar.slug) {
++            <option [value]="lugar.slug">{{ lugar.nombre }}</option>
++          }
++        </select>
++      }
++    </div>
++    <button class="boton-recorrido" type="button" [disabled]="!destino() || cargando()" (click)="cargarRecorrido()">
++      {{ cargando() ? 'Buscando recorrido…' : 'Ver recorrido' }}
++    </button>
++  </section>
++
++  @if (errorOpciones()) {
++    <p class="mensaje-error" role="alert">{{ errorOpciones() }}</p>
++  }
++  @if (cargando()) {
++    <p class="mensaje-estado" role="status">Consultando horarios y paradas publicadas…</p>
++  } @else if (error()) {
++    <div class="mensaje-error" role="alert">
++      <p>{{ error() }}</p>
++      <button type="button" class="boton-reintentar" (click)="cargarRecorrido()">Reintentar</button>
++    </div>
++  } @else if (guia(); as guia) {
++    @if (guia.mismo_punto) {
++      <p class="aviso-recorrido" role="status">{{ guia.mensaje }}</p>
++    } @else {
++      @if (!guia.tiene_servicio_rn9) {
++        <aside class="aviso-sin-servicio" role="note">
++          <p class="kicker">Sin servicio directo por RN9</p>
++          <h2 class="serif">{{ guia.motivo_sin_servicio || 'Este destino no tiene un servicio directo de la RN9.' }}</h2>
++          @if (guia.alternativa_honesta) {
++            <p>{{ guia.alternativa_honesta }}</p>
++          }
++        </aside>
++      }
++
++      @if (guia.servicios.length === 0 && guia.tiene_servicio_rn9) {
++        <p class="aviso-recorrido" role="status">
++          No encontramos horarios para este tramo. Probá otro origen o consultá opciones locales.
++        </p>
++      }
++
++      @if (pasosRelato(guia).length > 0) {
++        <section class="relato-section" aria-labelledby="relato-titulo">
++          <div class="relato-heading">
++            <p class="kicker">El camino</p>
++            <h2 id="relato-titulo" class="serif">De a poco, hasta {{ guia.destino.nombre }}</h2>
++          </div>
++          <ol class="relato-pasos">
++            @for (paso of pasosRelato(guia); track $index) {
++              <li class="relato-paso">
++                <span class="paso-numero" aria-hidden="true">{{ $index + 1 }}</span>
++                <div class="paso-contenido">
++                  <h3 class="serif">{{ paso.titulo }}</h3>
++                  <p>{{ paso.detalle }}</p>
++                  @if (paso.servicio; as servicio) {
++                    <p class="dato-fuente">
++                      <span>{{ confianza(servicio) }}</span>
++                      <span>Fuente: {{ horaFuente(servicio) }}</span>
++                    </p>
++                  }
++                  @if (paso.traslado; as traslado) {
++                    <p class="dato-fuente">
++                      <span>Acceso local</span>
++                      @if (traslado.distancia_km) {
++                        <span>{{ traslado.distancia_km }} km</span>
++                      }
++                      @if (traslado.duracion_estimada) {
++                        <span>Estimado: {{ traslado.duracion_estimada }}</span>
++                      }
++                    </p>
++                  }
++                </div>
++              </li>
++            }
++          </ol>
++        </section>
++      }
++
++      <section class="mapa-section" aria-labelledby="mapa-titulo">
++        <div class="mapa-heading">
++          <div>
++            <p class="kicker">Sobre el territorio</p>
++            <h2 id="mapa-titulo" class="serif">El recorrido en el mapa</h2>
++          </div>
++          <p>La línea une los puntos informados; no representa un camino calle por calle.</p>
++        </div>
++        <yapa-mapa
++          [rutaPuntos]="puntosMapa()"
++          [rutaPolyline]="guia.polyline"
++          [altura]="'440px'"
++          [interactive]="true"
++        ></yapa-mapa>
++      </section>
++    }
++  }
++</main>
+diff --git a/frontend/src/app/como-llegar/como-llegar.spec.ts b/frontend/src/app/como-llegar/como-llegar.spec.ts
+new file mode 100644
+index 0000000..5f3f4e9
+--- /dev/null
++++ b/frontend/src/app/como-llegar/como-llegar.spec.ts
+@@ -0,0 +1,159 @@
++import { provideRouter } from '@angular/router';
++import { ComponentFixture, TestBed } from '@angular/core/testing';
++import { ActivatedRoute, convertToParamMap } from '@angular/router';
++import { of } from 'rxjs';
++import { describe, expect, it, vi } from 'vitest';
++import { CatalogoService } from '../catalogo.service';
++import { Lugar } from '../catalogo.types';
++import { TransporteService } from '../transporte.service';
++import { ComoLlegarPage } from './como-llegar';
++import { RespuestaComoLlegar } from './como-llegar.types';
++
++const lugar: Lugar = {
++  id: 1,
++  nombre: 'Cerro de los Siete Colores',
++  slug: 'cerro-siete-colores',
++  lat: -23.7448,
++  lng: -65.4995,
++  altitud_m: 2324,
++  descripcion: 'Formaciones de distintos tonos rodean Purmamarca.',
++  como_llegar: 'Hay servicios regulares hasta Purmamarca.',
++  mejor_epoca: 'Todo el año.',
++  foto: 'purmamarca.jpg',
++  zona: 'Quebrada',
++  zona_slug: 'quebrada',
++  datos_json: { localidad: 'Purmamarca' },
++};
++
++const respuesta: RespuestaComoLlegar = {
++  origen: {
++    slug: 'terminal-jjs',
++    nombre: 'Terminal de Ómnibus SS.Jujuy',
++    tipo: 'terminal',
++    lat: -24.2128,
++    lng: -65.2891,
++  },
++  destino: {
++    slug: lugar.slug,
++    nombre: lugar.nombre,
++    tipo: 'lugar',
++    lat: lugar.lat,
++    lng: lugar.lng,
++    localidad: 'Purmamarca',
++  },
++  paradaOrigen: {
++    id: 1,
++    linea_id: 'rn9',
++    nombre: 'Terminal Jujuy',
++    slug: 'terminal-jjs',
++    orden_en_linea: 1,
++    lat: -24.2128,
++    lng: -65.2891,
++    tipo: 'terminal',
++  },
++  paradaDestino: {
++    id: 2,
++    linea_id: 'rn9',
++    nombre: 'Purmamarca Cruce',
++    slug: 'purmamarca-cruce',
++    orden_en_linea: 2,
++    lat: -23.741,
++    lng: -65.497,
++    tipo: 'cruce',
++  },
++  direccion: 'ida',
++  tiene_servicio_rn9: true,
++  motivo_sin_servicio: null,
++  alternativa_honesta: null,
++  traslado_inicial: null,
++  traslado_final: {
++    titulo: 'Del cruce al pueblo',
++    tipo: 'cruce-a-pueblo',
++    distancia_km: 3,
++    duracion_estimada: '5-10 min en vehículo / 35-40 min a pie',
++    descripcion: 'Purmamarca Cruce queda sobre la RN9, a 3 km del pueblo.',
++  },
++  servicios: [{
++    servicio_id: 'servicio-1',
++    linea_id: 'rn9',
++    linea_nombre: 'RN9',
++    hora_salida: '07:20',
++    hora_llegada: '09:10',
++    hora_estimada_llegada: '09:10',
++    duracion_minutos: 110,
++    duracion_estimada: '1h 50m',
++    duracion_aproximada: '1h 50m',
++    confianza: 'publicado',
++    fuente: 'horario oficial',
++  }],
++  paradas_tramo: [],
++  polyline: [[-24.2128, -65.2891], [-23.741, -65.497], [-23.7448, -65.4995]],
++  puntos: [
++    { nombre: 'Terminal Jujuy', tipo: 'origen', lat: -24.2128, lng: -65.2891 },
++    { nombre: 'Purmamarca Cruce', tipo: 'cruce', lat: -23.741, lng: -65.497 },
++    { nombre: lugar.nombre, tipo: 'destino', lat: lugar.lat, lng: lugar.lng },
++  ],
++};
++
++describe('ComoLlegarPage', () => {
++  let fixture: ComponentFixture<ComoLlegarPage>;
++  let respuestaActual: RespuestaComoLlegar;
++
++  beforeEach(async () => {
++    respuestaActual = respuesta;
++    await TestBed.configureTestingModule({
++      imports: [ComoLlegarPage],
++      providers: [
++        provideRouter([]),
++        {
++          provide: ActivatedRoute,
++          useValue: { paramMap: of(convertToParamMap({ slugLugar: lugar.slug })) },
++        },
++        {
++          provide: CatalogoService,
++          useValue: { getLugares: () => of([lugar]) },
++        },
++        {
++          provide: TransporteService,
++          useValue: {
++            getParadasRN9: () => of([]),
++            getComoLlegar: vi.fn(() => of(respuestaActual)),
++          },
++        },
++      ],
++    }).compileComponents();
++  });
++
++  it('renderiza el relato con el horario, la fuente y el traslado desde el cruce', () => {
++    fixture = TestBed.createComponent(ComoLlegarPage);
++    fixture.detectChanges();
++    const texto = fixture.nativeElement.textContent as string;
++
++    expect(texto).toContain(lugar.nombre);
++    expect(texto).toContain('Tomá el colectivo en Terminal Jujuy');
++    expect(texto).toContain('07:20');
++    expect(texto).toContain('Horario publicado');
++    expect(texto).toContain('Fuente: horario oficial');
++    expect(texto).toContain('Purmamarca Cruce');
++    expect(texto).toContain('3 km');
++    expect(fixture.nativeElement.querySelector('yapa-mapa')).toBeTruthy();
++  });
++
++  it('explica el destino sin servicio directo y conserva la alternativa de la API', () => {
++    respuestaActual = {
++      ...respuesta,
++      tiene_servicio_rn9: false,
++      motivo_sin_servicio: 'El destino queda fuera del corredor RN9.',
++      alternativa_honesta: 'Desde Abra Pampa, contratá un remise local.',
++      traslado_final: null,
++      servicios: [],
++    };
++
++    fixture = TestBed.createComponent(ComoLlegarPage);
++    fixture.detectChanges();
++    const aviso = fixture.nativeElement.querySelector('.aviso-sin-servicio') as HTMLElement;
++
++    expect(aviso.textContent).toContain('El destino queda fuera del corredor RN9.');
++    expect(aviso.textContent).toContain('Desde Abra Pampa, contratá un remise local.');
++  });
++});
+diff --git a/frontend/src/app/como-llegar/como-llegar.ts b/frontend/src/app/como-llegar/como-llegar.ts
+new file mode 100644
+index 0000000..c5674cd
+--- /dev/null
++++ b/frontend/src/app/como-llegar/como-llegar.ts
+@@ -0,0 +1,219 @@
++import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
++import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
++import { ActivatedRoute, RouterLink } from '@angular/router';
++import { forkJoin } from 'rxjs';
++import { CatalogoService } from '../catalogo.service';
++import { Lugar } from '../catalogo.types';
++import { TransporteService } from '../transporte.service';
++import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
++import { RutaMapaPunto } from '../yapa-mapa/yapa-mapa.types';
++import {
++  OpcionOrigen,
++  PuntoTransporte,
++  RespuestaComoLlegar,
++  ServicioTransporte,
++  TrasladoLocal,
++} from './como-llegar.types';
++
++interface PasoRelato {
++  titulo: string;
++  detalle: string;
++  servicio?: ServicioTransporte;
++  traslado?: TrasladoLocal;
++}
++
++const ORIGENES_BASE: OpcionOrigen[] = [
++  { slug: 'terminal-jjs', nombre: 'Terminal de Ómnibus SS.Jujuy', grupo: 'terminales' },
++  { slug: 'aeropuerto-jujuy', nombre: 'Aeropuerto Jujuy (Dr. Horacio Guzmán)', grupo: 'terminales' },
++];
++
++@Component({
++  imports: [RouterLink, YapaMapaComponent],
++  selector: 'app-como-llegar',
++  styleUrl: './como-llegar.css',
++  templateUrl: './como-llegar.html',
++})
++export class ComoLlegarPage {
++  private readonly route = inject(ActivatedRoute);
++  private readonly catalogo = inject(CatalogoService);
++  private readonly transporte = inject(TransporteService);
++  private readonly destroyRef = inject(DestroyRef);
++
++  protected readonly lugares = signal<Lugar[]>([]);
++  protected readonly paradas = signal<PuntoTransporte[]>([]);
++  protected readonly origen = signal('terminal-jjs');
++  protected readonly destino = signal('');
++  protected readonly destinoFijado = signal(false);
++  protected readonly guia = signal<RespuestaComoLlegar | null>(null);
++  protected readonly cargando = signal(false);
++  protected readonly error = signal('');
++  protected readonly errorOpciones = signal('');
++
++  protected readonly origenes = computed(() => {
++    const slugsBase = new Set(ORIGENES_BASE.map(opcion => opcion.slug));
++    return [
++      ...ORIGENES_BASE,
++      ...this.paradas()
++        .filter(parada => parada.slug && !slugsBase.has(parada.slug))
++        .map(parada => ({
++          slug: parada.slug!,
++          nombre: parada.nombre,
++          grupo: 'paradas' as const,
++        })),
++      ...this.lugares().map(lugar => ({
++        slug: lugar.slug,
++        nombre: lugar.nombre,
++        grupo: 'lugares' as const,
++      })),
++    ];
++  });
++
++  protected readonly nombreDestino = computed(() => {
++    const guia = this.guia();
++    if (guia && !guia.mismo_punto) return guia.destino.nombre;
++    return this.lugares().find(lugar => lugar.slug === this.destino())?.nombre ?? 'tu destino';
++  });
++
++  protected readonly puntosMapa = computed<RutaMapaPunto[]>(() =>
++    (this.guia()?.puntos ?? [])
++      .filter((punto): punto is PuntoTransporte & { lat: number; lng: number } =>
++        typeof punto.lat === 'number' && Number.isFinite(punto.lat) &&
++        typeof punto.lng === 'number' && Number.isFinite(punto.lng),
++      )
++      .map(punto => ({
++        nombre: punto.nombre,
++        tipo: punto.tipo,
++        lat: punto.lat,
++        lng: punto.lng,
++      })),
++  );
++
++  constructor() {
++    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
++      const slug = params.get('slugLugar') ?? '';
++      this.destinoFijado.set(Boolean(slug));
++      this.destino.set(slug);
++      this.guia.set(null);
++      if (slug) this.cargarRecorrido();
++    });
++
++    forkJoin({
++      lugares: this.catalogo.getLugares(),
++      paradas: this.transporte.getParadasRN9(),
++    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
++      next: ({ lugares, paradas }) => {
++        this.lugares.set(lugares);
++        this.paradas.set(paradas);
++      },
++      error: () => this.errorOpciones.set(
++        'No pudimos cargar los lugares y paradas para elegir. Revisá tu conexión e intentá de nuevo.',
++      ),
++    });
++  }
++
++  protected seleccionarOrigen(event: Event): void {
++    this.origen.set((event.target as HTMLSelectElement).value);
++  }
++
++  protected seleccionarDestino(event: Event): void {
++    this.destino.set((event.target as HTMLSelectElement).value);
++  }
++
++  protected cargarRecorrido(): void {
++    if (!this.destino()) return;
++
++    this.cargando.set(true);
++    this.error.set('');
++    this.guia.set(null);
++    this.transporte.getComoLlegar(this.origen(), this.destino())
++      .pipe(takeUntilDestroyed(this.destroyRef))
++      .subscribe({
++        next: guia => {
++          this.guia.set(guia);
++          this.cargando.set(false);
++        },
++        error: () => {
++          this.error.set('No pudimos consultar el recorrido. Revisá tu conexión e intentá de nuevo.');
++          this.cargando.set(false);
++        },
++      });
++  }
++
++  protected pasosRelato(guia: RespuestaComoLlegar): PasoRelato[] {
++    if (guia.mismo_punto) {
++      return [{ titulo: 'Ya estás en el destino', detalle: guia.mensaje }];
++    }
++
++    const pasos: PasoRelato[] = [];
++    if (guia.traslado_inicial) {
++      pasos.push({
++        titulo: guia.traslado_inicial.titulo,
++        detalle: guia.traslado_inicial.descripcion,
++        traslado: guia.traslado_inicial,
++      });
++    }
++
++    const servicio = guia.servicios[0];
++    if (servicio) {
++      const paradaSalida = guia.paradaOrigen?.nombre ?? guia.origen.nombre;
++      pasos.push({
++        titulo: `Tomá el colectivo en ${paradaSalida}`,
++        detalle: `${servicio.linea_nombre}: salida ${servicio.hora_salida}, llegada ${servicio.hora_llegada} (${servicio.duracion_estimada}).`,
++        servicio,
++      });
++
++      if (guia.paradaDestino && guia.paradaDestino.slug !== guia.destino.slug) {
++        pasos.push({
++          titulo: `Bajá en ${guia.paradaDestino.nombre}`,
++          detalle: guia.paradaDestino.tipo === 'cruce'
++            ? 'Es un cruce sobre la RN9; el colectivo no llega hasta el pueblo.'
++            : `Esta es la parada de conexión para ${guia.destino.nombre}.`,
++        });
++      }
++    } else if (guia.tiene_servicio_rn9) {
++      pasos.push({
++        titulo: 'No hay horarios disponibles para este tramo',
++        detalle: 'La consulta no devolvió salidas para el recorrido elegido. Probá con otro origen.',
++      });
++    }
++
++    if (guia.traslado_final) {
++      pasos.push({
++        titulo: guia.traslado_final.titulo,
++        detalle: guia.traslado_final.descripcion,
++        traslado: guia.traslado_final,
++      });
++    } else if (guia.tiene_servicio_rn9 && servicio && pasos.length > 0 &&
++      !guia.paradaDestino?.slug?.includes(guia.destino.slug)) {
++      pasos.push({
++        titulo: `Llegá a ${guia.destino.nombre}`,
++        detalle: guia.destino.localidad
++          ? `Destino en ${guia.destino.localidad}.`
++          : 'Destino indicado en el catálogo.',
++      });
++    }
++
++    return pasos;
++  }
++
++  protected confianza(servicio: ServicioTransporte): string {
++    switch (servicio.confianza) {
++      case 'publicado': return 'Horario publicado';
++      case 'estimado': return 'Horario estimado';
++      case 'tiempo-real': return 'Tiempo real';
++      default: return servicio.confianza;
++    }
++  }
++
++  protected horaFuente(servicio: ServicioTransporte): string {
++    return servicio.fuente;
++  }
++
++  protected etiquetaGrupo(grupo: OpcionOrigen): string {
++    return {
++      terminales: 'Terminales y aeropuerto',
++      paradas: 'Paradas RN9',
++      lugares: 'Lugares del catálogo',
++    }[grupo.grupo];
++  }
++}
+diff --git a/frontend/src/app/como-llegar/como-llegar.types.ts b/frontend/src/app/como-llegar/como-llegar.types.ts
+new file mode 100644
+index 0000000..08d6e49
+--- /dev/null
++++ b/frontend/src/app/como-llegar/como-llegar.types.ts
+@@ -0,0 +1,81 @@
++export interface PuntoTransporte {
++  id?: number;
++  linea_id?: string;
++  nombre: string;
++  slug?: string;
++  orden_en_linea?: number;
++  lat: number | null;
++  lng: number | null;
++  tipo: string;
++  notas?: string | null;
++  detalle?: string;
++}
++
++export interface EntidadTransporte {
++  slug: string;
++  nombre: string;
++  tipo: string;
++  lat: number | null;
++  lng: number | null;
++  altitud_m?: number | null;
++  descripcion?: string;
++  como_llegar?: string;
++  localidad?: string | null;
++}
++
++export interface ServicioTransporte {
++  servicio_id: string;
++  linea_id: string;
++  linea_nombre: string;
++  hora_salida: string;
++  hora_llegada: string;
++  hora_estimada_llegada: string;
++  duracion_minutos: number;
++  duracion_estimada: string;
++  duracion_aproximada: string;
++  confianza: 'publicado' | 'estimado' | 'tiempo-real' | string;
++  fuente: string;
++  frecuencia_dias?: string;
++}
++
++export interface TrasladoLocal {
++  titulo: string;
++  tipo: string;
++  distancia_km: number;
++  duracion_estimada: string;
++  descripcion: string;
++}
++
++interface RespuestaTrayecto {
++  mismo_punto?: false;
++  origen: EntidadTransporte;
++  destino: EntidadTransporte;
++  paradaOrigen: PuntoTransporte | null;
++  paradaDestino: PuntoTransporte | null;
++  direccion: string | null;
++  tiene_servicio_rn9: boolean;
++  motivo_sin_servicio: string | null;
++  alternativa_honesta: string | null;
++  traslado_inicial: TrasladoLocal | null;
++  traslado_final: TrasladoLocal | null;
++  servicios: ServicioTransporte[];
++  paradas_tramo: PuntoTransporte[];
++  polyline: [number, number][];
++  puntos: PuntoTransporte[];
++}
++
++export interface RespuestaMismoPunto {
++  mismo_punto: true;
++  mensaje: string;
++  servicios: [];
++  puntos: [];
++  polyline: [];
++}
++
++export type RespuestaComoLlegar = RespuestaTrayecto | RespuestaMismoPunto;
++
++export interface OpcionOrigen {
++  slug: string;
++  nombre: string;
++  grupo: 'terminales' | 'paradas' | 'lugares';
++}
+diff --git a/frontend/src/app/lugar-detalle/lugar-detalle.css b/frontend/src/app/lugar-detalle/lugar-detalle.css
+index e70e610..22becf6 100644
+--- a/frontend/src/app/lugar-detalle/lugar-detalle.css
++++ b/frontend/src/app/lugar-detalle/lugar-detalle.css
+@@ -19,6 +19,9 @@
+ .detail-content { max-width: 1000px; margin: 0 auto; padding: 72px 5% 96px; }
+ .detail-description { max-width: 760px; font: 400 clamp(24px, 3vw, 34px)/1.38 var(--serif); }
+ .detail-note { margin-top: 20px; color: var(--t60); font-size: 14px; line-height: 1.6; }
++.detail-directions { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; margin-top: 26px; padding: 0 20px; border-radius: 999px; background: var(--verde); color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; transition: background-color .18s ease, transform .18s ease; }
++.detail-directions:hover { background: #233a31; transform: translateY(-2px); }
++.detail-directions span { font-size: 18px; }
+ .detail-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 0 56px; margin-top: 56px; }
+ .detail-fact { padding: 24px 0; border-top: 1px solid var(--t14); }
+ .detail-fact h2 { font: 500 21px var(--serif); text-wrap: balance; }
+diff --git a/frontend/src/app/lugar-detalle/lugar-detalle.html b/frontend/src/app/lugar-detalle/lugar-detalle.html
+index 15c95c5..0a48dd1 100644
+--- a/frontend/src/app/lugar-detalle/lugar-detalle.html
++++ b/frontend/src/app/lugar-detalle/lugar-detalle.html
+@@ -36,6 +36,10 @@
+           <p class="detail-note">{{ lugar.datos_json.nota }}</p>
+         }
+ 
++        <a class="detail-directions" [routerLink]="['/como-llegar', lugar.slug]">
++          Cómo llegar <span aria-hidden="true">→</span>
++        </a>
++
+         <section class="detail-facts" aria-label="Información del lugar">
+           <div class="detail-fact">
+             <h2>Cómo llegar</h2>
+diff --git a/frontend/src/app/lugar-detalle/lugar-detalle.spec.ts b/frontend/src/app/lugar-detalle/lugar-detalle.spec.ts
+index a209ef2..6423730 100644
+--- a/frontend/src/app/lugar-detalle/lugar-detalle.spec.ts
++++ b/frontend/src/app/lugar-detalle/lugar-detalle.spec.ts
+@@ -66,4 +66,12 @@ describe('LugarDetallePage', () => {
+     const mapaEl = fixture.nativeElement.querySelector('yapa-mapa');
+     expect(mapaEl).toBeTruthy();
+   });
++
++  it('links to the travel guide with the place preselected as destination', () => {
++    const fixture = TestBed.createComponent(LugarDetallePage);
++    fixture.detectChanges();
++    const link = fixture.nativeElement.querySelector('.detail-directions') as HTMLAnchorElement;
++
++    expect(link.getAttribute('href')).toBe(`/como-llegar/${lugar.slug}`);
++  });
+ });
+diff --git a/frontend/src/app/transporte.service.ts b/frontend/src/app/transporte.service.ts
+new file mode 100644
+index 0000000..2c355ea
+--- /dev/null
++++ b/frontend/src/app/transporte.service.ts
+@@ -0,0 +1,20 @@
++import { HttpClient, HttpParams } from '@angular/common/http';
++import { Injectable, inject } from '@angular/core';
++import { Observable } from 'rxjs';
++import { environment } from '../environments/environment';
++import { RespuestaComoLlegar, PuntoTransporte } from './como-llegar/como-llegar.types';
++
++@Injectable({ providedIn: 'root' })
++export class TransporteService {
++  private readonly http = inject(HttpClient);
++  private readonly apiUrl = environment.apiUrl;
++
++  getParadasRN9(): Observable<PuntoTransporte[]> {
++    return this.http.get<PuntoTransporte[]>(`${this.apiUrl}/transporte/paradas`);
++  }
++
++  getComoLlegar(origen: string, destino: string): Observable<RespuestaComoLlegar> {
++    const params = new HttpParams().set('origen', origen).set('destino', destino);
++    return this.http.get<RespuestaComoLlegar>(`${this.apiUrl}/transporte/como-llegar`, { params });
++  }
++}
+diff --git a/frontend/src/app/yapa-mapa/yapa-mapa.component.css b/frontend/src/app/yapa-mapa/yapa-mapa.component.css
+index deefd68..a1b595c 100644
+--- a/frontend/src/app/yapa-mapa/yapa-mapa.component.css
++++ b/frontend/src/app/yapa-mapa/yapa-mapa.component.css
+@@ -68,6 +68,43 @@
+   border: none !important;
+ }
+ 
++/* Pins del relato de viaje */
++:host ::ng-deep .yapa-route-div-icon {
++  background: transparent !important;
++  border: none !important;
++}
++
++:host ::ng-deep .yapa-route-pin {
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  min-height: 36px;
++  max-width: 152px;
++  padding: 7px 12px;
++  overflow: hidden;
++  border: 1px solid var(--tinta, #241610);
++  border-radius: 999px;
++  background: var(--papel, #F4EDE3);
++  color: var(--tinta, #241610);
++  box-shadow: 0 2px 8px rgba(36, 22, 16, 0.18);
++  font: 600 12px/1.2 var(--sans, "Archivo", sans-serif);
++  text-overflow: ellipsis;
++  white-space: nowrap;
++}
++
++:host ::ng-deep .yapa-route-origin,
++:host ::ng-deep .yapa-route-destination {
++  border-color: var(--oxido, #B5492A);
++  background: var(--oxido, #B5492A);
++  color: #fff;
++}
++
++:host ::ng-deep .yapa-route-crossing {
++  border-color: var(--verde, #2E4A3E);
++  background: var(--verde, #2E4A3E);
++  color: #fff;
++}
++
+ /* Clusters ("Tilcara · 2") */
+ :host ::ng-deep .yapa-cluster-pin {
+   display: inline-flex;
+diff --git a/frontend/src/app/yapa-mapa/yapa-mapa.component.ts b/frontend/src/app/yapa-mapa/yapa-mapa.component.ts
+index 685f4ff..734d001 100644
+--- a/frontend/src/app/yapa-mapa/yapa-mapa.component.ts
++++ b/frontend/src/app/yapa-mapa/yapa-mapa.component.ts
+@@ -15,7 +15,7 @@ import { isPlatformBrowser } from '@angular/common';
+ import * as L from 'leaflet';
+ import { Lugar } from '../catalogo.types';
+ import { computeClusters } from './yapa-mapa.clustering';
+-import { MapCluster } from './yapa-mapa.types';
++import { MapCluster, RutaMapaPunto } from './yapa-mapa.types';
+ 
+ @Component({
+   selector: 'yapa-mapa',
+@@ -35,6 +35,8 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
+   readonly altura = input<string>('500px');
+   readonly modoMini = input<boolean>(false);
+   readonly interactive = input<boolean>(true);
++  readonly rutaPuntos = input<RutaMapaPunto[]>([]);
++  readonly rutaPolyline = input<[number, number][]>([]);
+ 
+   // Outputs
+   readonly lugarSelected = output<Lugar>();
+@@ -45,6 +47,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
+ 
+   private map?: L.Map;
+   private markersLayer?: L.LayerGroup;
++  private routeLayer?: L.LayerGroup;
+   private markersMap = new Map<string, L.Marker>();
+   private isBrowser = false;
+ 
+@@ -66,6 +69,12 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
+ 
+       this.focusLugar(selected);
+     });
++
++    effect(() => {
++      this.rutaPuntos();
++      this.rutaPolyline();
++      this.renderRoute();
++    });
+   }
+ 
+   ngAfterViewInit(): void {
+@@ -117,6 +126,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
+       }).addTo(this.map);
+ 
+       this.markersLayer = L.layerGroup().addTo(this.map);
++      this.routeLayer = L.layerGroup().addTo(this.map);
+ 
+       this.map.on('zoomend', () => {
+         if (!this.map) return;
+@@ -128,12 +138,13 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
+ 
+       this.clustersActivos.set(computeClusters(this.lugares(), initialZoom));
+       this.renderMarkers();
++      this.renderRoute();
+ 
+       // Si hay un centro o lugar seleccionado inicial, enfocarlo
+       const selected = this.lugarSeleccionado();
+       if (selected) {
+         this.focusLugar(selected);
+-      } else if (!this.centro() && this.lugares().length > 1 && !this.modoMini()) {
++      } else if (!this.fitRouteBounds() && !this.centro() && this.lugares().length > 1 && !this.modoMini()) {
+         this.fitLugaresBounds();
+       }
+     } catch {
+@@ -237,6 +248,74 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
+     }
+   }
+ 
++  private renderRoute(): void {
++    if (!this.map || !this.routeLayer) return;
++
++    this.routeLayer.clearLayers();
++    const coordinates = this.rutaPolyline().filter(([lat, lng]) =>
++      Number.isFinite(lat) && Number.isFinite(lng),
++    );
++
++    if (coordinates.length > 1) {
++      L.polyline(coordinates, {
++        color: '#B5492A',
++        opacity: 0.88,
++        weight: 4,
++      }).addTo(this.routeLayer);
++    }
++
++    for (const punto of this.rutaPuntos()) {
++      const icon = L.divIcon({
++        className: 'yapa-route-div-icon',
++        html: `<span class="yapa-route-pin yapa-route-${this.routePointClass(punto.tipo)}">${this.escapeHtml(punto.nombre)}</span>`,
++        iconSize: [152, 44],
++        iconAnchor: [76, 22],
++      });
++
++      L.marker([punto.lat, punto.lng], {
++        icon,
++        keyboard: true,
++        title: punto.nombre,
++        alt: punto.nombre,
++      }).addTo(this.routeLayer);
++    }
++  }
++
++  private routePointClass(tipo: string): string {
++    if (tipo === 'origen') return 'origin';
++    if (tipo === 'destino') return 'destination';
++    if (tipo === 'cruce') return 'crossing';
++    return 'stop';
++  }
++
++  private escapeHtml(value: string): string {
++    const escaped: Record<string, string> = {
++      '&': '&amp;',
++      '<': '&lt;',
++      '>': '&gt;',
++      '"': '&quot;',
++      "'": '&#39;',
++    };
++    return value.replace(/[&<>"']/g, character => escaped[character] ?? character);
++  }
++
++  private fitRouteBounds(): boolean {
++    if (!this.map) return false;
++    const coordinates: [number, number][] = [
++      ...this.rutaPolyline(),
++      ...this.rutaPuntos().map(({ lat, lng }) => [lat, lng] as [number, number]),
++    ].filter(([lat, lng]) => Number.isFinite(lat) && Number.isFinite(lng));
++
++    if (coordinates.length === 0) return false;
++    if (coordinates.length === 1) {
++      this.map.setView(coordinates[0], 12);
++      return true;
++    }
++
++    this.map.fitBounds(L.latLngBounds(coordinates), { padding: [48, 48], maxZoom: 12 });
++    return true;
++  }
++
+   /**
+    * Al hacer clic en un cluster, hace zoom suave hacia el grupo para disgregarlo
+    */
+diff --git a/frontend/src/app/yapa-mapa/yapa-mapa.types.ts b/frontend/src/app/yapa-mapa/yapa-mapa.types.ts
+index 2728de2..335887a 100644
+--- a/frontend/src/app/yapa-mapa/yapa-mapa.types.ts
++++ b/frontend/src/app/yapa-mapa/yapa-mapa.types.ts
+@@ -18,3 +18,10 @@ export interface MapBounds {
+   minLng: number;
+   maxLng: number;
+ }
++
++export interface RutaMapaPunto {
++  nombre: string;
++  tipo: string;
++  lat: number;
++  lng: number;
++}
+diff --git a/specs/06-como-llegar.spec.md b/specs/06-como-llegar.spec.md
+new file mode 100644
+index 0000000..e5f1af2
+--- /dev/null
++++ b/specs/06-como-llegar.spec.md
+@@ -0,0 +1,48 @@
++# Slice 06 — Cómo llegar (RUT): guía de movimiento sobre mapa
++
++**Depende de:** 03, 04, 05 mergeados. Master actual ~`97a7ce0`.
++**Alcance:** `frontend/src/app/como-llegar/` (nuevo), `frontend/src/app/app.routes.ts` (agregar ruta), `frontend/src/app/lugar-detalle/` (solo agregar link "Cómo llegar"), `frontend/src/app/yapa-mapa/` (solo inputs nuevos si hace falta dibujar origen→destino), `frontend/src/app/transporte.service.ts` (nuevo), `backend/src/routes/` (solo si falta endpoint), `backend/test/` (nuevos). NO tocar travesia/ (otro worker lo está editando), home, migraciones, docs, specs.
++
++## Contexto
++
++- Issue #6: "guía tipo Google Maps pero más linda" para cómo ir de A a B en transporte público por la RN9.
++- `backend/src/routes/transporte.js` — endpoints de paradas y próximos servicios ya existen (verificar forma de respuesta).
++- `frontend/src/app/yapa-mapa/` — componente mapa reusable (pins, clusters, centro, zoom).
++- `lugar.lat/lng`, `parada` RN9 con slug/orden.
++- La distinción cruce≠pueblo (Purmamarca Cruce a 3 km del pueblo) YA modelada.
++
++## Qué tiene que pasar
++
++1. Página `/como-llegar` (o `/como-llegar/:slugLugar`) — layout editorial tipo guía de viaje:
++   - Origen: selector con lugares/paradas base (Terminal SS.Jujuy, aeropuerto, o lugar del
++     catálogo). Si viene con `:slugLugar` el destino queda fijado.
++   - Resultado como **relato de viaje paso a paso** (no tabla fría): "Tomás el colectivo de
++     las 07:20 en la Terminal · bajás en Purmamarca Cruce · caminás/traslado 3 km al pueblo".
++   - Datos siempre marcados: horario publicado vs estimado, con su `fuente`.
++   - Accesos locales explícitos (la brecha parada→lugar real).
++2. Mapa: origen + destino + parada intermedia marcados; línea simple entre puntos
++   (dibujar tramo RN9 como polyline entre paradas es suficiente para MVP — NO enrutado
++   por calles). Estilo Yapa existente.
++3. Si un tramo no tiene servicio RN9: decirlo claro + sugerir alternativa honesta
++   (traslado local, otro origen) — nunca inventar.
++4. En `lugar-detalle`: botón "Cómo llegar" que lleva a la página con destino prefijado.
++5. Tests: componente renderiza, arma pasos del relato, estado sin-servicio; tests de
++   servicio/endpoint si se agrega lógica en backend.
++
++## Criterios
++
++- [ ] `npm test` front verde con tests nuevos
++- [ ] `npm test` back verde
++- [ ] `npm run build` OK
++- [ ] `/como-llegar/cerro-siete-colores` desde Terminal: pasos correctos incluyendo
++      traslado del cruce al pueblo
++- [ ] Estilo editorial coherente (serif, papel, números tabular)
++- [ ] kero-audit 390x844 + 1440x900 sin hard fails ni console errors
++- [ ] Nada de datos inventados: todo tramo proviene de la API de transporte
++
++## Fuera de alcance
++
++- Tiempo real GPS (sin datos — Santa Ana requiere auth)
++- Routing por calles (OSRM), caminata exacta
++- Edición de la travesía (slice 10 en curso)
++- NO commitear.

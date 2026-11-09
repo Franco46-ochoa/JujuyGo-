@@ -1,0 +1,125 @@
+<main class="como-llegar-shell">
+  <nav class="como-llegar-nav" aria-label="Navegación">
+    <a class="como-llegar-brand" routerLink="/">Yapa<span aria-hidden="true"></span></a>
+    <a class="volver-inicio" routerLink="/">Volver a explorar</a>
+  </nav>
+
+  <header class="como-llegar-intro">
+    <p class="kicker">Jujuy · guía de viaje</p>
+    <h1 class="serif">Cómo llegar a <em>{{ nombreDestino() }}</em></h1>
+    <p>Un recorrido explicado paso a paso, con horarios y accesos locales informados.</p>
+  </header>
+
+  <section class="seleccion-recorrido" aria-label="Elegir recorrido">
+    <div class="campo-recorrido">
+      <label for="origen">Salís desde</label>
+      <select id="origen" [value]="origen()" (change)="seleccionarOrigen($event)">
+        @for (opcion of origenes(); track opcion.slug) {
+          <option [value]="opcion.slug">{{ etiquetaGrupo(opcion) }} · {{ opcion.nombre }}</option>
+        }
+      </select>
+    </div>
+    <div class="campo-recorrido">
+      @if (destinoFijado()) {
+        <span class="campo-label">Vas a</span>
+        <p class="destino-fijo">{{ nombreDestino() }}</p>
+      } @else {
+        <label for="destino">Vas a</label>
+        <select id="destino" [value]="destino()" (change)="seleccionarDestino($event)">
+          <option value="">Elegí un lugar</option>
+          @for (lugar of lugares(); track lugar.slug) {
+            <option [value]="lugar.slug">{{ lugar.nombre }}</option>
+          }
+        </select>
+      }
+    </div>
+    <button class="boton-recorrido" type="button" [disabled]="!destino() || cargando()" (click)="cargarRecorrido()">
+      {{ cargando() ? 'Buscando recorrido…' : 'Ver recorrido' }}
+    </button>
+  </section>
+
+  @if (errorOpciones()) {
+    <p class="mensaje-error" role="alert">{{ errorOpciones() }}</p>
+  }
+  @if (cargando()) {
+    <p class="mensaje-estado" role="status">Consultando horarios y paradas publicadas…</p>
+  } @else if (error()) {
+    <div class="mensaje-error" role="alert">
+      <p>{{ error() }}</p>
+      <button type="button" class="boton-reintentar" (click)="cargarRecorrido()">Reintentar</button>
+    </div>
+  } @else if (guia(); as guia) {
+    @if (guia.mismo_punto) {
+      <p class="aviso-recorrido" role="status">{{ guia.mensaje }}</p>
+    } @else {
+      @if (!guia.tiene_servicio_rn9) {
+        <aside class="aviso-sin-servicio" role="note">
+          <p class="kicker">Sin servicio directo por RN9</p>
+          <h2 class="serif">{{ guia.motivo_sin_servicio || 'Este destino no tiene un servicio directo de la RN9.' }}</h2>
+          @if (guia.alternativa_honesta) {
+            <p>{{ guia.alternativa_honesta }}</p>
+          }
+        </aside>
+      }
+
+      @if (guia.servicios.length === 0 && guia.tiene_servicio_rn9) {
+        <p class="aviso-recorrido" role="status">
+          No encontramos horarios para este tramo. Probá otro origen o consultá opciones locales.
+        </p>
+      }
+
+      @if (pasosRelato(guia).length > 0) {
+        <section class="relato-section" aria-labelledby="relato-titulo">
+          <div class="relato-heading">
+            <p class="kicker">El camino</p>
+            <h2 id="relato-titulo" class="serif">De a poco, hasta {{ guia.destino.nombre }}</h2>
+          </div>
+          <ol class="relato-pasos">
+            @for (paso of pasosRelato(guia); track $index) {
+              <li class="relato-paso">
+                <span class="paso-numero" aria-hidden="true">{{ $index + 1 }}</span>
+                <div class="paso-contenido">
+                  <h3 class="serif">{{ paso.titulo }}</h3>
+                  <p>{{ paso.detalle }}</p>
+                  @if (paso.servicio; as servicio) {
+                    <p class="dato-fuente">
+                      <span>{{ confianza(servicio) }}</span>
+                      <span>Fuente: {{ horaFuente(servicio) }}</span>
+                    </p>
+                  }
+                  @if (paso.traslado; as traslado) {
+                    <p class="dato-fuente">
+                      <span>Acceso local</span>
+                      @if (traslado.distancia_km) {
+                        <span>{{ traslado.distancia_km }} km</span>
+                      }
+                      @if (traslado.duracion_estimada) {
+                        <span>Estimado: {{ traslado.duracion_estimada }}</span>
+                      }
+                    </p>
+                  }
+                </div>
+              </li>
+            }
+          </ol>
+        </section>
+      }
+
+      <section class="mapa-section" aria-labelledby="mapa-titulo">
+        <div class="mapa-heading">
+          <div>
+            <p class="kicker">Sobre el territorio</p>
+            <h2 id="mapa-titulo" class="serif">El recorrido en el mapa</h2>
+          </div>
+          <p>La línea une los puntos informados; no representa un camino calle por calle.</p>
+        </div>
+        <yapa-mapa
+          [rutaPuntos]="puntosMapa()"
+          [rutaPolyline]="guia.polyline"
+          [altura]="'440px'"
+          [interactive]="true"
+        ></yapa-mapa>
+      </section>
+    }
+  }
+</main>

@@ -1,0 +1,3 @@
+CIERRA
+- kero-audit 390x844 + 1440x900 no ejecutada (checkbox del SPEC sin verificar): el worker declara que el entorno denegó el lanzamiento del navegador; gap declarado, no bloqueante — el resto del contrato está cubierto por diff + tests.
+- Defecto menor encontrado por el juez y corregido por el coordinador antes del merge: el backend devolvía traslado_final sin campo titulo (LUGAR_PARADA_MAPPING copiado crudo en transporte.js) mientras como-llegar.ts lo usa como <h3> — en producción ese paso renderizaba encabezado vacío y el test lo enmascaraba con mock. Fix: se agrega titulo en la respuesta de la rama destino.

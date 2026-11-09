@@ -36,6 +36,10 @@
           <p class="detail-note">{{ lugar.datos_json.nota }}</p>
         }
 
+        <a class="detail-directions" [routerLink]="['/como-llegar', lugar.slug]">
+          Cómo llegar <span aria-hidden="true">→</span>
+        </a>
+
         <section class="detail-facts" aria-label="Información del lugar">
           <div class="detail-fact">
             <h2>Cómo llegar</h2>
