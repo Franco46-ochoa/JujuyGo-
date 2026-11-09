@@ -60,6 +60,7 @@ describe('TravesiaPage', () => {
           provide: TravesiaService,
           useValue: {
             validar: validate,
+            getContexto: () => of({ paradas: [], horarios: [] }),
             getProximos: () => of({
               origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
               destino: { slug: 'tilcara', nombre: 'Tilcara' },
@@ -75,6 +76,11 @@ describe('TravesiaPage', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
+    (fixture.nativeElement.querySelector('.wizard .boton-principal') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.wizard')).toBeTruthy();
+    expect(fixture.nativeElement.textContent).toContain('Elegí la fecha de llegada.');
+
     const fechas = fixture.nativeElement.querySelectorAll('input[type="date"]') as NodeListOf<HTMLInputElement>;
     fechas[0].value = '2026-11-07';
     fechas[0].dispatchEvent(new Event('input', { bubbles: true }));
@@ -86,6 +92,8 @@ describe('TravesiaPage', () => {
     (fixture.nativeElement.querySelector('button.boton-principal') as HTMLButtonElement).click();
     fixture.detectChanges();
     (fixture.nativeElement.querySelector('button.boton-principal') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.boton-sugerir') as HTMLButtonElement).click();
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
@@ -105,5 +113,74 @@ describe('TravesiaPage', () => {
 
     expect(validate).toHaveBeenCalledTimes(2);
     expect(fixture.nativeElement.textContent).toContain('Mové la visita a la mañana.');
+  });
+
+  it('shows at most two yapa suggestions per day, including those dismissed', async () => {
+    const catalogo = [
+      lugares[0],
+      { ...lugares[1], id: 3, slug: 'garganta-diablo', nombre: 'Garganta del Diablo' },
+      { ...lugares[1], id: 4, slug: 'pucara-tilcara', nombre: 'Pucará de Tilcara' },
+      { ...lugares[1], id: 5, slug: 'mirador-tilcara', nombre: 'Mirador de Tilcara' },
+    ];
+
+    await TestBed.configureTestingModule({
+      imports: [TravesiaPage],
+      providers: [
+        provideRouter([]),
+        { provide: CatalogoService, useValue: { getLugares: () => of(catalogo) } },
+        {
+          provide: TravesiaService,
+          useValue: {
+            validar: (plan: PlanTravesia) => of({
+              plan,
+              validado: true,
+              tramos: [],
+              conflictos: [],
+            }),
+            getContexto: () => of({ paradas: [], horarios: [] }),
+            getProximos: () => of({
+              origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
+              destino: { slug: 'tilcara', nombre: 'Tilcara' },
+              direccion: 'ida',
+              servicios: [],
+            }),
+          },
+        },
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(TravesiaPage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const fechas = fixture.nativeElement.querySelectorAll('input[type="date"]') as NodeListOf<HTMLInputElement>;
+    fechas[0].value = '2026-11-07';
+    fechas[0].dispatchEvent(new Event('input', { bubbles: true }));
+    fechas[1].value = '2026-11-07';
+    fechas[1].dispatchEvent(new Event('input', { bubbles: true }));
+    fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.wizard .boton-principal') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.wizard .boton-principal') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.wizard .boton-principal') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.lugar-eleccion') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.acciones-lugares .boton-principal') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const pasar = (): void => {
+      (fixture.nativeElement.querySelector('.boton-yapa-pasar') as HTMLButtonElement).click();
+      fixture.detectChanges();
+    };
+    expect(fixture.nativeElement.querySelector('.yapa-card')).toBeTruthy();
+    pasar();
+    expect(fixture.nativeElement.querySelector('.yapa-card')).toBeTruthy();
+    pasar();
+    expect(fixture.nativeElement.querySelector('.yapa-card')).toBeNull();
   });
 });

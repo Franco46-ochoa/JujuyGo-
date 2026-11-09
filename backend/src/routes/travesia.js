@@ -45,6 +45,30 @@ function agruparHorarios(rows) {
 export function createTravesiaRouter(pool) {
   const router = Router();
 
+  router.get('/travesia/contexto', asyncHandler(async (_req, res) => {
+    const [paradasResult, horariosResult] = await Promise.all([
+      pool.query(
+        `SELECT slug, nombre, orden_en_linea
+         FROM parada
+         WHERE linea_id = 'rn9'
+         ORDER BY orden_en_linea`,
+      ),
+      pool.query(
+        `SELECT h.servicio_id, h.direccion, to_char(h.hora_saliente, 'HH24:MI') AS hora,
+                h.confianza, h.fuente, p.slug AS parada_slug, p.orden_en_linea
+         FROM horario h
+         JOIN parada p ON p.id = h.parada_id
+         WHERE h.linea_id = 'rn9'
+         ORDER BY h.servicio_id, p.orden_en_linea`,
+      ),
+    ]);
+
+    res.json({
+      paradas: paradasResult.rows,
+      horarios: agruparHorarios(horariosResult.rows),
+    });
+  }));
+
   router.post('/travesia/validar', asyncHandler(async (req, res) => {
     const plan = req.body;
     if (!esPlanValido(plan)) {

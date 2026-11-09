@@ -1,0 +1,7 @@
+──────────── INTENTO ANTERIOR: NO CERRÓ ────────────
+Motivo: el juez devin no cierra (ver juez.txt)
+Veredicto del juez:
+NO CIERRA
+SPEC B.1: la regla "misma zona" del motor de yapas no está implementada — generarYapas solo emite tipos 'localidad', 'rn9' y 'aclimatacion'; el tipo 'zona' existe en TipoYapa (travesia.types.ts:108) pero nunca se genera, así que dos lugares de la misma zona en localidades distintas sin tramo RN9 contiguo nunca producen yapa.
+SPEC B.3: "máximo 2 por día" solo cuenta yapas aceptadas (yapasAgregadas[fecha] >= 2 en yapaActual); las descartadas con "Dejar pasar" no cuentan, por lo que un mismo día puede ofrecer más de 2 yapas en secuencia si el usuario sigue descartando — viola el "sin spam".
+Seguí sobre lo que ya está escrito en este worktree y arreglá exactamente eso.

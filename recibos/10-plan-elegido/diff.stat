@@ -1,0 +1,16 @@
+ backend/src/routes/travesia.js                   |  24 +++
+ backend/test/travesia.test.js                    |  46 +++++
+ frontend/src/app/app.config.ts                   |   7 +-
+ frontend/src/app/home/home.css                   |  66 ++++++-
+ frontend/src/app/travesia/travesia.css           |  21 +-
+ frontend/src/app/travesia/travesia.html          |  99 ++++++++--
+ frontend/src/app/travesia/travesia.model.spec.ts |  60 ++++++
+ frontend/src/app/travesia/travesia.model.ts      | 234 +++++++++++++++++++----
+ frontend/src/app/travesia/travesia.service.ts    |   5 +
+ frontend/src/app/travesia/travesia.spec.ts       |  77 ++++++++
+ frontend/src/app/travesia/travesia.ts            | 207 +++++++++++++++++++-
+ frontend/src/app/travesia/travesia.types.ts      |  35 ++++
+ frontend/src/app/travesia/travesia.yapas.spec.ts |  84 ++++++++
+ frontend/src/app/travesia/travesia.yapas.ts      | 160 ++++++++++++++++
+ specs/10-plan-elegido.spec.md                    |  82 ++++++++
+ 15 files changed, 1123 insertions(+), 84 deletions(-)

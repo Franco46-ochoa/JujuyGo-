@@ -1,0 +1,1644 @@
+diff --git a/backend/src/routes/travesia.js b/backend/src/routes/travesia.js
+index c06e523..4fcdfde 100644
+--- a/backend/src/routes/travesia.js
++++ b/backend/src/routes/travesia.js
+@@ -45,6 +45,30 @@ function agruparHorarios(rows) {
+ export function createTravesiaRouter(pool) {
+   const router = Router();
+ 
++  router.get('/travesia/contexto', asyncHandler(async (_req, res) => {
++    const [paradasResult, horariosResult] = await Promise.all([
++      pool.query(
++        `SELECT slug, nombre, orden_en_linea
++         FROM parada
++         WHERE linea_id = 'rn9'
++         ORDER BY orden_en_linea`,
++      ),
++      pool.query(
++        `SELECT h.servicio_id, h.direccion, to_char(h.hora_saliente, 'HH24:MI') AS hora,
++                h.confianza, h.fuente, p.slug AS parada_slug, p.orden_en_linea
++         FROM horario h
++         JOIN parada p ON p.id = h.parada_id
++         WHERE h.linea_id = 'rn9'
++         ORDER BY h.servicio_id, p.orden_en_linea`,
++      ),
++    ]);
++
++    res.json({
++      paradas: paradasResult.rows,
++      horarios: agruparHorarios(horariosResult.rows),
++    });
++  }));
++
+   router.post('/travesia/validar', asyncHandler(async (req, res) => {
+     const plan = req.body;
+     if (!esPlanValido(plan)) {
+diff --git a/backend/test/travesia.test.js b/backend/test/travesia.test.js
+index 0f518a5..cfeae39 100644
+--- a/backend/test/travesia.test.js
++++ b/backend/test/travesia.test.js
+@@ -104,3 +104,49 @@ describe('POST /api/travesia/validar', () => {
+     assert.match(response.body.error, /lugar y hora/);
+   });
+ });
++
++describe('GET /api/travesia/contexto', () => {
++  test('devuelve paradas ordenadas y solo servicios con tramos cargados', async () => {
++    const app = createApp({
++      pool: {
++        async query(sql) {
++          if (sql.includes('FROM parada')) {
++            return { rows: [
++              { slug: 'volcan', nombre: 'Volcán', orden_en_linea: 2 },
++              { slug: 'purmamarca-cruce', nombre: 'Purmamarca Cruce', orden_en_linea: 3 },
++            ] };
++          }
++          if (sql.includes('FROM horario')) {
++            return { rows: [
++              {
++                servicio_id: 'rn9-ida',
++                direccion: 'ida',
++                hora: '06:15',
++                confianza: 'estimado',
++                fuente: 'seed RN9',
++                parada_slug: 'volcan',
++                orden_en_linea: 2,
++              },
++              {
++                servicio_id: 'rn9-ida',
++                direccion: 'ida',
++                hora: '06:35',
++                confianza: 'estimado',
++                fuente: 'seed RN9',
++                parada_slug: 'purmamarca-cruce',
++                orden_en_linea: 3,
++              },
++            ] };
++          }
++          throw new Error('Consulta inesperada en el contexto de travesía');
++        },
++      },
++    });
++
++    const response = await request(app).get('/api/travesia/contexto');
++
++    assert.equal(response.status, 200);
++    assert.deepEqual(response.body.paradas.map(parada => parada.slug), ['volcan', 'purmamarca-cruce']);
++    assert.deepEqual(response.body.horarios[0].paradas.map(parada => parada.hora), ['06:15', '06:35']);
++  });
++});
+diff --git a/frontend/src/app/app.config.ts b/frontend/src/app/app.config.ts
+index 570dcbf..19c0927 100644
+--- a/frontend/src/app/app.config.ts
++++ b/frontend/src/app/app.config.ts
+@@ -1,12 +1,17 @@
+-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
++import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
++import { registerLocaleData } from '@angular/common';
++import localeEs from '@angular/common/locales/es';
+ import { provideHttpClient } from '@angular/common/http';
+ import { provideRouter } from '@angular/router';
+ import { routes } from './app.routes';
+ 
++registerLocaleData(localeEs, 'es-AR');
++
+ export const appConfig: ApplicationConfig = {
+   providers: [
+     provideBrowserGlobalErrorListeners(),
+     provideHttpClient(),
+     provideRouter(routes),
++    { provide: LOCALE_ID, useValue: 'es-AR' },
+   ]
+ };
+diff --git a/frontend/src/app/home/home.css b/frontend/src/app/home/home.css
+index 64ddf61..4f55c9f 100644
+--- a/frontend/src/app/home/home.css
++++ b/frontend/src/app/home/home.css
+@@ -459,9 +459,20 @@ app-home { display: block; }
+   .pillnav { display: none; }
+   .brand { font-size: 22px; }
+   .nav-cta { padding: 14px 13px; font-size: 14px; }
+-  .hero-content { padding-inline: 7%; }
++  .hero-content { isolation: isolate; padding-inline: 7%; }
++  .hero-content::before {
++    position: absolute;
++    z-index: -1;
++    inset: 20% 5% 14%;
++    border-radius: 50%;
++    background: radial-gradient(ellipse, rgba(20, 10, 6, .76) 0%, rgba(20, 10, 6, .48) 56%, transparent 76%);
++    content: "";
++    filter: blur(14px);
++  }
+   .hero h1 { margin-top: 28px; font-size: clamp(54px, 15vw, 82px); }
++  .hero h1 em { text-shadow: 0 2px 3px rgba(0, 0, 0, .9), 0 0 22px rgba(0, 0, 0, .75); }
+   .hero-copy { font-size: 15px; }
++  .eyebrow { color: #e8c98f; text-shadow: 0 1px 5px rgba(0, 0, 0, .9); }
+   .hero-caption { bottom: 24px; gap: 10px; font-size: 14px; }
+   .caption-rule { width: 22px; }
+   .hero-coordinates { display: none; }
+@@ -608,8 +619,8 @@ app-home { display: block; }
+ }
+ 
+ .transport-band {
+-  width: 100vw;
+-  margin: 110px calc(50% - 50vw) 0;
++  width: 100%;
++  margin: 110px 0 0;
+   padding: 76px 5%;
+   background: var(--verde);
+   color: var(--papel);
+@@ -693,3 +704,52 @@ app-home { display: block; }
+ @media (prefers-reduced-motion: reduce) {
+   .transport-copy > a { transition: none; }
+ }
++
++.travesia-shell .acciones-lugares { display: flex; align-items: center; gap: 20px; }
++.travesia-shell .boton-principal:disabled { cursor: not-allowed; opacity: .5; }
++.travesia-shell .boton-sugerir { text-decoration: underline; text-underline-offset: 4px; }
++.travesia-shell .lugares-por-zona { display: grid; gap: 32px; margin-top: 36px; }
++.travesia-shell .seleccion-zona h3 { margin-bottom: 12px; color: var(--verde); font: 500 24px var(--serif); }
++.travesia-shell .seleccion-lugares { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
++.travesia-shell .lugar-eleccion { display: grid; grid-template-columns: 90px minmax(0, 1fr) 32px; align-items: center; gap: 14px; min-height: 102px; padding: 8px; border: 1px solid var(--t30); border-radius: 4px; background: transparent; color: var(--tinta); text-align: left; cursor: pointer; touch-action: manipulation; }
++.travesia-shell .lugar-eleccion:hover, .travesia-shell .lugar-elegido { border-color: var(--verde); background: rgba(57, 91, 67, .07); }
++.travesia-shell .lugar-eleccion:focus-visible, .travesia-shell .yapa-acciones button:focus-visible, .travesia-shell .agregar-lugar button:focus-visible { outline: 2px solid var(--oxido); outline-offset: 3px; }
++.travesia-shell .lugar-eleccion img { width: 90px; height: 82px; border-radius: 2px; object-fit: cover; }
++.travesia-shell .lugar-eleccion-texto { display: grid; gap: 4px; min-width: 0; }
++.travesia-shell .lugar-eleccion-texto strong { font: 500 17px/1.2 var(--serif); }
++.travesia-shell .lugar-eleccion-texto span, .travesia-shell .lugar-eleccion-texto small { color: var(--t60); font-size: 14px; line-height: 1.35; }
++.travesia-shell .lugar-check { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid var(--t30); border-radius: 50%; color: var(--verde); font-size: 18px; }
++.travesia-shell .lugar-elegido .lugar-check { border-color: var(--verde); background: var(--verde); color: #fff; }
++.travesia-shell .seleccion-contador { margin-top: 20px; color: var(--t60); font-size: 14px; }
++.travesia-shell .yapa-card { margin: 0 0 24px; padding: 20px 22px; border: 1px solid rgba(201, 168, 106, .55); background: rgba(201, 168, 106, .13); color: inherit; }
++.travesia-shell .yapa-kicker { color: var(--ocre); font-size: 14px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
++.travesia-shell .yapa-mensaje { max-width: 580px; margin-top: 10px; font: 400 21px/1.35 var(--serif); }
++.travesia-shell .yapa-acciones { display: flex; gap: 20px; margin-top: 16px; }
++.travesia-shell .yapa-acciones button { min-height: 44px; padding: 8px 18px; border: 1px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font: 600 14px var(--sans); cursor: pointer; touch-action: manipulation; }
++.travesia-shell .yapa-acciones .boton-yapa-sumar { border-color: var(--verde); background: var(--verde); color: #fff; }
++.travesia-shell .yapa-acciones .boton-yapa-pasar { border: 0; text-decoration: underline; text-underline-offset: 4px; }
++.travesia-shell .agregar-lugar { display: flex; align-items: end; gap: 16px; margin-top: 24px; }
++.travesia-shell .agregar-lugar label { display: grid; gap: 8px; width: min(100%, 380px); color: var(--t60); font-size: 14px; }
++.travesia-shell .agregar-lugar select { min-height: 46px; padding: 8px 12px; border: 1px solid var(--t30); border-radius: 3px; background: transparent; color: var(--tinta); font: 14px var(--sans); }
++.travesia-shell .agregar-lugar option { color: var(--tinta); }
++.travesia-shell .agregar-lugar button:disabled { opacity: .5; cursor: not-allowed; }
++.travesia-shell .tramo { position: relative; display: flex; flex-direction: column; gap: 6px; margin: 0 0 0 20px; padding: 16px 0 16px 36px; border-left: 1px solid rgba(244, 237, 227, .25); color: rgba(244, 237, 227, .92); font-size: 14px; font-variant-numeric: tabular-nums; }
++.travesia-shell .tramo-nodo { position: absolute; top: 21px; left: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--ocre); }
++.travesia-shell .tramo small { color: rgba(244, 237, 227, .66); font-size: 14px; line-height: 1.45; }
++.travesia-shell .tramo .proximo-servicio { color: var(--verde); }
++.travesia-shell .dia-activo .tramo .proximo-servicio { color: #f4ede3; }
++.travesia-shell .dia:not(.dia-activo) .tramo { color: var(--verde); border-color: var(--t30); }
++.travesia-shell .dia:not(.dia-activo) .tramo small { color: var(--t60); }
++
++@media (max-width: 720px) {
++  .travesia-shell .seleccion-lugares { grid-template-columns: 1fr; }
++  .travesia-shell .lugar-eleccion { grid-template-columns: 76px minmax(0, 1fr) 28px; }
++  .travesia-shell .lugar-eleccion img { width: 76px; height: 76px; }
++  .travesia-shell .wizard-actions > .boton-principal, .travesia-shell .acciones-lugares { flex: 1; }
++  .travesia-shell .acciones-lugares { align-items: stretch; flex-direction: column-reverse; gap: 8px; }
++  .travesia-shell .acciones-lugares .boton-principal { justify-content: center; padding-inline: 16px; }
++  .travesia-shell .boton-sugerir { min-height: 44px; }
++  .travesia-shell .agregar-lugar { align-items: stretch; flex-direction: column; }
++  .travesia-shell .agregar-lugar label { width: 100%; }
++  .travesia-shell .tramo { margin-left: 12px; padding-left: 26px; }
++}
+diff --git a/frontend/src/app/travesia/travesia.css b/frontend/src/app/travesia/travesia.css
+index dec9d5e..30f0530 100644
+--- a/frontend/src/app/travesia/travesia.css
++++ b/frontend/src/app/travesia/travesia.css
+@@ -11,7 +11,7 @@
+ .wizard-intro h1 em, .pregunta h2 em, .plan-heading h1 em { color: var(--oxido); font-weight: 400; }
+ .wizard-intro > p:last-child { max-width: 510px; margin-top: 20px; color: var(--t60); font-size: 16px; line-height: 1.65; }
+ .progreso { display: flex; margin: 56px 0 60px; padding: 0; border-bottom: 1px solid var(--t14); list-style: none; }
+-.progreso li { display: flex; align-items: center; gap: 12px; min-width: 0; width: 33.333%; padding: 0 0 16px; color: var(--t60); font-size: 14px; }
++.progreso li { display: flex; align-items: center; gap: 12px; min-width: 0; width: 25%; padding: 0 0 16px; color: var(--t60); font-size: 14px; }
+ .progreso li.activo { border-bottom: 2px solid var(--oxido); color: var(--tinta); }
+ .numero-pregunta { color: var(--t60); font-size: 14px; letter-spacing: .15em; }
+ .pregunta h2 { margin-top: 16px; font: 400 clamp(36px, 5vw, 54px)/1.08 var(--serif); text-wrap: balance; }
+@@ -20,6 +20,8 @@
+ .campo-fechas label { display: grid; gap: 8px; color: var(--t60); font-size: 14px; touch-action: manipulation; }
+ .campo-fechas input { min-height: 54px; padding: 12px; border: 1px solid #887b70; border-radius: 3px; background: transparent; color: var(--tinta); font: 16px var(--sans); font-variant-numeric: tabular-nums; touch-action: manipulation; }
+ .campo-fechas input:focus-visible, .mover-evento select:focus-visible { outline: 2px solid var(--oxido); outline-offset: 3px; }
++.campo-fechas input[aria-invalid="true"] { border-color: var(--oxido); }
++.campo-error { color: #8d321f; font-size: 14px; line-height: 1.4; }
+ .opciones { margin-top: 32px; border-top: 1px solid var(--t14); }
+ .opcion { display: flex; align-items: center; gap: 16px; min-height: 76px; padding: 16px 8px; border-bottom: 1px solid var(--t14); cursor: pointer; }
+ .opcion input { width: 18px; height: 18px; accent-color: var(--verde); flex: none; }
+@@ -29,7 +31,6 @@
+ .intereses-opciones { grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--t14); }
+ .intereses-opciones .opcion { min-height: 100px; border-bottom: 0; }
+ .intereses-opciones .opcion + .opcion { border-left: 1px solid var(--t14); }
+-.intereses-opciones .opcion strong { font-size: 20px; }
+ .form-error { margin-top: 24px; padding: 16px 18px; border-left: 3px solid var(--oxido); background: rgba(181, 73, 42, .07); color: var(--tinta); font-size: 14px; line-height: 1.5; }
+ .wizard-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 32px; }
+ .boton-principal, .boton-secundario { min-height: 48px; padding: 12px 24px; border: 0; border-radius: 999px; font: 600 14px var(--sans); cursor: pointer; touch-action: manipulation; }
+@@ -60,7 +61,6 @@
+ .evento-hora { padding-top: 4px; color: var(--ocre); font-size: 15px; font-variant-numeric: tabular-nums; }
+ .evento-detalle a { display: inline-flex; align-items: center; min-height: 44px; color: var(--tinta); font: 500 22px/1.2 var(--serif); text-decoration: none; touch-action: manipulation; }
+ .evento-detalle p { margin-top: 8px; color: var(--t60); font-size: 14px; }
+-.evento-detalle .acceso-local { margin-top: 12px; color: var(--ocre); line-height: 1.5; }
+ .mover-evento select { max-width: 150px; min-height: 44px; padding: 8px 24px 8px 8px; border: 1px solid currentColor; border-radius: 3px; background: transparent; color: inherit; font: 14px var(--sans); }
+ .mover-evento option { color: var(--tinta); }
+ .borrar-evento { min-width: 44px; min-height: 44px; padding: 8px 4px; border: 0; background: transparent; color: rgba(244, 237, 227, .72); font: 14px var(--sans); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; touch-action: manipulation; }
+@@ -68,25 +68,19 @@
+ .conflicto { margin: 16px 0 0 76px; padding: 16px 18px; border-left: 3px solid var(--ocre); background: rgba(201, 168, 106, .12); }
+ .conflicto strong { font: 500 17px/1.4 var(--serif); }
+ .conflicto p { margin-top: 8px; color: inherit; font-size: 14px; line-height: 1.5; opacity: .8; }
+-.tramo { position: relative; display: flex; flex-direction: column; gap: 6px; margin: 0 0 0 20px; padding: 16px 0 16px 36px; border-left: 1px solid rgba(244, 237, 227, .25); color: rgba(244, 237, 227, .92); font-size: 14px; font-variant-numeric: tabular-nums; }
+-.tramo-nodo { position: absolute; top: 21px; left: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--ocre); }
+-.tramo small { color: rgba(244, 237, 227, .66); font-size: 14px; line-height: 1.45; }
+-.tramo .proximo-servicio { color: var(--verde); }
+-.dia-activo .tramo .proximo-servicio { color: #f4ede3; }
+-.dia:not(.dia-activo) .evento-hora, .dia:not(.dia-activo) .tramo { color: var(--verde); }
++.dia:not(.dia-activo) .evento-hora { color: var(--verde); }
+ .dia:not(.dia-activo) .dia-estado { color: var(--t60); }
+-.dia:not(.dia-activo) .tramo { border-color: var(--t30); }
+-.dia:not(.dia-activo) .tramo small { color: var(--t60); }
+ .dia:not(.dia-activo) .borrar-evento { color: var(--t60); }
+-.dia:not(.dia-activo) .mover-evento select { border-color: currentColor; }
+ .nueva-travesia { margin-top: 32px; }
+ 
+ @media (max-width: 720px) {
+   .travesia-shell { padding-inline: 24px; }
+   .wizard { padding-top: 32px; }
+   .progreso { margin: 40px 0 32px; }
+-  .progreso li { gap: 8px; font-size: 14px; }
++  .progreso li { flex-direction: column; align-items: flex-start; gap: 5px; font-size: 14px; }
+   .campo-fechas { grid-template-columns: 1fr; gap: 16px; }
++  .wizard-actions { align-items: stretch; gap: 12px; }
++  .wizard-actions > .boton-principal { flex: 1; }
+   .intereses-opciones { grid-template-columns: 1fr; }
+   .intereses-opciones .opcion { min-height: 70px; }
+   .intereses-opciones .opcion + .opcion { border-left: 0; border-top: 1px solid var(--t14); }
+@@ -97,7 +91,6 @@
+   .mover-evento { grid-column: 2; }
+   .borrar-evento { grid-column: 3; grid-row: 2; }
+   .conflicto { margin-left: 0; }
+-  .tramo { margin-left: 12px; padding-left: 26px; }
+ }
+ 
+ 
+diff --git a/frontend/src/app/travesia/travesia.html b/frontend/src/app/travesia/travesia.html
+index 66dd794..21190a5 100644
+--- a/frontend/src/app/travesia/travesia.html
++++ b/frontend/src/app/travesia/travesia.html
+@@ -6,44 +6,42 @@
+ 
+   @if (cargando()) {
+     <p class="mensaje-carga status" role="status">Cargando lugares para tu viaje…</p>
+-  } @else if (error() && !plan()) {
+-    <div class="status status-error" role="alert">
+-      <p>{{ error() }}</p>
+-      <a routerLink="/">Volver a explorar el catálogo</a>
+-    </div>
+   } @else if (!plan()) {
+     <section class="wizard" aria-labelledby="wizard-title">
+       <div class="wizard-intro">
+         <p class="kicker">Armá tu travesía</p>
+         <h1 id="wizard-title">Un viaje que <em>cierra.</em></h1>
+-        <p>Fechas, forma de llegada e intereses. El plan se comprueba con los horarios publicados.</p>
++        <p>Elegí cuándo vas, cómo llegás y qué lugares querés conocer. El plan se comprueba con los horarios publicados.</p>
+       </div>
+ 
+       <ol class="progreso" aria-label="Pasos del armado">
+         <li [class.activo]="paso() === 1" [class.completo]="paso() > 1" [attr.aria-current]="paso() === 1 ? 'step' : null"><span>01</span> Fechas</li>
+         <li [class.activo]="paso() === 2" [class.completo]="paso() > 2" [attr.aria-current]="paso() === 2 ? 'step' : null"><span>02</span> Llegada</li>
+-        <li [class.activo]="paso() === 3" [attr.aria-current]="paso() === 3 ? 'step' : null"><span>03</span> Intereses</li>
++        <li [class.activo]="paso() === 3" [class.completo]="paso() > 3" [attr.aria-current]="paso() === 3 ? 'step' : null"><span>03</span> Intereses</li>
++        <li [class.activo]="paso() === 4" [attr.aria-current]="paso() === 4 ? 'step' : null"><span>04</span> Lugares</li>
+       </ol>
+ 
+       @if (paso() === 1) {
+         <section class="pregunta wizard-step" aria-labelledby="fechas-title">
+-          <div class="numero-pregunta">01 / 03</div>
++          <div class="numero-pregunta">01 / 04</div>
+           <h2 id="fechas-title">¿Cuándo <em>vas?</em></h2>
+           <p>Elegí el primer y el último día. La propuesta se organiza día por día.</p>
+           <div class="campo-fechas">
+             <label>
+-              <span>Llegada</span>
+-              <input type="date" [value]="fechaInicio()" (input)="actualizarFecha('inicio', $event)">
++              <span>Primer día</span>
++              <input type="date" [value]="fechaInicio()" (input)="actualizarFecha('inicio', $event)" [attr.aria-invalid]="errorFechaInicio() ? 'true' : null" [attr.aria-describedby]="errorFechaInicio() ? 'error-fecha-inicio' : null">
++              @if (errorFechaInicio()) { <small class="campo-error" id="error-fecha-inicio">{{ errorFechaInicio() }}</small> }
+             </label>
+             <label>
+-              <span>Regreso</span>
+-              <input type="date" [value]="fechaFin()" (input)="actualizarFecha('fin', $event)">
++              <span>Último día</span>
++              <input type="date" [value]="fechaFin()" (input)="actualizarFecha('fin', $event)" [attr.aria-invalid]="errorFechaFin() ? 'true' : null" [attr.aria-describedby]="errorFechaFin() ? 'error-fecha-fin' : null">
++              @if (errorFechaFin()) { <small class="campo-error" id="error-fecha-fin">{{ errorFechaFin() }}</small> }
+             </label>
+           </div>
+         </section>
+       } @else if (paso() === 2) {
+         <section class="pregunta wizard-step" aria-labelledby="llegada-title">
+-          <div class="numero-pregunta">02 / 03</div>
++          <div class="numero-pregunta">02 / 04</div>
+           <h2 id="llegada-title">¿Cómo <em>llegás?</em></h2>
+           <p>Así ubicamos el comienzo de la travesía.</p>
+           <div class="opciones llegada-opciones">
+@@ -64,9 +62,9 @@
+             </label>
+           </div>
+         </section>
+-      } @else {
++      } @else if (paso() === 3) {
+         <section class="pregunta wizard-step" aria-labelledby="intereses-title">
+-          <div class="numero-pregunta">03 / 03</div>
++          <div class="numero-pregunta">03 / 04</div>
+           <h2 id="intereses-title">¿Qué te <em>mueve?</em></h2>
+           <p>Elegí uno o más intereses para priorizar lugares del catálogo.</p>
+           <div class="opciones intereses-opciones">
+@@ -84,6 +82,36 @@
+             </label>
+           </div>
+         </section>
++      } @else {
++        <section class="pregunta wizard-step" aria-labelledby="lugares-title">
++          <div class="numero-pregunta">04 / 04</div>
++          <h2 id="lugares-title">¿Qué querés <em>hacer?</em></h2>
++          <p>Marcá los lugares que querés incluir. Los ordenamos por la RN9 y no sumamos otros por tu cuenta.</p>
++          @if (errorCatalogo()) { <p class="form-error" role="alert">{{ errorCatalogo() }}</p> }
++          @if (errorContexto()) { <p class="aviso-transporte" role="status">{{ errorContexto() }}</p> }
++          @if (!lugares().length && !errorCatalogo()) { <p class="status">No hay lugares disponibles para elegir.</p> }
++          <div class="lugares-por-zona">
++            @for (grupo of gruposDeLugares(); track grupo.zona) {
++              <section class="seleccion-zona" [attr.aria-label]="grupo.zona">
++                <h3>{{ grupo.zona }}</h3>
++                <div class="seleccion-lugares">
++                  @for (lugar of grupo.lugares; track lugar.slug) {
++                    <button class="lugar-eleccion" type="button" [class.lugar-elegido]="lugaresElegidos().includes(lugar.slug)" [attr.aria-pressed]="lugaresElegidos().includes(lugar.slug)" (click)="alternarLugar(lugar)">
++                      <img [src]="fotoUrl(lugar.foto)" [alt]="lugar.nombre" loading="lazy">
++                      <span class="lugar-eleccion-texto">
++                        <strong>{{ lugar.nombre }}</strong>
++                        <span>{{ lugar.datos_json.localidad || grupo.zona }}</span>
++                        @if (lugar.altitud_m) { <small>{{ lugar.altitud_m | number:'1.0-0' }} msnm</small> }
++                      </span>
++                      <span class="lugar-check" aria-hidden="true">{{ lugaresElegidos().includes(lugar.slug) ? '✓' : '+' }}</span>
++                    </button>
++                  }
++                </div>
++              </section>
++            }
++          </div>
++          <p class="seleccion-contador" aria-live="polite">{{ lugaresElegidos().length }} lugares elegidos</p>
++        </section>
+       }
+ 
+       @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+@@ -94,10 +122,13 @@
+         } @else {
+           <span></span>
+         }
+-        @if (paso() < 3) {
++        @if (paso() < 4) {
+           <button class="boton-principal" type="button" (click)="avanzar()">Siguiente <span aria-hidden="true">→</span></button>
+         } @else {
+-          <button class="boton-principal" type="button" (click)="armar()">Ver mi propuesta <span aria-hidden="true">→</span></button>
++          <div class="acciones-lugares">
++            <button class="boton-secundario boton-sugerir" type="button" (click)="omitirSeleccion()">Proponer según mis intereses</button>
++            <button class="boton-principal" type="button" (click)="armar()" [disabled]="!lugaresElegidos().length">Armar con mis lugares <span aria-hidden="true">→</span></button>
++          </div>
+         }
+       </div>
+     </section>
+@@ -130,7 +161,7 @@
+         <div class="tramo" [class.tramo-regreso]="tramo.etiqueta === 'regreso'">
+           <span class="tramo-nodo" aria-hidden="true"></span>
+           <span>{{ tramo.etiqueta === 'regreso' ? 'Regreso' : 'RN9' }} · {{ tramo.hora_salida }} → {{ tramo.hora_llegada }}</span>
+-          <small>{{ tramo.origen }} — {{ tramo.destino }} · {{ tramo.confianza }} · {{ tramo.fuente }}</small>
++          <small>{{ nombreParada(tramo.origen) || humanizar(tramo.origen) }} — {{ nombreParada(tramo.destino) || humanizar(tramo.destino) }} · {{ tramo.confianza }} · {{ tramo.fuente }}</small>
+           @if (transporteDelTramo(tramo); as proximos) {
+             @if (proximos.servicios.length) {
+               <small class="proximo-servicio">Próximo servicio: {{ proximos.servicios[0].hora_salida }} → {{ proximos.servicios[0].hora_llegada }}</small>
+@@ -149,6 +180,18 @@
+             </header>
+ 
+             <div class="dia-cuerpo">
++              @if (yapaActual(); as sugerencia) {
++                @if (sugerencia.diaIndex === diaIndex) {
++                  <aside class="yapa-card" aria-label="Yapa para este día">
++                    <p class="yapa-kicker">Tu yapa · {{ sugerencia.yapa.tipo }}</p>
++                    <p class="yapa-mensaje">{{ sugerencia.yapa.mensaje }}</p>
++                    <div class="yapa-acciones">
++                      <button class="boton-yapa-sumar" type="button" (click)="sumarYapa(diaIndex, sugerencia.yapa)">Sumar</button>
++                      <button class="boton-yapa-pasar" type="button" (click)="dejarYapa(sugerencia.yapa, diaIndex)">Dejar pasar</button>
++                    </div>
++                  </aside>
++                }
++              }
+               @for (evento of dia.eventos; track evento.id; let eventoIndex = $index) {
+                 @for (tramo of tramosDelEvento(diaIndex + 1, eventoIndex); track tramo.servicio_id + tramo.dia) {
+                   <ng-container [ngTemplateOutlet]="tramoVista" [ngTemplateOutletContext]="{ tramo: tramo }"></ng-container>
+@@ -156,7 +199,7 @@
+                 <article class="evento" [style.--evento-delay]="(eventoIndex * 90) + 'ms'">
+                   <span class="evento-hora">{{ evento.hora }}</span>
+                   <div class="evento-detalle">
+-                    <a [routerLink]="['/lugares', evento.lugar]">{{ evento.nombre || evento.lugar }}</a>
++                    <a [routerLink]="['/lugares', evento.lugar]">{{ evento.nombre || nombreLugar(evento.lugar) }}</a>
+                     <p>{{ lugares().find(lugar => lugar.slug === evento.lugar)?.datos_json?.localidad || 'Jujuy' }}</p>
+                     @if (evento.acceso_local) { <p class="acceso-local">{{ evento.acceso_local }}</p> }
+                   </div>
+@@ -176,14 +219,28 @@
+ 
+               @for (conflicto of conflictosDelDia(diaIndex + 1); track $index) {
+                 <aside class="conflicto" role="alert">
+-                  <strong>{{ conflicto.mensaje }}</strong>
+-                  <p>{{ conflicto.propuesta }}</p>
++                  <strong>{{ humanizar(conflicto.mensaje) }}</strong>
++                  <p>{{ humanizar(conflicto.propuesta) }}</p>
+                 </aside>
+               }
+ 
+               @for (tramo of tramosDeRegreso(diaIndex + 1); track tramo.servicio_id + tramo.dia) {
+                 <ng-container [ngTemplateOutlet]="tramoVista" [ngTemplateOutletContext]="{ tramo: tramo }"></ng-container>
+               }
++              @if (lugaresDisponibles().length) {
++                <div class="agregar-lugar">
++                  <label>
++                    <span>Sumar un lugar al día</span>
++                    <select [value]="lugarPendientePorDia()[diaIndex] || ''" (change)="actualizarLugarPendiente(diaIndex, $event)">
++                      <option value="">Elegí del catálogo</option>
++                      @for (lugar of lugaresDisponibles(); track lugar.slug) {
++                        <option [value]="lugar.slug">{{ lugar.nombre }} · {{ lugar.datos_json.localidad || lugar.zona }}</option>
++                      }
++                    </select>
++                  </label>
++                  <button class="boton-secundario" type="button" [disabled]="!lugarPendientePorDia()[diaIndex]" (click)="agregarLugarAlDia(diaIndex)">Agregar</button>
++                </div>
++              }
+             </div>
+           </section>
+         }
+diff --git a/frontend/src/app/travesia/travesia.model.spec.ts b/frontend/src/app/travesia/travesia.model.spec.ts
+index 4f8c2af..20f5221 100644
+--- a/frontend/src/app/travesia/travesia.model.spec.ts
++++ b/frontend/src/app/travesia/travesia.model.spec.ts
+@@ -1,5 +1,6 @@
+ import { Lugar } from '../catalogo.types';
+ import { crearPlan } from './travesia.model';
++import { ContextoTravesia } from './travesia.types';
+ 
+ const lugares: Lugar[] = [
+   {
+@@ -22,6 +23,18 @@ const lugares: Lugar[] = [
+   },
+ ];
+ 
++const contexto: ContextoTravesia = {
++  paradas: [
++    { slug: 'terminal-jjs', nombre: 'Terminal de San Salvador', orden_en_linea: 1 },
++    { slug: 'volcan', nombre: 'Volcán', orden_en_linea: 2 },
++    { slug: 'purmamarca-cruce', nombre: 'Purmamarca Cruce', orden_en_linea: 3 },
++    { slug: 'tilcara', nombre: 'Tilcara', orden_en_linea: 5 },
++    { slug: 'humahuaca', nombre: 'Humahuaca', orden_en_linea: 8 },
++    { slug: 'abra-pampa', nombre: 'Abra Pampa', orden_en_linea: 9 },
++  ],
++  horarios: [],
++};
++
+ describe('crearPlan', () => {
+   it('creates a multi-day proposal from the date range and prioritizes selected interests', () => {
+     const plan = crearPlan('2026-11-07', '2026-11-09', 'terminal', ['cultura'], lugares);
+@@ -35,4 +48,51 @@ describe('crearPlan', () => {
+   it('rejects a reversed date range', () => {
+     expect(crearPlan('2026-11-09', '2026-11-07', 'terminal', ['paisaje'], lugares)).toBeNull();
+   });
++
++  it('keeps only the places the traveler explicitly selected', () => {
++    const plan = crearPlan('2026-11-07', '2026-11-07', 'terminal', ['paisaje'], lugares, ['garganta']);
++
++    expect(plan?.dias.flatMap(dia => dia.eventos.map(evento => evento.lugar))).toEqual(['garganta']);
++  });
++
++  it('orders selected Quebrada places by the RN9 corridor and separates distant zones by day', () => {
++    const lugaresMixtos = [
++      ...lugares,
++      {
++        id: 4, nombre: 'Abra Pampa', slug: 'abra', lat: 0, lng: 0,
++        altitud_m: 3484, descripcion: 'Puna jujeña.', como_llegar: '',
++        mejor_epoca: '', foto: null, zona: 'Puna', zona_slug: 'puna',
++        datos_json: { localidad: 'Abra Pampa' },
++      },
++    ];
++    const plan = crearPlan(
++      '2026-11-07',
++      '2026-11-09',
++      'terminal',
++      ['paisaje'],
++      lugaresMixtos,
++      ['abra', 'hornocal', 'pucara'],
++      contexto,
++    );
++
++    expect(plan?.dias[0].eventos.map(evento => evento.lugar)).toEqual(['pucara', 'hornocal']);
++    expect(plan?.dias[1].eventos.map(evento => evento.lugar)).toEqual(['abra']);
++    expect(plan?.dias.every(dia => new Set(dia.eventos.map(evento =>
++      lugaresMixtos.find(lugar => lugar.slug === evento.lugar)?.zona_slug,
++    )).size <= 1)).toBe(true);
++  });
++
++  it('does not combine geographically separate selected groups when there are too few days', () => {
++    const lugaresMixtos = [
++      lugares[0],
++      {
++        id: 4, nombre: 'Abra Pampa', slug: 'abra', lat: 0, lng: 0,
++        altitud_m: 3484, descripcion: 'Puna jujeña.', como_llegar: '',
++        mejor_epoca: '', foto: null, zona: 'Puna', zona_slug: 'puna',
++        datos_json: { localidad: 'Abra Pampa' },
++      },
++    ];
++
++    expect(crearPlan('2026-11-07', '2026-11-07', 'terminal', ['paisaje'], lugaresMixtos, ['hornocal', 'abra'], contexto)).toBeNull();
++  });
+ });
+diff --git a/frontend/src/app/travesia/travesia.model.ts b/frontend/src/app/travesia/travesia.model.ts
+index fdb712e..da82593 100644
+--- a/frontend/src/app/travesia/travesia.model.ts
++++ b/frontend/src/app/travesia/travesia.model.ts
+@@ -1,5 +1,13 @@
+ import { Lugar } from '../catalogo.types';
+-import { DiaTravesia, Interes, Llegada, PlanTravesia } from './travesia.types';
++import {
++  ContextoTravesia,
++  DiaTravesia,
++  HorarioTravesia,
++  Interes,
++  Llegada,
++  ParadaTravesia,
++  PlanTravesia,
++} from './travesia.types';
+ 
+ const PARADAS_POR_LOCALIDAD: Record<string, string> = {
+   'abra pampa': 'abra-pampa',
+@@ -16,12 +24,30 @@ const PARADAS_POR_LOCALIDAD: Record<string, string> = {
+   volcan: 'volcan',
+ };
+ 
++const ORDEN_RN9: Record<string, number> = {
++  'terminal-jjs': 1,
++  volcan: 2,
++  'purmamarca-cruce': 3,
++  maimara: 4,
++  tilcara: 5,
++  huacalera: 6,
++  uquia: 7,
++  humahuaca: 8,
++  'abra-pampa': 9,
++  'la-quiaca': 10,
++};
++
+ const PALABRAS_POR_INTERES: Record<Interes, RegExp> = {
+   paisaje: /cerro|serran[ií]a|salinas|laguna|paleta|quebrada|mirador|valle/i,
+   cultura: /pucar[aá]|monumento|plaza|tren|iglesia|pueblo|hist[oó]ric/i,
+   aventura: /garganta|parque|sendero|laguna|caminata|altura|monta[ñn]a/i,
+ };
+ 
++export function paradaSlugDeLugar(lugar: Lugar): string | null {
++  const localidad = lugar.datos_json.localidad?.trim().toLocaleLowerCase('es');
++  return localidad ? PARADAS_POR_LOCALIDAD[localidad] ?? null : null;
++}
++
+ function fechasEntre(inicio: string, fin: string): string[] {
+   const fechaInicio = new Date(`${inicio}T12:00:00`);
+   const fechaFin = new Date(`${fin}T12:00:00`);
+@@ -34,56 +60,192 @@ function fechasEntre(inicio: string, fin: string): string[] {
+   return fechas;
+ }
+ 
+-function paradaDe(lugar: Lugar): string | null {
+-  const localidad = lugar.datos_json.localidad?.trim().toLocaleLowerCase('es');
+-  return localidad ? PARADAS_POR_LOCALIDAD[localidad] ?? null : null;
+-}
+-
+ function puntaje(lugar: Lugar, intereses: Interes[]): number {
+   const texto = `${lugar.nombre} ${lugar.descripcion} ${lugar.datos_json.nota ?? ''}`;
+   return intereses.reduce((total, interes) => total + Number(PALABRAS_POR_INTERES[interes].test(texto)), 0);
+ }
+ 
++function ordenParada(lugar: Lugar, paradas: ParadaTravesia[]): number {
++  if (lugar.datos_json.localidad?.trim().toLocaleLowerCase('es') === 'yala') return 0;
++  const slug = paradaSlugDeLugar(lugar);
++  return paradas.find(parada => parada.slug === slug)?.orden_en_linea
++    ?? (slug ? ORDEN_RN9[slug] : Number.MAX_SAFE_INTEGER);
++}
++
++function agruparGeograficamente(lugares: Lugar[], paradas: ParadaTravesia[]): Lugar[][] {
++  const grupos: Lugar[][] = [];
++  for (const lugar of [...lugares].sort((a, b) =>
++    ordenParada(a, paradas) - ordenParada(b, paradas)
++    || a.zona_slug.localeCompare(b.zona_slug)
++    || a.nombre.localeCompare(b.nombre, 'es'),
++  )) {
++    const grupo = grupos.at(-1);
++    const anterior = grupo?.at(-1);
++    if (grupo && anterior && (lugar.zona_slug === anterior.zona_slug
++      || lugar.datos_json.localidad === anterior.datos_json.localidad)) grupo.push(lugar);
++    else grupos.push([lugar]);
++  }
++  return grupos;
++}
++
++function minutos(hora: string): number | null {
++  const match = /^(\d{2}):(\d{2})$/.exec(hora);
++  if (!match) return null;
++  const total = Number(match[1]) * 60 + Number(match[2]);
++  return Number(match[1]) < 24 && Number(match[2]) < 60 ? total : null;
++}
++
++function horaDesdeMinutos(total: number): string {
++  const hora = Math.floor(total / 60) % 24;
++  const minuto = total % 60;
++  return `${String(hora).padStart(2, '0')}:${String(minuto).padStart(2, '0')}`;
++}
++
++function primerServicio(
++  horarios: HorarioTravesia[],
++  paradas: ParadaTravesia[],
++  origen: string,
++  destino: string,
++  despuesDe: string,
++): { llegada: string } | null {
++  const ordenOrigen = paradas.find(parada => parada.slug === origen)?.orden_en_linea;
++  const ordenDestino = paradas.find(parada => parada.slug === destino)?.orden_en_linea;
++  const salidaMinima = minutos(despuesDe);
++  if (ordenOrigen === undefined || ordenDestino === undefined || salidaMinima === null) return null;
++
++  const servicios = horarios.flatMap(horario => {
++    const origenHorario = horario.paradas.find(parada => parada.slug === origen);
++    const destinoHorario = horario.paradas.find(parada => parada.slug === destino);
++    if (!origenHorario || !destinoHorario) return [];
++    const vaAlNorte = ordenOrigen < ordenDestino;
++    if (vaAlNorte !== (horario.direccion === 'ida')) return [];
++    if (vaAlNorte !== (origenHorario.orden_en_linea < destinoHorario.orden_en_linea)) return [];
++    const salida = minutos(origenHorario.hora);
++    const llegada = minutos(destinoHorario.hora);
++    if (salida === null || llegada === null || salida < salidaMinima) return [];
++    return [{ salida, llegada: llegada < salida ? llegada + 1440 : llegada }];
++  }).sort((a, b) => a.salida - b.salida);
++
++  const servicio = servicios[0];
++  return servicio ? { llegada: horaDesdeMinutos(servicio.llegada) } : null;
++}
++
++function gruposParaPlan(
++  candidatos: Lugar[],
++  seleccionados: boolean,
++  fechasDisponibles: number,
++  paradas: ParadaTravesia[],
++  intereses: Interes[],
++): Lugar[][] {
++  const grupos = agruparGeograficamente(candidatos, paradas);
++  if (seleccionados) {
++    return grupos.flatMap(grupo => {
++      const partes: Lugar[][] = [];
++      for (let indice = 0; indice < grupo.length; indice += 3) {
++        partes.push(grupo.slice(indice, indice + 3));
++      }
++      return partes;
++    });
++  }
++
++  return grupos
++    .map(grupo => ({
++      grupo: grupo
++        .sort((a, b) => puntaje(b, intereses) - puntaje(a, intereses) || a.nombre.localeCompare(b.nombre, 'es'))
++        .slice(0, 3),
++      puntaje: Math.max(...grupo.map(lugar => puntaje(lugar, intereses))),
++      orden: ordenParada(grupo[0], paradas),
++    }))
++    .sort((a, b) => b.puntaje - a.puntaje || a.orden - b.orden)
++    .slice(0, fechasDisponibles)
++    .sort((a, b) => a.orden - b.orden)
++    .map(grupo => grupo.grupo);
++}
++
+ export function crearPlan(
+   inicio: string,
+   fin: string,
+   llegada: Llegada,
+   intereses: Interes[],
+   lugares: Lugar[],
++  lugaresElegidos: string[] = [],
++  contexto: ContextoTravesia | null = null,
+ ): PlanTravesia | null {
+   const fechas = fechasEntre(inicio, fin);
+   if (!fechas.length) return null;
+ 
+-  const candidatos = [...lugares]
+-    .sort((a, b) => puntaje(b, intereses) - puntaje(a, intereses) || a.nombre.localeCompare(b.nombre, 'es'))
+-    .slice(0, fechas.length * 2);
+-
+-  let paradaNoche = llegada === 'auto' ? paradaDe(candidatos[0]) ?? 'terminal-jjs' : 'terminal-jjs';
+-  const dias: DiaTravesia[] = fechas.map((fecha, indice) => {
+-    const lugaresDelDia = candidatos.slice(indice * 2, indice * 2 + 2);
+-    const eventos = lugaresDelDia.map((lugar, eventoIndex) => ({
+-      id: `${fecha}-${lugar.slug}`,
+-      lugar: lugar.slug,
+-      nombre: lugar.nombre,
+-      hora: eventoIndex === 0 ? '09:00' : '14:00',
+-      duracion_minutos: 120,
+-    }));
+-    const primeraParada = lugaresDelDia[0] ? paradaDe(lugaresDelDia[0]) : null;
+-    const ultimaParada = lugaresDelDia.length ? paradaDe(lugaresDelDia[lugaresDelDia.length - 1]) : null;
+-    const origen = indice === 0 ? paradaNoche : paradaNoche;
+-    const cierre = indice === fechas.length - 1
+-      ? llegada === 'auto' ? ultimaParada ?? primeraParada ?? paradaNoche : 'terminal-jjs'
+-      : ultimaParada ?? primeraParada ?? paradaNoche;
+-
+-    paradaNoche = cierre;
+-    return {
+-      fecha,
+-      origen,
+-      cierre,
+-      hora_inicio: indice === 0 && llegada !== 'auto' ? '05:30' : '07:00',
+-      hora_cierre: '22:00',
+-      eventos,
+-    };
++  const paradas = contexto?.paradas ?? [];
++  const elegidos = new Set(lugaresElegidos);
++  const candidatos = lugaresElegidos.length
++    ? lugares.filter(lugar => elegidos.has(lugar.slug))
++    : [...lugares]
++      .sort((a, b) => puntaje(b, intereses) - puntaje(a, intereses) || a.nombre.localeCompare(b.nombre, 'es'));
++  const grupos = gruposParaPlan(
++    candidatos,
++    lugaresElegidos.length > 0,
++    fechas.length,
++    paradas,
++    intereses,
++  );
++  if (grupos.length > fechas.length || grupos.some(grupo => grupo.length > fechas.length * 3)) return null;
++
++  const dias: DiaTravesia[] = fechas.map((fecha, indice) => ({
++    fecha,
++    origen: indice === 0 && llegada === 'auto' ? 'terminal-jjs' : 'terminal-jjs',
++    cierre: 'terminal-jjs',
++    hora_inicio: indice === 0 && llegada !== 'auto' ? '05:30' : '07:00',
++    hora_cierre: '22:00',
++    eventos: [],
++  }));
++  let nocheAnterior = 'terminal-jjs';
++  let indiceDia = 0;
++
++  grupos.forEach(grupo => {
++    const dia = dias[indiceDia];
++    dia.origen = indiceDia === 0 && llegada === 'auto'
++      ? paradaSlugDeLugar(grupo[0]) ?? nocheAnterior
++      : nocheAnterior;
++    if (indiceDia === 0 && llegada === 'auto') nocheAnterior = dia.origen;
++    let paradaAnterior = nocheAnterior;
++    let finEvento = '07:00';
++
++    grupo.forEach((lugar, eventoIndex) => {
++      const paradaActual = paradaSlugDeLugar(lugar);
++      let hora = eventoIndex === 0 ? '09:00' : '14:00';
++      if (contexto && paradaActual) {
++        const servicio = primerServicio(
++          contexto.horarios,
++          contexto.paradas,
++          paradaAnterior,
++          paradaActual,
++          finEvento,
++        );
++        if (servicio) {
++          const llegadaMinutos = minutos(servicio.llegada) ?? 0;
++          hora = horaDesdeMinutos(Math.max(llegadaMinutos + 30, minutos(hora) ?? 0));
++        } else if (paradaActual === paradaAnterior) {
++          hora = horaDesdeMinutos(Math.max(minutos(hora) ?? 0, (minutos(finEvento) ?? 0) + 30));
++        }
++      }
++
++      dia.eventos.push({
++        id: `${dia.fecha}-${lugar.slug}`,
++        lugar: lugar.slug,
++        nombre: lugar.nombre,
++        hora,
++        duracion_minutos: 120,
++      });
++      paradaAnterior = paradaActual ?? paradaAnterior;
++      finEvento = horaDesdeMinutos((minutos(hora) ?? 0) + 150);
++    });
++
++    const ultimaParada = grupo.at(-1) ? paradaSlugDeLugar(grupo.at(-1)!) : null;
++    const cierre = indiceDia === fechas.length - 1
++      ? llegada === 'auto' ? ultimaParada ?? nocheAnterior : 'terminal-jjs'
++      : ultimaParada ?? nocheAnterior;
++    dia.cierre = cierre;
++    nocheAnterior = cierre;
++    indiceDia++;
+   });
+ 
+   return { llegada, intereses, dias };
+diff --git a/frontend/src/app/travesia/travesia.service.ts b/frontend/src/app/travesia/travesia.service.ts
+index 16e5298..97d7460 100644
+--- a/frontend/src/app/travesia/travesia.service.ts
++++ b/frontend/src/app/travesia/travesia.service.ts
+@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
+ import { environment } from '../../environments/environment';
+ import {
+   PlanTravesia,
++  ContextoTravesia,
+   RespuestaProximos,
+   ResultadoValidacion,
+ } from './travesia.types';
+@@ -17,6 +18,10 @@ export class TravesiaService {
+     return this.http.post<ResultadoValidacion>(`${this.apiUrl}/travesia/validar`, plan);
+   }
+ 
++  getContexto(): Observable<ContextoTravesia> {
++    return this.http.get<ContextoTravesia>(`${this.apiUrl}/travesia/contexto`);
++  }
++
+   getProximos(origen: string, destino: string, hora: string): Observable<RespuestaProximos> {
+     const params = new HttpParams()
+       .set('origen', origen)
+diff --git a/frontend/src/app/travesia/travesia.spec.ts b/frontend/src/app/travesia/travesia.spec.ts
+index 52c6a62..e193412 100644
+--- a/frontend/src/app/travesia/travesia.spec.ts
++++ b/frontend/src/app/travesia/travesia.spec.ts
+@@ -60,6 +60,7 @@ describe('TravesiaPage', () => {
+           provide: TravesiaService,
+           useValue: {
+             validar: validate,
++            getContexto: () => of({ paradas: [], horarios: [] }),
+             getProximos: () => of({
+               origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
+               destino: { slug: 'tilcara', nombre: 'Tilcara' },
+@@ -75,6 +76,11 @@ describe('TravesiaPage', () => {
+     fixture.detectChanges();
+     await fixture.whenStable();
+ 
++    (fixture.nativeElement.querySelector('.wizard .boton-principal') as HTMLButtonElement).click();
++    fixture.detectChanges();
++    expect(fixture.nativeElement.querySelector('.wizard')).toBeTruthy();
++    expect(fixture.nativeElement.textContent).toContain('Elegí la fecha de llegada.');
++
+     const fechas = fixture.nativeElement.querySelectorAll('input[type="date"]') as NodeListOf<HTMLInputElement>;
+     fechas[0].value = '2026-11-07';
+     fechas[0].dispatchEvent(new Event('input', { bubbles: true }));
+@@ -87,6 +93,8 @@ describe('TravesiaPage', () => {
+     fixture.detectChanges();
+     (fixture.nativeElement.querySelector('button.boton-principal') as HTMLButtonElement).click();
+     fixture.detectChanges();
++    (fixture.nativeElement.querySelector('.boton-sugerir') as HTMLButtonElement).click();
++    fixture.detectChanges();
+     await fixture.whenStable();
+     fixture.detectChanges();
+ 
+@@ -106,4 +114,73 @@ describe('TravesiaPage', () => {
+     expect(validate).toHaveBeenCalledTimes(2);
+     expect(fixture.nativeElement.textContent).toContain('Mové la visita a la mañana.');
+   });
++
++  it('shows at most two yapa suggestions per day, including those dismissed', async () => {
++    const catalogo = [
++      lugares[0],
++      { ...lugares[1], id: 3, slug: 'garganta-diablo', nombre: 'Garganta del Diablo' },
++      { ...lugares[1], id: 4, slug: 'pucara-tilcara', nombre: 'Pucará de Tilcara' },
++      { ...lugares[1], id: 5, slug: 'mirador-tilcara', nombre: 'Mirador de Tilcara' },
++    ];
++
++    await TestBed.configureTestingModule({
++      imports: [TravesiaPage],
++      providers: [
++        provideRouter([]),
++        { provide: CatalogoService, useValue: { getLugares: () => of(catalogo) } },
++        {
++          provide: TravesiaService,
++          useValue: {
++            validar: (plan: PlanTravesia) => of({
++              plan,
++              validado: true,
++              tramos: [],
++              conflictos: [],
++            }),
++            getContexto: () => of({ paradas: [], horarios: [] }),
++            getProximos: () => of({
++              origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
++              destino: { slug: 'tilcara', nombre: 'Tilcara' },
++              direccion: 'ida',
++              servicios: [],
++            }),
++          },
++        },
++      ],
++    }).compileComponents();
++
++    const fixture = TestBed.createComponent(TravesiaPage);
++    fixture.detectChanges();
++    await fixture.whenStable();
++
++    const fechas = fixture.nativeElement.querySelectorAll('input[type="date"]') as NodeListOf<HTMLInputElement>;
++    fechas[0].value = '2026-11-07';
++    fechas[0].dispatchEvent(new Event('input', { bubbles: true }));
++    fechas[1].value = '2026-11-07';
++    fechas[1].dispatchEvent(new Event('input', { bubbles: true }));
++    fixture.detectChanges();
++    (fixture.nativeElement.querySelector('.wizard .boton-principal') as HTMLButtonElement).click();
++    fixture.detectChanges();
++    (fixture.nativeElement.querySelector('.wizard .boton-principal') as HTMLButtonElement).click();
++    fixture.detectChanges();
++    (fixture.nativeElement.querySelector('.wizard .boton-principal') as HTMLButtonElement).click();
++    fixture.detectChanges();
++
++    (fixture.nativeElement.querySelector('.lugar-eleccion') as HTMLButtonElement).click();
++    fixture.detectChanges();
++    (fixture.nativeElement.querySelector('.acciones-lugares .boton-principal') as HTMLButtonElement).click();
++    fixture.detectChanges();
++    await fixture.whenStable();
++    fixture.detectChanges();
++
++    const pasar = (): void => {
++      (fixture.nativeElement.querySelector('.boton-yapa-pasar') as HTMLButtonElement).click();
++      fixture.detectChanges();
++    };
++    expect(fixture.nativeElement.querySelector('.yapa-card')).toBeTruthy();
++    pasar();
++    expect(fixture.nativeElement.querySelector('.yapa-card')).toBeTruthy();
++    pasar();
++    expect(fixture.nativeElement.querySelector('.yapa-card')).toBeNull();
++  });
+ });
+diff --git a/frontend/src/app/travesia/travesia.ts b/frontend/src/app/travesia/travesia.ts
+index fc6dda0..52f467a 100644
+--- a/frontend/src/app/travesia/travesia.ts
++++ b/frontend/src/app/travesia/travesia.ts
+@@ -1,4 +1,4 @@
+-import { NgTemplateOutlet } from '@angular/common';
++import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
+ import { Component, inject, signal } from '@angular/core';
+ import { RouterLink } from '@angular/router';
+ import { forkJoin } from 'rxjs';
+@@ -7,17 +7,20 @@ import { Lugar } from '../catalogo.types';
+ import { crearPlan } from './travesia.model';
+ import {
+   ConflictoTravesia,
++  ContextoTravesia,
+   Interes,
+   Llegada,
+   PlanTravesia,
+   RespuestaProximos,
+   ResultadoValidacion,
+   TramoTravesia,
++  YapaTravesia,
+ } from './travesia.types';
+ import { TravesiaService } from './travesia.service';
++import { generarYapas } from './travesia.yapas';
+ 
+ @Component({
+-  imports: [NgTemplateOutlet, RouterLink],
++  imports: [DecimalPipe, NgTemplateOutlet, RouterLink],
+   selector: 'app-travesia',
+   templateUrl: './travesia.html',
+   styleUrl: './travesia.css',
+@@ -27,6 +30,7 @@ export class TravesiaPage {
+   private readonly travesia = inject(TravesiaService);
+ 
+   protected readonly lugares = signal<Lugar[]>([]);
++  protected readonly contexto = signal<ContextoTravesia | null>(null);
+   protected readonly paso = signal(1);
+   protected readonly fechaInicio = signal('');
+   protected readonly fechaFin = signal('');
+@@ -38,6 +42,14 @@ export class TravesiaPage {
+   protected readonly cargando = signal(true);
+   protected readonly validando = signal(false);
+   protected readonly error = signal('');
++  protected readonly errorCatalogo = signal('');
++  protected readonly errorContexto = signal('');
++  protected readonly errorFechaInicio = signal('');
++  protected readonly errorFechaFin = signal('');
++  protected readonly lugaresElegidos = signal<string[]>([]);
++  protected readonly descartadas = signal<string[]>([]);
++  protected readonly yapasMostradas = signal<Record<string, number>>({});
++  protected readonly lugarPendientePorDia = signal<Record<number, string>>({});
+   protected readonly errorTransporte = signal('');
+   private validacionId = 0;
+ 
+@@ -48,16 +60,26 @@ export class TravesiaPage {
+         this.cargando.set(false);
+       },
+       error: () => {
+-        this.error.set('No pudimos cargar los lugares para armar tu travesía. Revisá tu conexión e intentá de nuevo.');
++        this.errorCatalogo.set('No pudimos cargar los lugares para armar tu travesía. Revisá tu conexión e intentá de nuevo.');
+         this.cargando.set(false);
+       },
+     });
++    this.travesia.getContexto().subscribe({
++      next: contexto => this.contexto.set(contexto),
++      error: () => this.errorContexto.set('No pudimos consultar los horarios RN9. La propuesta usará horas orientativas y no mostrará yapas de ruta.'),
++    });
+   }
+ 
+   protected actualizarFecha(campo: 'inicio' | 'fin', event: Event): void {
+     const value = (event.target as HTMLInputElement).value;
+-    if (campo === 'inicio') this.fechaInicio.set(value);
+-    else this.fechaFin.set(value);
++    if (campo === 'inicio') {
++      this.fechaInicio.set(value);
++      this.errorFechaInicio.set('');
++    } else {
++      this.fechaFin.set(value);
++      this.errorFechaFin.set('');
++    }
++    this.error.set('');
+   }
+ 
+   protected seleccionarLlegada(value: Llegada): void {
+@@ -80,8 +102,12 @@ export class TravesiaPage {
+   protected avanzar(): void {
+     this.error.set('');
+     if (this.paso() === 1) {
+-      if (!this.fechaInicio() || !this.fechaFin() || this.fechaInicio() > this.fechaFin()) {
+-        this.error.set('Elegí un rango de fechas válido para continuar.');
++      this.errorFechaInicio.set(this.fechaInicio() ? '' : 'Elegí la fecha de llegada.');
++      this.errorFechaFin.set(this.fechaFin() ? '' : 'Elegí la fecha de regreso.');
++      if (this.fechaInicio() && this.fechaFin() && this.fechaInicio() > this.fechaFin()) {
++        this.errorFechaFin.set('La fecha de regreso no puede ser anterior a la llegada.');
++      }
++      if (this.errorFechaInicio() || this.errorFechaFin()) {
+         return;
+       }
+     }
+@@ -89,7 +115,7 @@ export class TravesiaPage {
+       this.error.set('Elegí al menos un interés para preparar la propuesta.');
+       return;
+     }
+-    this.paso.update(actual => Math.min(actual + 1, 3));
++    this.paso.update(actual => Math.min(actual + 1, 4));
+   }
+ 
+   protected volver(): void {
+@@ -104,15 +130,176 @@ export class TravesiaPage {
+       this.llegada(),
+       this.intereses(),
+       this.lugares(),
++      this.lugaresElegidos(),
++      this.contexto(),
+     );
+     if (!propuesta) {
+-      this.error.set('El rango de fechas no es válido. Corregilo para generar el plan.');
++      this.error.set(this.lugaresElegidos().length
++        ? 'Con estas fechas no entran todos los lugares elegidos sin mezclar zonas lejanas. Sumá días o ajustá tu selección.'
++        : 'No pudimos armar un plan con ese rango de fechas. Revisalo para continuar.');
+       return;
+     }
+     this.plan.set(propuesta);
+     this.validar(propuesta);
+   }
+ 
++  protected alternarLugar(lugar: Lugar): void {
++    this.lugaresElegidos.update(actuales => actuales.includes(lugar.slug)
++      ? actuales.filter(slug => slug !== lugar.slug)
++      : [...actuales, lugar.slug]);
++    this.error.set('');
++  }
++
++  protected omitirSeleccion(): void {
++    this.lugaresElegidos.set([]);
++    this.armar();
++  }
++
++  protected gruposDeLugares(): { zona: string; lugares: Lugar[] }[] {
++    const grupos = new Map<string, Lugar[]>();
++    for (const lugar of this.lugares()) {
++      const lista = grupos.get(lugar.zona) ?? [];
++      lista.push(lugar);
++      grupos.set(lugar.zona, lista);
++    }
++    return [...grupos.entries()].map(([zona, lugares]) => ({ zona, lugares }));
++  }
++
++  protected fotoUrl(foto: string | null): string {
++    return foto ? `/img/${foto}` : '/img/purmamarca.jpg';
++  }
++
++  protected lugaresDisponibles(): Lugar[] {
++    const incluidos = new Set(this.plan()?.dias.flatMap(dia => dia.eventos.map(evento => evento.lugar)) ?? []);
++    return this.lugares().filter(lugar => !incluidos.has(lugar.slug));
++  }
++
++  protected actualizarLugarPendiente(diaIndex: number, event: Event): void {
++    const slug = (event.target as HTMLSelectElement).value;
++    this.lugarPendientePorDia.update(actuales => ({ ...actuales, [diaIndex]: slug }));
++  }
++
++  protected agregarLugarAlDia(diaIndex: number): void {
++    const slug = this.lugarPendientePorDia()[diaIndex];
++    const lugar = this.lugares().find(item => item.slug === slug);
++    const actual = this.plan();
++    if (!actual || !lugar) return;
++    const dias = actual.dias.map(dia => ({ ...dia, eventos: [...dia.eventos] }));
++    const eventos = dias[diaIndex].eventos;
++    const horaFinal = eventos.reduce((ultimo, evento) => {
++      const [hora, minuto] = evento.hora.split(':').map(Number);
++      return Math.max(ultimo, hora * 60 + minuto + evento.duracion_minutos);
++    }, 7 * 60);
++    const hora = `${String(Math.floor(horaFinal / 60) % 24).padStart(2, '0')}:${String(horaFinal % 60).padStart(2, '0')}`;
++    eventos.push({
++      id: `${dias[diaIndex].fecha}-${lugar.slug}`,
++      lugar: lugar.slug,
++      nombre: lugar.nombre,
++      hora,
++      duracion_minutos: 120,
++    });
++    const actualizado = { ...actual, dias };
++    this.plan.set(actualizado);
++    this.validar(actualizado);
++  }
++
++  protected yapaActual(): { diaIndex: number; yapa: YapaTravesia } | null {
++    const plan = this.plan();
++    const contexto = this.contexto();
++    if (!plan) return null;
++
++    for (const [diaIndex, dia] of plan.dias.entries()) {
++      const diaKey = dia.fecha;
++      if ((this.yapasMostradas()[diaKey] ?? 0) >= 2) continue;
++      const lugaresDelDia = dia.eventos
++        .map(evento => this.lugares().find(lugar => lugar.slug === evento.lugar))
++        .filter((lugar): lugar is Lugar => Boolean(lugar));
++      const ultimoEvento = dia.eventos.at(-1);
++      const horaDisponible = ultimoEvento
++        ? this.minutos(ultimoEvento.hora) + ultimoEvento.duracion_minutos
++        : 0;
++      const sugerencias = generarYapas(lugaresDelDia, this.lugares(), contexto, horaDisponible);
++      const yapa = sugerencias.find(opcion => !this.descartadas().includes(`${diaKey}:${opcion.lugar_sugerido_slug}`));
++      if (yapa) return { diaIndex, yapa };
++    }
++    return null;
++  }
++
++  protected sumarYapa(diaIndex: number, yapa: YapaTravesia): void {
++    const actual = this.plan();
++    const lugar = this.lugares().find(item => item.slug === yapa.lugar_sugerido_slug);
++    if (!actual || !lugar) return;
++
++    const dias = actual.dias.map(dia => ({ ...dia, eventos: [...dia.eventos] }));
++    const eventos = dias[diaIndex].eventos;
++    const horaFinal = eventos.reduce((ultimo, evento) => {
++      const fin = this.minutos(evento.hora) + evento.duracion_minutos;
++      return Math.max(ultimo, fin);
++    }, 8 * 60);
++    const hora = yapa.hora_sugerida ?? this.horaDesdeMinutos(horaFinal + 30);
++    eventos.push({
++      id: `${dias[diaIndex].fecha}-${lugar.slug}`,
++      lugar: lugar.slug,
++      nombre: lugar.nombre,
++      hora,
++      duracion_minutos: 120,
++    });
++    const actualizado = { ...actual, dias };
++    this.yapasMostradas.update(contador => ({
++      ...contador,
++      [dias[diaIndex].fecha]: (contador[dias[diaIndex].fecha] ?? 0) + 1,
++    }));
++    this.plan.set(actualizado);
++    this.validar(actualizado);
++  }
++
++  protected dejarYapa(yapa: YapaTravesia, diaIndex: number): void {
++    const fecha = this.plan()?.dias[diaIndex].fecha;
++    if (!fecha) return;
++    this.descartadas.update(actuales => [...actuales, `${fecha}:${yapa.lugar_sugerido_slug}`]);
++    this.yapasMostradas.update(contador => ({
++      ...contador,
++      [fecha]: (contador[fecha] ?? 0) + 1,
++    }));
++  }
++
++  protected nombreLugar(slug: string): string {
++    return this.lugares().find(lugar => lugar.slug === slug)?.nombre
++      ?? this.nombreParada(slug)
++      ?? slug.replace(/-/g, ' ').replace(/\b\p{L}/gu, letra => letra.toLocaleUpperCase('es'));
++  }
++
++  protected nombreParada(slug: string): string | null {
++    const paradas = this.contexto()?.paradas ?? [];
++    const encontrada = paradas.find(parada => parada.slug === slug);
++    if (encontrada) return encontrada.nombre;
++    const nombres: Record<string, string> = {
++      'terminal-jjs': 'Terminal de San Salvador',
++      'purmamarca-cruce': 'Purmamarca Cruce',
++      'abra-pampa': 'Abra Pampa',
++      'la-quiaca': 'La Quiaca',
++      maimara: 'Maimará',
++      tilcara: 'Tilcara',
++      humahuaca: 'Humahuaca',
++      uquia: 'Uquía',
++      volcan: 'Volcán',
++    };
++    return nombres[slug] ?? null;
++  }
++
++  protected humanizar(texto: string): string {
++    return texto.replace(/\b[a-z]+(?:-[a-z]+)+\b/gi, slug => this.nombreParada(slug) ?? slug);
++  }
++
++  private minutos(hora: string): number {
++    const [horas, minutos] = hora.split(':').map(Number);
++    return horas * 60 + minutos;
++  }
++
++  private horaDesdeMinutos(total: number): string {
++    return `${String(Math.floor(total / 60) % 24).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
++  }
++
+   protected moverEvento(diaOrigen: number, indiceEvento: number, event: Event): void {
+     const diaDestino = Number((event.target as HTMLSelectElement).value);
+     if (!Number.isInteger(diaDestino) || diaDestino === diaOrigen) return;
+@@ -153,6 +340,8 @@ export class TravesiaPage {
+     this.fechaInicio.set('');
+     this.fechaFin.set('');
+     this.intereses.set(['paisaje']);
++    this.lugaresElegidos.set([]);
++    this.yapasMostradas.set({});
+   }
+ 
+   protected conflictosDelDia(numeroDia: number): ConflictoTravesia[] {
+diff --git a/frontend/src/app/travesia/travesia.types.ts b/frontend/src/app/travesia/travesia.types.ts
+index 30fb394..8c9b813 100644
+--- a/frontend/src/app/travesia/travesia.types.ts
++++ b/frontend/src/app/travesia/travesia.types.ts
+@@ -80,3 +80,38 @@ export interface RespuestaProximos {
+   servicios: ServicioProximo[];
+ }
+ 
++export interface ParadaTravesia {
++  slug: string;
++  nombre: string;
++  orden_en_linea: number;
++}
++
++export interface HorarioParadaTravesia {
++  slug: string;
++  orden_en_linea: number;
++  hora: string;
++  confianza: string;
++  fuente: string;
++}
++
++export interface HorarioTravesia {
++  servicio_id: string;
++  direccion: 'ida' | 'vuelta';
++  paradas: HorarioParadaTravesia[];
++}
++
++export interface ContextoTravesia {
++  paradas: ParadaTravesia[];
++  horarios: HorarioTravesia[];
++}
++
++export type TipoYapa = 'localidad' | 'zona' | 'rn9' | 'aclimatacion';
++
++export interface YapaTravesia {
++  tipo: TipoYapa;
++  lugar_sugerido_slug: string;
++  mensaje: string;
++  accion: 'agregar-al-dia';
++  hora_sugerida?: string;
++}
++
+diff --git a/frontend/src/app/travesia/travesia.yapas.spec.ts b/frontend/src/app/travesia/travesia.yapas.spec.ts
+new file mode 100644
+index 0000000..9b488de
+--- /dev/null
++++ b/frontend/src/app/travesia/travesia.yapas.spec.ts
+@@ -0,0 +1,84 @@
++import { Lugar } from '../catalogo.types';
++import { ContextoTravesia } from './travesia.types';
++import { generarYapas } from './travesia.yapas';
++
++const volcan: Lugar = {
++  id: 1, nombre: 'Tren Solar — estación Volcán', slug: 'tren-volcan', lat: 0, lng: 0,
++  altitud_m: 2080, descripcion: 'Estación del Tren Solar.', como_llegar: '',
++  mejor_epoca: '', foto: null, zona: 'Quebrada', zona_slug: 'quebrada',
++  datos_json: { localidad: 'Volcán' },
++};
++
++const cerro: Lugar = {
++  id: 2, nombre: 'Cerro de los Siete Colores', slug: 'cerro-siete-colores', lat: 0, lng: 0,
++  altitud_m: 2324, descripcion: 'Formaciones de distintos tonos.', como_llegar: '',
++  mejor_epoca: '', foto: null, zona: 'Quebrada', zona_slug: 'quebrada',
++  datos_json: { localidad: 'Purmamarca' },
++};
++
++const contexto: ContextoTravesia = {
++  paradas: [
++    { slug: 'volcan', nombre: 'Volcán', orden_en_linea: 2 },
++    { slug: 'purmamarca-cruce', nombre: 'Purmamarca Cruce', orden_en_linea: 3 },
++  ],
++  horarios: [{
++    servicio_id: 'rn9-ida',
++    direccion: 'ida',
++    paradas: [
++      { slug: 'volcan', orden_en_linea: 2, hora: '11:15', confianza: 'estimado', fuente: 'horario RN9' },
++      { slug: 'purmamarca-cruce', orden_en_linea: 3, hora: '11:35', confianza: 'estimado', fuente: 'horario RN9' },
++    ],
++  }],
++};
++
++describe('generarYapas', () => {
++  it('uses RN9 details only when a service connects Volcán and Purmamarca', () => {
++    const sugerencias = generarYapas([volcan], [cerro], contexto, 11 * 60);
++
++    expect(sugerencias[0]).toMatchObject({
++      tipo: 'rn9',
++      lugar_sugerido_slug: 'cerro-siete-colores',
++      accion: 'agregar-al-dia',
++      hora_sugerida: '12:05',
++    });
++    expect(sugerencias[0].mensaje).toContain('Purmamarca Cruce');
++    expect(sugerencias[0].mensaje).toContain('3 km');
++    const sinServicio = generarYapas([volcan], [cerro], { ...contexto, horarios: [] }, 11 * 60);
++    expect(sinServicio[0].tipo).toBe('zona');
++    expect(sinServicio[0].mensaje).not.toContain('servicio RN9');
++  });
++
++  it('builds a locality suggestion from catalog data without requiring transit between stops', () => {
++    const tilcara: Lugar = {
++      ...cerro,
++      slug: 'pucara-tilcara',
++      nombre: 'Pucará de Tilcara',
++      datos_json: { localidad: 'Tilcara' },
++    };
++    const gargante: Lugar = {
++      ...tilcara,
++      slug: 'garganta-tilcara',
++      nombre: 'Garganta del Diablo',
++    };
++
++    expect(generarYapas([tilcara], [gargante], null)[0].mensaje).toContain('Tilcara');
++    expect(generarYapas([tilcara], [gargante], null)[0].mensaje).toContain('Garganta del Diablo');
++  });
++
++  it('suggests a different locality in the same zone without requiring an RN9 service', () => {
++    const tilcara: Lugar = {
++      ...volcan,
++      nombre: 'Pucará de Tilcara',
++      datos_json: { localidad: 'Tilcara' },
++    };
++
++    const sugerencias = generarYapas([tilcara], [cerro], null);
++
++    expect(sugerencias[0]).toMatchObject({
++      tipo: 'zona',
++      lugar_sugerido_slug: 'cerro-siete-colores',
++    });
++    expect(sugerencias[0].mensaje).toContain('Quebrada');
++    expect(sugerencias[0].mensaje).toContain('Purmamarca');
++  });
++});
+diff --git a/frontend/src/app/travesia/travesia.yapas.ts b/frontend/src/app/travesia/travesia.yapas.ts
+new file mode 100644
+index 0000000..857ec6e
+--- /dev/null
++++ b/frontend/src/app/travesia/travesia.yapas.ts
+@@ -0,0 +1,160 @@
++import { Lugar } from '../catalogo.types';
++import { paradaSlugDeLugar } from './travesia.model';
++import {
++  ContextoTravesia,
++  HorarioTravesia,
++  TipoYapa,
++  YapaTravesia,
++} from './travesia.types';
++
++function servicioEntre(
++  horarios: HorarioTravesia[],
++  origen: string,
++  destino: string,
++  despuesDe: number,
++): { hora: string; confianza: string; fuente: string } | null {
++  const servicios = horarios.flatMap(horario => {
++    const partida = horario.paradas.find(parada => parada.slug === origen);
++    const llegada = horario.paradas.find(parada => parada.slug === destino);
++    if (!partida || !llegada) return [];
++    const vaAlNorte = partida.orden_en_linea < llegada.orden_en_linea;
++    if (Math.abs(partida.orden_en_linea - llegada.orden_en_linea) !== 1) return [];
++    if (vaAlNorte !== (horario.direccion === 'ida')) return [];
++    if (vaAlNorte !== (partida.orden_en_linea < llegada.orden_en_linea)) return [];
++    const [hora, minuto] = partida.hora.split(':').map(Number);
++    const salida = hora * 60 + minuto;
++    if (!Number.isFinite(salida) || salida < despuesDe) return [];
++    return [{
++      salida,
++      hora: llegada.hora,
++      confianza: [partida.confianza, llegada.confianza].includes('estimado') ? 'estimado' : 'publicado',
++      fuente: partida.fuente === llegada.fuente ? partida.fuente : `${partida.fuente} / ${llegada.fuente}`,
++    }];
++  }).sort((a, b) => a.salida - b.salida);
++
++  const servicio = servicios[0];
++  return servicio ? { hora: servicio.hora, confianza: servicio.confianza, fuente: servicio.fuente } : null;
++}
++
++function formatoAltitud(altitud: number | null): string {
++  return altitud === null
++    ? ''
++    : new Intl.NumberFormat('es-AR').format(altitud);
++}
++
++function crearYapa(
++  tipo: TipoYapa,
++  lugar: Lugar,
++  mensaje: string,
++  horaSugerida?: string,
++): YapaTravesia {
++  return {
++    tipo,
++    lugar_sugerido_slug: lugar.slug,
++    mensaje,
++    accion: 'agregar-al-dia',
++    ...(horaSugerida ? { hora_sugerida: horaSugerida } : {}),
++  };
++}
++
++function crearYapaDeZona(candidato: Lugar, ultimo: Lugar): YapaTravesia {
++  const localidad = candidato.datos_json.localidad?.trim();
++  const altitud = formatoAltitud(candidato.altitud_m);
++  return crearYapa(
++    'zona',
++    candidato,
++    `${candidato.nombre} también queda en ${candidato.zona}${localidad ? `, en ${localidad}` : ''}${altitud ? `, a ${altitud} msnm` : ''}; comparte zona con ${ultimo.nombre}.`,
++  );
++}
++
++function sumarMinutos(hora: string, cantidad: number): string {
++  const [horas, minutos] = hora.split(':').map(Number);
++  const total = (horas * 60 + minutos + cantidad) % (24 * 60);
++  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
++}
++
++export function generarYapas(
++  lugaresDelDia: Lugar[],
++  candidatos: Lugar[],
++  contexto: ContextoTravesia | null,
++  disponibleDesde = 0,
++): YapaTravesia[] {
++  if (!lugaresDelDia.length) return [];
++  const elegidos = new Set(lugaresDelDia.map(lugar => lugar.slug));
++  const ultimo = lugaresDelDia.at(-1)!;
++  const paradaOrigen = paradaSlugDeLugar(ultimo);
++  const horaDisponible = disponibleDesde;
++  const sugerencias: Array<{ orden: number; yapa: YapaTravesia }> = [];
++
++  for (const candidato of candidatos) {
++    if (elegidos.has(candidato.slug)) continue;
++    const localidadCandidata = candidato.datos_json.localidad?.trim();
++    const localidadActual = ultimo.datos_json.localidad?.trim();
++    const mismaLocalidad = Boolean(
++      localidadCandidata
++      && localidadActual
++      && localidadCandidata.toLocaleLowerCase('es') === localidadActual.toLocaleLowerCase('es'),
++    );
++    if (mismaLocalidad) {
++      const altitud = formatoAltitud(candidato.altitud_m);
++      sugerencias.push({
++        orden: 0,
++        yapa: crearYapa(
++          'localidad',
++          candidato,
++          `${candidato.nombre} también queda en ${candidato.datos_json.localidad}${altitud ? `, a ${altitud} msnm` : ''}.`,
++        ),
++      });
++      continue;
++    }
++
++    const zonaCandidata = candidato.zona_slug.trim();
++    const zonaActual = ultimo.zona_slug.trim();
++    const mismaZona = Boolean(
++      zonaCandidata
++      && zonaActual
++      && zonaCandidata.toLocaleLowerCase('es') === zonaActual.toLocaleLowerCase('es'),
++    );
++    const paradaDestino = paradaSlugDeLugar(candidato);
++    if (!contexto || !paradaOrigen || !paradaDestino) {
++      if (mismaZona) sugerencias.push({ orden: 1, yapa: crearYapaDeZona(candidato, ultimo) });
++      continue;
++    }
++    const servicio = servicioEntre(contexto.horarios, paradaOrigen, paradaDestino, horaDisponible);
++    if (!servicio) {
++      if (mismaZona) sugerencias.push({ orden: 1, yapa: crearYapaDeZona(candidato, ultimo) });
++      continue;
++    }
++    const paradaSalida = contexto.paradas.find(parada => parada.slug === paradaOrigen)?.nombre;
++    const paradaLlegada = contexto.paradas.find(parada => parada.slug === paradaDestino)?.nombre;
++    if (!paradaSalida || !paradaLlegada) continue;
++
++    const altura = ultimo.altitud_m !== null && candidato.altitud_m !== null
++      ? candidato.altitud_m - ultimo.altitud_m
++      : 0;
++    const tipo: TipoYapa = Math.abs(altura) >= 1000 ? 'aclimatacion' : 'rn9';
++    const advertenciaAltitud = tipo === 'aclimatacion'
++      ? ` El cambio de ${formatoAltitud(ultimo.altitud_m)} a ${formatoAltitud(candidato.altitud_m)} msnm es de ${formatoAltitud(Math.abs(altura))} m; sumá tiempo para aclimatarte.`
++      : '';
++    const detalleServicio = servicio.confianza === 'estimado'
++      ? `El horario estimado de ${servicio.fuente}`
++      : `El servicio RN9 de ${servicio.fuente}`;
++    const accesoLocal = paradaDestino === 'purmamarca-cruce'
++      ? ' El pueblo queda a 3 km del cruce por RN52 y requiere un traslado local.'
++      : '';
++
++    sugerencias.push({
++      orden: tipo === 'aclimatacion' ? 2 : 1,
++      yapa: crearYapa(
++        tipo,
++        candidato,
++        `${detalleServicio} conecta ${paradaSalida} con ${paradaLlegada} a las ${servicio.hora}; podés sumar ${candidato.nombre}.${accesoLocal}${advertenciaAltitud}`,
++        sumarMinutos(servicio.hora, 30),
++      ),
++    });
++  }
++
++  return sugerencias
++    .sort((a, b) => a.orden - b.orden || a.yapa.lugar_sugerido_slug.localeCompare(b.yapa.lugar_sugerido_slug))
++    .map(sugerencia => sugerencia.yapa);
++}
+diff --git a/specs/10-plan-elegido.spec.md b/specs/10-plan-elegido.spec.md
+new file mode 100644
+index 0000000..14ee646
+--- /dev/null
++++ b/specs/10-plan-elegido.spec.md
+@@ -0,0 +1,82 @@
++# Slice 10 — El plan lo elige el turista + yapas contextuales + fixes de análisis
++
++**Depende de:** todo lo mergeado hasta `97a7ce0`.
++**Alcance:** `frontend/src/app/travesia/`, `frontend/src/app/home/` (solo estilos puntuales si hace falta), `frontend/src/app/app.config.ts`, `backend/src/itinerario/`, `backend/src/routes/travesia.js`, `backend/test/`. NO tocar otras páginas ni migraciones.
++
++## Contexto
++
++- `frontend/src/app/travesia/travesia.model.ts` — hoy `crearPlan` ordena ALFABÉTICO y reparte 2 lugares por día a 09:00/14:00 sin mirar geografía ni horarios. Eso genera planes imposibles (4/6 días con conflicto).
++- `backend/src/itinerario/validar.js` — valida tramos RN9, devuelve `tramos` y `conflictos` con slugs crudos.
++- `frontend/src/app/travesia/travesia.ts|.html` — wizard 3 pasos + plan editable.
++- `backend/src/routes/catalogo.js` — patrón de router.
++- Feedback del usuario: "el turista no puede elegir: día 1 quiero hacer ESTO, y la IA de una sugerencia respecto a lo que quiere hacer".
++
++## Qué tiene que pasar
++
++### A. El turista elige (wizard paso 4 + plan)
++
++1. Paso nuevo del wizard **"¿Qué querés hacer?"** (después de intereses): lista del catálogo
++   agrupada por zona con foto, nombre, localidad, altitud; multi-select con chips/cards.
++   El turista puede marcar lo que quiera (mín. 1). Puede saltear el paso y dejar que
++   se propongan lugares por intereses (comportamiento actual mejorado).
++2. `crearPlan` rediseñado:
++   - Si el turista eligió lugares → SOLO esos, distribuidos por día.
++   - Si no eligió → sugerir por intereses (mismo scoring actual).
++   - **Orden de días por geografía, no alfabético**: agrupar por zona y ordenar los días
++     siguiendo la RN9 (de sur a norte: San Salvador → Purmamarca → Tilcara → Humahuaca →
++     Puna). Lugares de la misma localidad/zona van al MISMO día si caben (2-3 por día máx).
++   - Horas iniciales respetando el primer servicio RN9 disponible de `horarios` si se
++     puede consultar (si no, mantener 09:00/14:00 pero NUNCA dos zonas incompatibles el
++     mismo día).
++3. En el plan generado, cada evento puede **moverse entre días** (ya existe) y el turista
++   puede **agregar lugar a un día** con un picker inline.
++
++### B. Yapas contextuales (sugerencias honestas)
++
++1. Motor de sugerencias en frontend (puro, testeable, `travesia.yapas.ts`):
++   - Reglas reales: misma localidad, misma zona, ruta RN9 contigua (paradas adyacentes),
++     altitud compatible (no meter 3.600 msnm un día después de 2.300 → sugerir aclimatación).
++   - Ejemplo canónico: si el turista marca **Volcán** → sugerir **Purmamarca/Cerro de los
++     Siete Colores**: "el colectivo a Volcán pasa por el cruce, podés bajar, caminar el
++     pueblo y seguir a la tarde". Verificar que el tramo exista en `horarios` antes de
++     ofrecerlo.
++   - Cada yapa: `{ tipo, lugar_sugerido_slug, mensaje, accion }` estructurada — NADA de
++     textos prefijados genéricos; el mensaje se arma con datos del catálogo/horarios.
++2. UI: bloque "Tu yapa" por día o al elegir lugar en el wizard — card editorial
++   (kicker "yapa", serif), botones "Sumar" / "Dejar pasar". Aceptar suma el lugar al plan
++   (y revalida); dejar pasar lo descarta (recordarlo en sesión para no insistir).
++3. Mostrar UNA yapa activa a la vez; máximo 2 por día. Sin spam.
++
++### C. Fixes del análisis
++
++1. **Wizard ya no desaparece con error**: errores de validación de paso (fechas vacías,
++   fecha_fin < fecha_inicio) se muestran inline junto al campo, el wizard queda montado.
++2. **Slugs humanizados en la UI**: los conflictos y tramos muestran nombres de parada
++   ("Terminal de San Salvador", "Purmamarca Cruce", "Abra Pampa") — mapear slug→nombre
++   en frontend con los datos de `/api/transporte/paradas` si existe, o tabla local.
++3. **Locale es-AR**: registrar `es` (registerLocaleData de @angular/common/locales/es)
++   en app.config → números con punto de miles ("3.484 msnm") y fechas es.
++4. **Contraste hero móvil**: el `em` ocre sobre foto — subir sombra/contorno o llevar el
++   hero-copy a un bloque con velo local para legibilidad en 390px.
++
++## Criterios de aceptación
++
++- [ ] `npm test` front verde — incluye tests del generador (orden geográfico, mismos
++      lugares elegidos, nunca 2 zonas lejanas por día) y del motor de yapas
++      (Volcán → propone Cerro Siete Colores si el tramo existe)
++- [ ] `npm test` back verde
++- [ ] `npm run build` OK
++- [ ] Wizard: error inline sin desmontar; paso "qué querés hacer" funcional
++- [ ] Plan con fechas+intereses por defecto genera días geográficamente coherentes
++      (ej: Quebrada junta, Puna junta — nunca Abra Pampa y Yala el mismo día)
++- [ ] Al elegir Volcán aparece la yapa de Purmamarca (si el tramo RN9 existe)
++- [ ] Slugs no aparecen nunca en UI; números con formato es-AR
++- [ ] kero-audit `/` y `/travesia` 390x844 + 1440x900 sin hard fails ni console errors
++- [ ] La yapa NUNCA propone horarios/tramos inexistentes (si no hay servicio, no se ofrece)
++
++## Fuera de alcance
++
++- LLM real para yapas (este motor es reglas honestas; el texto se genera con datos del
++  catálogo, no con frases prefijadas)
++- Persistir/ compartir travesía (#10)
++- NO commitear.

@@ -1,0 +1,12 @@
+{
+  "slice": "10-plan-elegido",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "97a7ce0",
+  "verificado": "2026-11-09T19:01:20-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 15,
+  "juez": "devin: NO CIERRA",
+  "cerrado": false,
+  "motivo": "el juez devin no cierra (ver juez.txt)"
+}

@@ -1,4 +1,4 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -7,17 +7,20 @@ import { Lugar } from '../catalogo.types';
 import { crearPlan } from './travesia.model';
 import {
   ConflictoTravesia,
+  ContextoTravesia,
   Interes,
   Llegada,
   PlanTravesia,
   RespuestaProximos,
   ResultadoValidacion,
   TramoTravesia,
+  YapaTravesia,
 } from './travesia.types';
 import { TravesiaService } from './travesia.service';
+import { generarYapas } from './travesia.yapas';
 
 @Component({
-  imports: [NgTemplateOutlet, RouterLink],
+  imports: [DecimalPipe, NgTemplateOutlet, RouterLink],
   selector: 'app-travesia',
   templateUrl: './travesia.html',
   styleUrl: './travesia.css',
@@ -27,6 +30,7 @@ export class TravesiaPage {
   private readonly travesia = inject(TravesiaService);
 
   protected readonly lugares = signal<Lugar[]>([]);
+  protected readonly contexto = signal<ContextoTravesia | null>(null);
   protected readonly paso = signal(1);
   protected readonly fechaInicio = signal('');
   protected readonly fechaFin = signal('');
@@ -38,6 +42,14 @@ export class TravesiaPage {
   protected readonly cargando = signal(true);
   protected readonly validando = signal(false);
   protected readonly error = signal('');
+  protected readonly errorCatalogo = signal('');
+  protected readonly errorContexto = signal('');
+  protected readonly errorFechaInicio = signal('');
+  protected readonly errorFechaFin = signal('');
+  protected readonly lugaresElegidos = signal<string[]>([]);
+  protected readonly descartadas = signal<string[]>([]);
+  protected readonly yapasMostradas = signal<Record<string, number>>({});
+  protected readonly lugarPendientePorDia = signal<Record<number, string>>({});
   protected readonly errorTransporte = signal('');
   private validacionId = 0;
 
@@ -48,16 +60,26 @@ export class TravesiaPage {
         this.cargando.set(false);
       },
       error: () => {
-        this.error.set('No pudimos cargar los lugares para armar tu travesía. Revisá tu conexión e intentá de nuevo.');
+        this.errorCatalogo.set('No pudimos cargar los lugares para armar tu travesía. Revisá tu conexión e intentá de nuevo.');
         this.cargando.set(false);
       },
+    });
+    this.travesia.getContexto().subscribe({
+      next: contexto => this.contexto.set(contexto),
+      error: () => this.errorContexto.set('No pudimos consultar los horarios RN9. La propuesta usará horas orientativas y no mostrará yapas de ruta.'),
     });
   }
 
   protected actualizarFecha(campo: 'inicio' | 'fin', event: Event): void {
     const value = (event.target as HTMLInputElement).value;
-    if (campo === 'inicio') this.fechaInicio.set(value);
-    else this.fechaFin.set(value);
+    if (campo === 'inicio') {
+      this.fechaInicio.set(value);
+      this.errorFechaInicio.set('');
+    } else {
+      this.fechaFin.set(value);
+      this.errorFechaFin.set('');
+    }
+    this.error.set('');
   }
 
   protected seleccionarLlegada(value: Llegada): void {
@@ -80,8 +102,12 @@ export class TravesiaPage {
   protected avanzar(): void {
     this.error.set('');
     if (this.paso() === 1) {
-      if (!this.fechaInicio() || !this.fechaFin() || this.fechaInicio() > this.fechaFin()) {
-        this.error.set('Elegí un rango de fechas válido para continuar.');
+      this.errorFechaInicio.set(this.fechaInicio() ? '' : 'Elegí la fecha de llegada.');
+      this.errorFechaFin.set(this.fechaFin() ? '' : 'Elegí la fecha de regreso.');
+      if (this.fechaInicio() && this.fechaFin() && this.fechaInicio() > this.fechaFin()) {
+        this.errorFechaFin.set('La fecha de regreso no puede ser anterior a la llegada.');
+      }
+      if (this.errorFechaInicio() || this.errorFechaFin()) {
         return;
       }
     }
@@ -89,7 +115,7 @@ export class TravesiaPage {
       this.error.set('Elegí al menos un interés para preparar la propuesta.');
       return;
     }
-    this.paso.update(actual => Math.min(actual + 1, 3));
+    this.paso.update(actual => Math.min(actual + 1, 4));
   }
 
   protected volver(): void {
@@ -104,13 +130,174 @@ export class TravesiaPage {
       this.llegada(),
       this.intereses(),
       this.lugares(),
+      this.lugaresElegidos(),
+      this.contexto(),
     );
     if (!propuesta) {
-      this.error.set('El rango de fechas no es válido. Corregilo para generar el plan.');
+      this.error.set(this.lugaresElegidos().length
+        ? 'Con estas fechas no entran todos los lugares elegidos sin mezclar zonas lejanas. Sumá días o ajustá tu selección.'
+        : 'No pudimos armar un plan con ese rango de fechas. Revisalo para continuar.');
       return;
     }
     this.plan.set(propuesta);
     this.validar(propuesta);
+  }
+
+  protected alternarLugar(lugar: Lugar): void {
+    this.lugaresElegidos.update(actuales => actuales.includes(lugar.slug)
+      ? actuales.filter(slug => slug !== lugar.slug)
+      : [...actuales, lugar.slug]);
+    this.error.set('');
+  }
+
+  protected omitirSeleccion(): void {
+    this.lugaresElegidos.set([]);
+    this.armar();
+  }
+
+  protected gruposDeLugares(): { zona: string; lugares: Lugar[] }[] {
+    const grupos = new Map<string, Lugar[]>();
+    for (const lugar of this.lugares()) {
+      const lista = grupos.get(lugar.zona) ?? [];
+      lista.push(lugar);
+      grupos.set(lugar.zona, lista);
+    }
+    return [...grupos.entries()].map(([zona, lugares]) => ({ zona, lugares }));
+  }
+
+  protected fotoUrl(foto: string | null): string {
+    return foto ? `/img/${foto}` : '/img/purmamarca.jpg';
+  }
+
+  protected lugaresDisponibles(): Lugar[] {
+    const incluidos = new Set(this.plan()?.dias.flatMap(dia => dia.eventos.map(evento => evento.lugar)) ?? []);
+    return this.lugares().filter(lugar => !incluidos.has(lugar.slug));
+  }
+
+  protected actualizarLugarPendiente(diaIndex: number, event: Event): void {
+    const slug = (event.target as HTMLSelectElement).value;
+    this.lugarPendientePorDia.update(actuales => ({ ...actuales, [diaIndex]: slug }));
+  }
+
+  protected agregarLugarAlDia(diaIndex: number): void {
+    const slug = this.lugarPendientePorDia()[diaIndex];
+    const lugar = this.lugares().find(item => item.slug === slug);
+    const actual = this.plan();
+    if (!actual || !lugar) return;
+    const dias = actual.dias.map(dia => ({ ...dia, eventos: [...dia.eventos] }));
+    const eventos = dias[diaIndex].eventos;
+    const horaFinal = eventos.reduce((ultimo, evento) => {
+      const [hora, minuto] = evento.hora.split(':').map(Number);
+      return Math.max(ultimo, hora * 60 + minuto + evento.duracion_minutos);
+    }, 7 * 60);
+    const hora = `${String(Math.floor(horaFinal / 60) % 24).padStart(2, '0')}:${String(horaFinal % 60).padStart(2, '0')}`;
+    eventos.push({
+      id: `${dias[diaIndex].fecha}-${lugar.slug}`,
+      lugar: lugar.slug,
+      nombre: lugar.nombre,
+      hora,
+      duracion_minutos: 120,
+    });
+    const actualizado = { ...actual, dias };
+    this.plan.set(actualizado);
+    this.validar(actualizado);
+  }
+
+  protected yapaActual(): { diaIndex: number; yapa: YapaTravesia } | null {
+    const plan = this.plan();
+    const contexto = this.contexto();
+    if (!plan) return null;
+
+    for (const [diaIndex, dia] of plan.dias.entries()) {
+      const diaKey = dia.fecha;
+      if ((this.yapasMostradas()[diaKey] ?? 0) >= 2) continue;
+      const lugaresDelDia = dia.eventos
+        .map(evento => this.lugares().find(lugar => lugar.slug === evento.lugar))
+        .filter((lugar): lugar is Lugar => Boolean(lugar));
+      const ultimoEvento = dia.eventos.at(-1);
+      const horaDisponible = ultimoEvento
+        ? this.minutos(ultimoEvento.hora) + ultimoEvento.duracion_minutos
+        : 0;
+      const sugerencias = generarYapas(lugaresDelDia, this.lugares(), contexto, horaDisponible);
+      const yapa = sugerencias.find(opcion => !this.descartadas().includes(`${diaKey}:${opcion.lugar_sugerido_slug}`));
+      if (yapa) return { diaIndex, yapa };
+    }
+    return null;
+  }
+
+  protected sumarYapa(diaIndex: number, yapa: YapaTravesia): void {
+    const actual = this.plan();
+    const lugar = this.lugares().find(item => item.slug === yapa.lugar_sugerido_slug);
+    if (!actual || !lugar) return;
+
+    const dias = actual.dias.map(dia => ({ ...dia, eventos: [...dia.eventos] }));
+    const eventos = dias[diaIndex].eventos;
+    const horaFinal = eventos.reduce((ultimo, evento) => {
+      const fin = this.minutos(evento.hora) + evento.duracion_minutos;
+      return Math.max(ultimo, fin);
+    }, 8 * 60);
+    const hora = yapa.hora_sugerida ?? this.horaDesdeMinutos(horaFinal + 30);
+    eventos.push({
+      id: `${dias[diaIndex].fecha}-${lugar.slug}`,
+      lugar: lugar.slug,
+      nombre: lugar.nombre,
+      hora,
+      duracion_minutos: 120,
+    });
+    const actualizado = { ...actual, dias };
+    this.yapasMostradas.update(contador => ({
+      ...contador,
+      [dias[diaIndex].fecha]: (contador[dias[diaIndex].fecha] ?? 0) + 1,
+    }));
+    this.plan.set(actualizado);
+    this.validar(actualizado);
+  }
+
+  protected dejarYapa(yapa: YapaTravesia, diaIndex: number): void {
+    const fecha = this.plan()?.dias[diaIndex].fecha;
+    if (!fecha) return;
+    this.descartadas.update(actuales => [...actuales, `${fecha}:${yapa.lugar_sugerido_slug}`]);
+    this.yapasMostradas.update(contador => ({
+      ...contador,
+      [fecha]: (contador[fecha] ?? 0) + 1,
+    }));
+  }
+
+  protected nombreLugar(slug: string): string {
+    return this.lugares().find(lugar => lugar.slug === slug)?.nombre
+      ?? this.nombreParada(slug)
+      ?? slug.replace(/-/g, ' ').replace(/\b\p{L}/gu, letra => letra.toLocaleUpperCase('es'));
+  }
+
+  protected nombreParada(slug: string): string | null {
+    const paradas = this.contexto()?.paradas ?? [];
+    const encontrada = paradas.find(parada => parada.slug === slug);
+    if (encontrada) return encontrada.nombre;
+    const nombres: Record<string, string> = {
+      'terminal-jjs': 'Terminal de San Salvador',
+      'purmamarca-cruce': 'Purmamarca Cruce',
+      'abra-pampa': 'Abra Pampa',
+      'la-quiaca': 'La Quiaca',
+      maimara: 'Maimará',
+      tilcara: 'Tilcara',
+      humahuaca: 'Humahuaca',
+      uquia: 'Uquía',
+      volcan: 'Volcán',
+    };
+    return nombres[slug] ?? null;
+  }
+
+  protected humanizar(texto: string): string {
+    return texto.replace(/\b[a-z]+(?:-[a-z]+)+\b/gi, slug => this.nombreParada(slug) ?? slug);
+  }
+
+  private minutos(hora: string): number {
+    const [horas, minutos] = hora.split(':').map(Number);
+    return horas * 60 + minutos;
+  }
+
+  private horaDesdeMinutos(total: number): string {
+    return `${String(Math.floor(total / 60) % 24).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
   }
 
   protected moverEvento(diaOrigen: number, indiceEvento: number, event: Event): void {
@@ -153,6 +340,8 @@ export class TravesiaPage {
     this.fechaInicio.set('');
     this.fechaFin.set('');
     this.intereses.set(['paisaje']);
+    this.lugaresElegidos.set([]);
+    this.yapasMostradas.set({});
   }
 
   protected conflictosDelDia(numeroDia: number): ConflictoTravesia[] {

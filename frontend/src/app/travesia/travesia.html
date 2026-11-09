@@ -6,44 +6,42 @@
 
   @if (cargando()) {
     <p class="mensaje-carga status" role="status">Cargando lugares para tu viaje…</p>
-  } @else if (error() && !plan()) {
-    <div class="status status-error" role="alert">
-      <p>{{ error() }}</p>
-      <a routerLink="/">Volver a explorar el catálogo</a>
-    </div>
   } @else if (!plan()) {
     <section class="wizard" aria-labelledby="wizard-title">
       <div class="wizard-intro">
         <p class="kicker">Armá tu travesía</p>
         <h1 id="wizard-title">Un viaje que <em>cierra.</em></h1>
-        <p>Fechas, forma de llegada e intereses. El plan se comprueba con los horarios publicados.</p>
+        <p>Elegí cuándo vas, cómo llegás y qué lugares querés conocer. El plan se comprueba con los horarios publicados.</p>
       </div>
 
       <ol class="progreso" aria-label="Pasos del armado">
         <li [class.activo]="paso() === 1" [class.completo]="paso() > 1" [attr.aria-current]="paso() === 1 ? 'step' : null"><span>01</span> Fechas</li>
         <li [class.activo]="paso() === 2" [class.completo]="paso() > 2" [attr.aria-current]="paso() === 2 ? 'step' : null"><span>02</span> Llegada</li>
-        <li [class.activo]="paso() === 3" [attr.aria-current]="paso() === 3 ? 'step' : null"><span>03</span> Intereses</li>
+        <li [class.activo]="paso() === 3" [class.completo]="paso() > 3" [attr.aria-current]="paso() === 3 ? 'step' : null"><span>03</span> Intereses</li>
+        <li [class.activo]="paso() === 4" [attr.aria-current]="paso() === 4 ? 'step' : null"><span>04</span> Lugares</li>
       </ol>
 
       @if (paso() === 1) {
         <section class="pregunta wizard-step" aria-labelledby="fechas-title">
-          <div class="numero-pregunta">01 / 03</div>
+          <div class="numero-pregunta">01 / 04</div>
           <h2 id="fechas-title">¿Cuándo <em>vas?</em></h2>
           <p>Elegí el primer y el último día. La propuesta se organiza día por día.</p>
           <div class="campo-fechas">
             <label>
-              <span>Llegada</span>
-              <input type="date" [value]="fechaInicio()" (input)="actualizarFecha('inicio', $event)">
+              <span>Primer día</span>
+              <input type="date" [value]="fechaInicio()" (input)="actualizarFecha('inicio', $event)" [attr.aria-invalid]="errorFechaInicio() ? 'true' : null" [attr.aria-describedby]="errorFechaInicio() ? 'error-fecha-inicio' : null">
+              @if (errorFechaInicio()) { <small class="campo-error" id="error-fecha-inicio">{{ errorFechaInicio() }}</small> }
             </label>
             <label>
-              <span>Regreso</span>
-              <input type="date" [value]="fechaFin()" (input)="actualizarFecha('fin', $event)">
+              <span>Último día</span>
+              <input type="date" [value]="fechaFin()" (input)="actualizarFecha('fin', $event)" [attr.aria-invalid]="errorFechaFin() ? 'true' : null" [attr.aria-describedby]="errorFechaFin() ? 'error-fecha-fin' : null">
+              @if (errorFechaFin()) { <small class="campo-error" id="error-fecha-fin">{{ errorFechaFin() }}</small> }
             </label>
           </div>
         </section>
       } @else if (paso() === 2) {
         <section class="pregunta wizard-step" aria-labelledby="llegada-title">
-          <div class="numero-pregunta">02 / 03</div>
+          <div class="numero-pregunta">02 / 04</div>
           <h2 id="llegada-title">¿Cómo <em>llegás?</em></h2>
           <p>Así ubicamos el comienzo de la travesía.</p>
           <div class="opciones llegada-opciones">
@@ -64,9 +62,9 @@
             </label>
           </div>
         </section>
-      } @else {
+      } @else if (paso() === 3) {
         <section class="pregunta wizard-step" aria-labelledby="intereses-title">
-          <div class="numero-pregunta">03 / 03</div>
+          <div class="numero-pregunta">03 / 04</div>
           <h2 id="intereses-title">¿Qué te <em>mueve?</em></h2>
           <p>Elegí uno o más intereses para priorizar lugares del catálogo.</p>
           <div class="opciones intereses-opciones">
@@ -84,6 +82,36 @@
             </label>
           </div>
         </section>
+      } @else {
+        <section class="pregunta wizard-step" aria-labelledby="lugares-title">
+          <div class="numero-pregunta">04 / 04</div>
+          <h2 id="lugares-title">¿Qué querés <em>hacer?</em></h2>
+          <p>Marcá los lugares que querés incluir. Los ordenamos por la RN9 y no sumamos otros por tu cuenta.</p>
+          @if (errorCatalogo()) { <p class="form-error" role="alert">{{ errorCatalogo() }}</p> }
+          @if (errorContexto()) { <p class="aviso-transporte" role="status">{{ errorContexto() }}</p> }
+          @if (!lugares().length && !errorCatalogo()) { <p class="status">No hay lugares disponibles para elegir.</p> }
+          <div class="lugares-por-zona">
+            @for (grupo of gruposDeLugares(); track grupo.zona) {
+              <section class="seleccion-zona" [attr.aria-label]="grupo.zona">
+                <h3>{{ grupo.zona }}</h3>
+                <div class="seleccion-lugares">
+                  @for (lugar of grupo.lugares; track lugar.slug) {
+                    <button class="lugar-eleccion" type="button" [class.lugar-elegido]="lugaresElegidos().includes(lugar.slug)" [attr.aria-pressed]="lugaresElegidos().includes(lugar.slug)" (click)="alternarLugar(lugar)">
+                      <img [src]="fotoUrl(lugar.foto)" [alt]="lugar.nombre" loading="lazy">
+                      <span class="lugar-eleccion-texto">
+                        <strong>{{ lugar.nombre }}</strong>
+                        <span>{{ lugar.datos_json.localidad || grupo.zona }}</span>
+                        @if (lugar.altitud_m) { <small>{{ lugar.altitud_m | number:'1.0-0' }} msnm</small> }
+                      </span>
+                      <span class="lugar-check" aria-hidden="true">{{ lugaresElegidos().includes(lugar.slug) ? '✓' : '+' }}</span>
+                    </button>
+                  }
+                </div>
+              </section>
+            }
+          </div>
+          <p class="seleccion-contador" aria-live="polite">{{ lugaresElegidos().length }} lugares elegidos</p>
+        </section>
       }
 
       @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
@@ -94,10 +122,13 @@
         } @else {
           <span></span>
         }
-        @if (paso() < 3) {
+        @if (paso() < 4) {
           <button class="boton-principal" type="button" (click)="avanzar()">Siguiente <span aria-hidden="true">→</span></button>
         } @else {
-          <button class="boton-principal" type="button" (click)="armar()">Ver mi propuesta <span aria-hidden="true">→</span></button>
+          <div class="acciones-lugares">
+            <button class="boton-secundario boton-sugerir" type="button" (click)="omitirSeleccion()">Proponer según mis intereses</button>
+            <button class="boton-principal" type="button" (click)="armar()" [disabled]="!lugaresElegidos().length">Armar con mis lugares <span aria-hidden="true">→</span></button>
+          </div>
         }
       </div>
     </section>
@@ -130,7 +161,7 @@
         <div class="tramo" [class.tramo-regreso]="tramo.etiqueta === 'regreso'">
           <span class="tramo-nodo" aria-hidden="true"></span>
           <span>{{ tramo.etiqueta === 'regreso' ? 'Regreso' : 'RN9' }} · {{ tramo.hora_salida }} → {{ tramo.hora_llegada }}</span>
-          <small>{{ tramo.origen }} — {{ tramo.destino }} · {{ tramo.confianza }} · {{ tramo.fuente }}</small>
+          <small>{{ nombreParada(tramo.origen) || humanizar(tramo.origen) }} — {{ nombreParada(tramo.destino) || humanizar(tramo.destino) }} · {{ tramo.confianza }} · {{ tramo.fuente }}</small>
           @if (transporteDelTramo(tramo); as proximos) {
             @if (proximos.servicios.length) {
               <small class="proximo-servicio">Próximo servicio: {{ proximos.servicios[0].hora_salida }} → {{ proximos.servicios[0].hora_llegada }}</small>
@@ -149,6 +180,18 @@
             </header>
 
             <div class="dia-cuerpo">
+              @if (yapaActual(); as sugerencia) {
+                @if (sugerencia.diaIndex === diaIndex) {
+                  <aside class="yapa-card" aria-label="Yapa para este día">
+                    <p class="yapa-kicker">Tu yapa · {{ sugerencia.yapa.tipo }}</p>
+                    <p class="yapa-mensaje">{{ sugerencia.yapa.mensaje }}</p>
+                    <div class="yapa-acciones">
+                      <button class="boton-yapa-sumar" type="button" (click)="sumarYapa(diaIndex, sugerencia.yapa)">Sumar</button>
+                      <button class="boton-yapa-pasar" type="button" (click)="dejarYapa(sugerencia.yapa, diaIndex)">Dejar pasar</button>
+                    </div>
+                  </aside>
+                }
+              }
               @for (evento of dia.eventos; track evento.id; let eventoIndex = $index) {
                 @for (tramo of tramosDelEvento(diaIndex + 1, eventoIndex); track tramo.servicio_id + tramo.dia) {
                   <ng-container [ngTemplateOutlet]="tramoVista" [ngTemplateOutletContext]="{ tramo: tramo }"></ng-container>
@@ -156,7 +199,7 @@
                 <article class="evento" [style.--evento-delay]="(eventoIndex * 90) + 'ms'">
                   <span class="evento-hora">{{ evento.hora }}</span>
                   <div class="evento-detalle">
-                    <a [routerLink]="['/lugares', evento.lugar]">{{ evento.nombre || evento.lugar }}</a>
+                    <a [routerLink]="['/lugares', evento.lugar]">{{ evento.nombre || nombreLugar(evento.lugar) }}</a>
                     <p>{{ lugares().find(lugar => lugar.slug === evento.lugar)?.datos_json?.localidad || 'Jujuy' }}</p>
                     @if (evento.acceso_local) { <p class="acceso-local">{{ evento.acceso_local }}</p> }
                   </div>
@@ -176,13 +219,27 @@
 
               @for (conflicto of conflictosDelDia(diaIndex + 1); track $index) {
                 <aside class="conflicto" role="alert">
-                  <strong>{{ conflicto.mensaje }}</strong>
-                  <p>{{ conflicto.propuesta }}</p>
+                  <strong>{{ humanizar(conflicto.mensaje) }}</strong>
+                  <p>{{ humanizar(conflicto.propuesta) }}</p>
                 </aside>
               }
 
               @for (tramo of tramosDeRegreso(diaIndex + 1); track tramo.servicio_id + tramo.dia) {
                 <ng-container [ngTemplateOutlet]="tramoVista" [ngTemplateOutletContext]="{ tramo: tramo }"></ng-container>
+              }
+              @if (lugaresDisponibles().length) {
+                <div class="agregar-lugar">
+                  <label>
+                    <span>Sumar un lugar al día</span>
+                    <select [value]="lugarPendientePorDia()[diaIndex] || ''" (change)="actualizarLugarPendiente(diaIndex, $event)">
+                      <option value="">Elegí del catálogo</option>
+                      @for (lugar of lugaresDisponibles(); track lugar.slug) {
+                        <option [value]="lugar.slug">{{ lugar.nombre }} · {{ lugar.datos_json.localidad || lugar.zona }}</option>
+                      }
+                    </select>
+                  </label>
+                  <button class="boton-secundario" type="button" [disabled]="!lugarPendientePorDia()[diaIndex]" (click)="agregarLugarAlDia(diaIndex)">Agregar</button>
+                </div>
               }
             </div>
           </section>

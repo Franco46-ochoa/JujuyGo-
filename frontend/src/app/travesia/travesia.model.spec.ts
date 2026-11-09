@@ -1,5 +1,6 @@
 import { Lugar } from '../catalogo.types';
 import { crearPlan } from './travesia.model';
+import { ContextoTravesia } from './travesia.types';
 
 const lugares: Lugar[] = [
   {
@@ -22,6 +23,18 @@ const lugares: Lugar[] = [
   },
 ];
 
+const contexto: ContextoTravesia = {
+  paradas: [
+    { slug: 'terminal-jjs', nombre: 'Terminal de San Salvador', orden_en_linea: 1 },
+    { slug: 'volcan', nombre: 'Volcán', orden_en_linea: 2 },
+    { slug: 'purmamarca-cruce', nombre: 'Purmamarca Cruce', orden_en_linea: 3 },
+    { slug: 'tilcara', nombre: 'Tilcara', orden_en_linea: 5 },
+    { slug: 'humahuaca', nombre: 'Humahuaca', orden_en_linea: 8 },
+    { slug: 'abra-pampa', nombre: 'Abra Pampa', orden_en_linea: 9 },
+  ],
+  horarios: [],
+};
+
 describe('crearPlan', () => {
   it('creates a multi-day proposal from the date range and prioritizes selected interests', () => {
     const plan = crearPlan('2026-11-07', '2026-11-09', 'terminal', ['cultura'], lugares);
@@ -34,5 +47,52 @@ describe('crearPlan', () => {
 
   it('rejects a reversed date range', () => {
     expect(crearPlan('2026-11-09', '2026-11-07', 'terminal', ['paisaje'], lugares)).toBeNull();
+  });
+
+  it('keeps only the places the traveler explicitly selected', () => {
+    const plan = crearPlan('2026-11-07', '2026-11-07', 'terminal', ['paisaje'], lugares, ['garganta']);
+
+    expect(plan?.dias.flatMap(dia => dia.eventos.map(evento => evento.lugar))).toEqual(['garganta']);
+  });
+
+  it('orders selected Quebrada places by the RN9 corridor and separates distant zones by day', () => {
+    const lugaresMixtos = [
+      ...lugares,
+      {
+        id: 4, nombre: 'Abra Pampa', slug: 'abra', lat: 0, lng: 0,
+        altitud_m: 3484, descripcion: 'Puna jujeña.', como_llegar: '',
+        mejor_epoca: '', foto: null, zona: 'Puna', zona_slug: 'puna',
+        datos_json: { localidad: 'Abra Pampa' },
+      },
+    ];
+    const plan = crearPlan(
+      '2026-11-07',
+      '2026-11-09',
+      'terminal',
+      ['paisaje'],
+      lugaresMixtos,
+      ['abra', 'hornocal', 'pucara'],
+      contexto,
+    );
+
+    expect(plan?.dias[0].eventos.map(evento => evento.lugar)).toEqual(['pucara', 'hornocal']);
+    expect(plan?.dias[1].eventos.map(evento => evento.lugar)).toEqual(['abra']);
+    expect(plan?.dias.every(dia => new Set(dia.eventos.map(evento =>
+      lugaresMixtos.find(lugar => lugar.slug === evento.lugar)?.zona_slug,
+    )).size <= 1)).toBe(true);
+  });
+
+  it('does not combine geographically separate selected groups when there are too few days', () => {
+    const lugaresMixtos = [
+      lugares[0],
+      {
+        id: 4, nombre: 'Abra Pampa', slug: 'abra', lat: 0, lng: 0,
+        altitud_m: 3484, descripcion: 'Puna jujeña.', como_llegar: '',
+        mejor_epoca: '', foto: null, zona: 'Puna', zona_slug: 'puna',
+        datos_json: { localidad: 'Abra Pampa' },
+      },
+    ];
+
+    expect(crearPlan('2026-11-07', '2026-11-07', 'terminal', ['paisaje'], lugaresMixtos, ['hornocal', 'abra'], contexto)).toBeNull();
   });
 });
