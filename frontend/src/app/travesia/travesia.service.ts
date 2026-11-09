@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   PlanTravesia,
+  ContextoTravesia,
   RespuestaProximos,
   ResultadoValidacion,
 } from './travesia.types';
@@ -15,6 +16,10 @@ export class TravesiaService {
 
   validar(plan: PlanTravesia): Observable<ResultadoValidacion> {
     return this.http.post<ResultadoValidacion>(`${this.apiUrl}/travesia/validar`, plan);
+  }
+
+  getContexto(): Observable<ContextoTravesia> {
+    return this.http.get<ContextoTravesia>(`${this.apiUrl}/travesia/contexto`);
   }
 
   getProximos(origen: string, destino: string, hora: string): Observable<RespuestaProximos> {

@@ -459,9 +459,20 @@ app-home { display: block; }
   .pillnav { display: none; }
   .brand { font-size: 22px; }
   .nav-cta { padding: 14px 13px; font-size: 14px; }
-  .hero-content { padding-inline: 7%; }
+  .hero-content { isolation: isolate; padding-inline: 7%; }
+  .hero-content::before {
+    position: absolute;
+    z-index: -1;
+    inset: 20% 5% 14%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(20, 10, 6, .76) 0%, rgba(20, 10, 6, .48) 56%, transparent 76%);
+    content: "";
+    filter: blur(14px);
+  }
   .hero h1 { margin-top: 28px; font-size: clamp(54px, 15vw, 82px); }
+  .hero h1 em { text-shadow: 0 2px 3px rgba(0, 0, 0, .9), 0 0 22px rgba(0, 0, 0, .75); }
   .hero-copy { font-size: 15px; }
+  .eyebrow { color: #e8c98f; text-shadow: 0 1px 5px rgba(0, 0, 0, .9); }
   .hero-caption { bottom: 24px; gap: 10px; font-size: 14px; }
   .caption-rule { width: 22px; }
   .hero-coordinates { display: none; }
@@ -608,8 +619,8 @@ app-home { display: block; }
 }
 
 .transport-band {
-  width: 100vw;
-  margin: 110px calc(50% - 50vw) 0;
+  width: 100%;
+  margin: 110px 0 0;
   padding: 76px 5%;
   background: var(--verde);
   color: var(--papel);
@@ -692,4 +703,53 @@ app-home { display: block; }
 
 @media (prefers-reduced-motion: reduce) {
   .transport-copy > a { transition: none; }
+}
+
+.travesia-shell .acciones-lugares { display: flex; align-items: center; gap: 20px; }
+.travesia-shell .boton-principal:disabled { cursor: not-allowed; opacity: .5; }
+.travesia-shell .boton-sugerir { text-decoration: underline; text-underline-offset: 4px; }
+.travesia-shell .lugares-por-zona { display: grid; gap: 32px; margin-top: 36px; }
+.travesia-shell .seleccion-zona h3 { margin-bottom: 12px; color: var(--verde); font: 500 24px var(--serif); }
+.travesia-shell .seleccion-lugares { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.travesia-shell .lugar-eleccion { display: grid; grid-template-columns: 90px minmax(0, 1fr) 32px; align-items: center; gap: 14px; min-height: 102px; padding: 8px; border: 1px solid var(--t30); border-radius: 4px; background: transparent; color: var(--tinta); text-align: left; cursor: pointer; touch-action: manipulation; }
+.travesia-shell .lugar-eleccion:hover, .travesia-shell .lugar-elegido { border-color: var(--verde); background: rgba(57, 91, 67, .07); }
+.travesia-shell .lugar-eleccion:focus-visible, .travesia-shell .yapa-acciones button:focus-visible, .travesia-shell .agregar-lugar button:focus-visible { outline: 2px solid var(--oxido); outline-offset: 3px; }
+.travesia-shell .lugar-eleccion img { width: 90px; height: 82px; border-radius: 2px; object-fit: cover; }
+.travesia-shell .lugar-eleccion-texto { display: grid; gap: 4px; min-width: 0; }
+.travesia-shell .lugar-eleccion-texto strong { font: 500 17px/1.2 var(--serif); }
+.travesia-shell .lugar-eleccion-texto span, .travesia-shell .lugar-eleccion-texto small { color: var(--t60); font-size: 14px; line-height: 1.35; }
+.travesia-shell .lugar-check { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid var(--t30); border-radius: 50%; color: var(--verde); font-size: 18px; }
+.travesia-shell .lugar-elegido .lugar-check { border-color: var(--verde); background: var(--verde); color: #fff; }
+.travesia-shell .seleccion-contador { margin-top: 20px; color: var(--t60); font-size: 14px; }
+.travesia-shell .yapa-card { margin: 0 0 24px; padding: 20px 22px; border: 1px solid rgba(201, 168, 106, .55); background: rgba(201, 168, 106, .13); color: inherit; }
+.travesia-shell .yapa-kicker { color: var(--ocre); font-size: 14px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+.travesia-shell .yapa-mensaje { max-width: 580px; margin-top: 10px; font: 400 21px/1.35 var(--serif); }
+.travesia-shell .yapa-acciones { display: flex; gap: 20px; margin-top: 16px; }
+.travesia-shell .yapa-acciones button { min-height: 44px; padding: 8px 18px; border: 1px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font: 600 14px var(--sans); cursor: pointer; touch-action: manipulation; }
+.travesia-shell .yapa-acciones .boton-yapa-sumar { border-color: var(--verde); background: var(--verde); color: #fff; }
+.travesia-shell .yapa-acciones .boton-yapa-pasar { border: 0; text-decoration: underline; text-underline-offset: 4px; }
+.travesia-shell .agregar-lugar { display: flex; align-items: end; gap: 16px; margin-top: 24px; }
+.travesia-shell .agregar-lugar label { display: grid; gap: 8px; width: min(100%, 380px); color: var(--t60); font-size: 14px; }
+.travesia-shell .agregar-lugar select { min-height: 46px; padding: 8px 12px; border: 1px solid var(--t30); border-radius: 3px; background: transparent; color: var(--tinta); font: 14px var(--sans); }
+.travesia-shell .agregar-lugar option { color: var(--tinta); }
+.travesia-shell .agregar-lugar button:disabled { opacity: .5; cursor: not-allowed; }
+.travesia-shell .tramo { position: relative; display: flex; flex-direction: column; gap: 6px; margin: 0 0 0 20px; padding: 16px 0 16px 36px; border-left: 1px solid rgba(244, 237, 227, .25); color: rgba(244, 237, 227, .92); font-size: 14px; font-variant-numeric: tabular-nums; }
+.travesia-shell .tramo-nodo { position: absolute; top: 21px; left: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--ocre); }
+.travesia-shell .tramo small { color: rgba(244, 237, 227, .66); font-size: 14px; line-height: 1.45; }
+.travesia-shell .tramo .proximo-servicio { color: var(--verde); }
+.travesia-shell .dia-activo .tramo .proximo-servicio { color: #f4ede3; }
+.travesia-shell .dia:not(.dia-activo) .tramo { color: var(--verde); border-color: var(--t30); }
+.travesia-shell .dia:not(.dia-activo) .tramo small { color: var(--t60); }
+
+@media (max-width: 720px) {
+  .travesia-shell .seleccion-lugares { grid-template-columns: 1fr; }
+  .travesia-shell .lugar-eleccion { grid-template-columns: 76px minmax(0, 1fr) 28px; }
+  .travesia-shell .lugar-eleccion img { width: 76px; height: 76px; }
+  .travesia-shell .wizard-actions > .boton-principal, .travesia-shell .acciones-lugares { flex: 1; }
+  .travesia-shell .acciones-lugares { align-items: stretch; flex-direction: column-reverse; gap: 8px; }
+  .travesia-shell .acciones-lugares .boton-principal { justify-content: center; padding-inline: 16px; }
+  .travesia-shell .boton-sugerir { min-height: 44px; }
+  .travesia-shell .agregar-lugar { align-items: stretch; flex-direction: column; }
+  .travesia-shell .agregar-lugar label { width: 100%; }
+  .travesia-shell .tramo { margin-left: 12px; padding-left: 26px; }
 }

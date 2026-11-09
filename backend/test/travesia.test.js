@@ -104,3 +104,49 @@ describe('POST /api/travesia/validar', () => {
     assert.match(response.body.error, /lugar y hora/);
   });
 });
+
+describe('GET /api/travesia/contexto', () => {
+  test('devuelve paradas ordenadas y solo servicios con tramos cargados', async () => {
+    const app = createApp({
+      pool: {
+        async query(sql) {
+          if (sql.includes('FROM parada')) {
+            return { rows: [
+              { slug: 'volcan', nombre: 'Volcán', orden_en_linea: 2 },
+              { slug: 'purmamarca-cruce', nombre: 'Purmamarca Cruce', orden_en_linea: 3 },
+            ] };
+          }
+          if (sql.includes('FROM horario')) {
+            return { rows: [
+              {
+                servicio_id: 'rn9-ida',
+                direccion: 'ida',
+                hora: '06:15',
+                confianza: 'estimado',
+                fuente: 'seed RN9',
+                parada_slug: 'volcan',
+                orden_en_linea: 2,
+              },
+              {
+                servicio_id: 'rn9-ida',
+                direccion: 'ida',
+                hora: '06:35',
+                confianza: 'estimado',
+                fuente: 'seed RN9',
+                parada_slug: 'purmamarca-cruce',
+                orden_en_linea: 3,
+              },
+            ] };
+          }
+          throw new Error('Consulta inesperada en el contexto de travesía');
+        },
+      },
+    });
+
+    const response = await request(app).get('/api/travesia/contexto');
+
+    assert.equal(response.status, 200);
+    assert.deepEqual(response.body.paradas.map(parada => parada.slug), ['volcan', 'purmamarca-cruce']);
+    assert.deepEqual(response.body.horarios[0].paradas.map(parada => parada.hora), ['06:15', '06:35']);
+  });
+});

@@ -80,3 +80,38 @@ export interface RespuestaProximos {
   servicios: ServicioProximo[];
 }
 
+export interface ParadaTravesia {
+  slug: string;
+  nombre: string;
+  orden_en_linea: number;
+}
+
+export interface HorarioParadaTravesia {
+  slug: string;
+  orden_en_linea: number;
+  hora: string;
+  confianza: string;
+  fuente: string;
+}
+
+export interface HorarioTravesia {
+  servicio_id: string;
+  direccion: 'ida' | 'vuelta';
+  paradas: HorarioParadaTravesia[];
+}
+
+export interface ContextoTravesia {
+  paradas: ParadaTravesia[];
+  horarios: HorarioTravesia[];
+}
+
+export type TipoYapa = 'localidad' | 'zona' | 'rn9' | 'aclimatacion';
+
+export interface YapaTravesia {
+  tipo: TipoYapa;
+  lugar_sugerido_slug: string;
+  mensaje: string;
+  accion: 'agregar-al-dia';
+  hora_sugerida?: string;
+}
+

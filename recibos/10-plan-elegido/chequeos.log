@@ -1,0 +1,91 @@
+### tests: test ! -f package.json || npm test
+### fin tests (ok=true)
+
+### tests-front: test ! -d frontend || (cd frontend && npm test -- --watch=false)
+
+> frontend@0.0.0 test
+> ng test --watch=false
+
+❯ Building...
+✔ Building...
+Application bundle generation complete. [9.837 seconds] - 2026-11-09T22:50:39.086Z
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/Elect/orca/projects/JujuyGo/.slices/10-plan-elegido/frontend[39m
+
+
+[2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[32m27 passed[39m[22m[90m (27)[39m
+[2m   Start at [22m 19:50:42
+[2m   Duration [22m 21.87s[2m (environment 67%, setup 16%, tests 9%, transform 5%, import 3%)[22m
+
+### fin tests-front (ok=true)
+
+### tests-back: test ! -d backend || (cd backend && npm test)
+
+> jujuygo-backend@0.1.0 test
+> node --test
+
+﹣ API de catálogo (3.1564ms) # requiere DATABASE_URL_TEST
+✔ GET /health responde ok (269.8572ms)
+sin migraciones nuevas
+▶ API de hospedajes y guías
+  ✔ lista hospedajes con fuente y estado de verificación (476.474ms)
+  ✔ filtra hospedajes por zona (54.5544ms)
+  ✔ responde una lista vacía si no hay hospedajes en la zona (32.6494ms)
+  ✔ la lista de guías vacía responde correctamente (38.492ms)
+  ✔ la migración puede aplicarse varias veces sin duplicar hospedajes (48.5257ms)
+✔ API de hospedajes y guías (1035.2613ms)
+▶ motor de validación de travesía
+  ✔ valida un día que llega a Tilcara y toma el regreso dentro del horario (68.1083ms)
+  ✔ detecta que el regreso de Humahuaca no llega antes del cierre y sugiere una alternativa (2.0682ms)
+  ✔ mapea Purmamarca al cruce y nunca afirma que el colectivo llega al pueblo (0.9235ms)
+  ✔ advierte el traslado local desde Humahuaca hasta Hornocal (1.3874ms)
+  ✔ detecta eventos superpuestos aun cuando ocurren en la misma parada (1.787ms)
+  ✔ no permite que una visita se prolongue al día siguiente (1.1597ms)
+  ✔ marca como conflicto un tramo para el que no hay servicio cargado (1.2185ms)
+✔ motor de validación de travesía (86.4142ms)
+Seed de transporte RN9 completado con éxito.
+▶ Transporte y horarios RN9 (Slice 04)
+  ▶ Orden de paradas
+    ✔ GET /api/transporte/paradas devuelve lista completa en orden estricto de ruta (353.9895ms)
+    ✔ GET /api/transporte/paradas con línea inexistente devuelve 404 (27.7297ms)
+  ✔ Orden de paradas (391.5016ms)
+  ▶ Regla crítica: Cruce ≠ Pueblo
+    ✔ Purmamarca Cruce tiene tipo="cruce" y notas explicativas diferenciadas del pueblo (27.4472ms)
+    ✔ La base de datos rechaza tipos de parada no válidos (19.6516ms)
+  ✔ Regla crítica: Cruce ≠ Pueblo (49.4056ms)
+  ▶ Cálculo de próximos servicios
+    ✔ GET /api/transporte/proximos?origen=terminal-jjs&destino=tilcara devuelve servicios con hora estimada (261.1807ms)
+    ✔ GET /api/transporte/proximos dirección vuelta (Humahuaca -> SS.Jujuy) (27.6877ms)
+    ✔ GET /api/transporte/proximos con filtro ?hora=12:00 devuelve solo salidas posteriores (24.3835ms)
+    ✔ Validación de errores en parámetros origen y destino (55.6975ms)
+  ✔ Cálculo de próximos servicios (371.237ms)
+  ▶ Confianza y fuente presente en cada horario
+    ✔ Ningún horario en la DB carece de fuente o confianza (5.0996ms)
+    ✔ Todos los valores de confianza son válidos ("publicado", "estimado" o "tiempo-real") (2.9518ms)
+    ✔ Tramos que incluyen paradas intermedias sin boletería oficial marcan confianza="estimado" (25.6529ms)
+  ✔ Confianza y fuente presente en cada horario (34.6322ms)
+Seed de transporte RN9 completado con éxito.
+  ▶ Idempotencia del seed
+    ✔ Ejecutar el seed nuevamente no duplica registros (515.3929ms)
+  ✔ Idempotencia del seed (516.0133ms)
+✔ Transporte y horarios RN9 (Slice 04) (2644.9993ms)
+▶ POST /api/travesia/validar
+  ✔ devuelve los tramos RN9 reales que permiten completar el plan (404.6021ms)
+  ✔ propone una corrección cuando el regreso no llega antes de la hora de cierre (98.2403ms)
+  ✔ rechaza planes incompletos (30.0061ms)
+✔ POST /api/travesia/validar (541.743ms)
+▶ GET /api/travesia/contexto
+  ✔ devuelve paradas ordenadas y solo servicios con tramos cargados (35.3109ms)
+✔ GET /api/travesia/contexto (36.2801ms)
+ℹ tests 29
+ℹ suites 11
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5691.0381
+### fin tests-back (ok=true)
+
