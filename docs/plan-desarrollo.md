@@ -39,8 +39,8 @@ Postgres local para tests · Supabase cloud para auth/datos/memoria de yapas.
 | MAP mapa | atractivos y paradas sobre OSM | mergeado (05) |
 | ITI travesía | `/travesia` — plan día por día por rango de fechas | mergeado (07); refinado en 10 |
 | HOT/GUI | hospedaje y guías por zona | parcial (09: migration 003 + datos) |
-| RUT cómo llegar | paso a paso terminal → pueblo, guiado sobre mapa | **en curso** (06, a medias) |
-| REC yapas | sugerencias IA contextuales dentro del plan | **en curso** (10, pendiente verificar) |
+| RUT cómo llegar | paso a paso terminal → pueblo, guiado sobre mapa | **mergeado** (06) |
+| REC yapas | sugerencias IA contextuales dentro del plan | **mergeado** (10) |
 | SAV guardar/compartir | travesía persistente + link | sin construir |
 | LNG i18n | ES base, PT/EN | sin construir |
 | Tiempo real | posiciones Santa Ana en vivo | spike hecho; integración pendiente |
@@ -70,12 +70,9 @@ es su API, no un producto separado. No hay segunda app en el horizonte del plan.
 **Fase 0 — cimientos (hecha):** andamio monorepo, catálogo, horarios, mapa, travesía base,
 pulido editorial sobre mock-04. Slices 01→09 mergeados.
 
-**Fase 1 — cerrar lo abierto (ahora):**
-1. `./slices verificar 10-plan-elegido` (checks) → subagente-juez → `verificar` → merge si cierra verde (trabajo + recibo listos).
-2. Relanzar `06-como-llegar` (retoma sobre las +443 líneas ya escritas; el último worker
-   murió en dispatch, `agent_prompt_blocked`).
-3. Higiene: `worker-release` de dispatches muertos; decidir `environment.ts` (túnel
-   cloudflare ¿se revierte?); commitear specs 06/10 y este plan.
+**Fase 1 — cerrar lo abierto (hecha 2026-11-09):** 10 y 06 verificados con el juez nuevo,
+mergeados a master, auditados visualmente en 390 y 1440 sin errores de consola; tooling,
+worktrees y dispatches limpiados.
 
 **Fase 2 — completar scope MVP (slices nuevos, a definir el DAG):**
 - SAV: travesía guardada local + link compartible (sin login en MVP).

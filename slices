@@ -412,7 +412,8 @@ ids_de_specs() { local f; for f in "$RAIZ/$SPECS"/*.spec.md; do [[ -e "$f" ]] &&
 estado_de() {
   local id="$1" wt; wt="$(wt_de "$id")"; local out="$wt/$RECIBOS/$id" r="$wt/$RECIBOS/$id/recibo.json"
   # Sin `| grep -q`: con pipefail, grep corta antes y git log muere por SIGPIPE.
-  if [[ -n "$(git -C "$RAIZ" log -1 --format=%h -F --grep="merge slice $id " "$BASE" 2>/dev/null)" ]]; then echo mergeado
+  if [[ -n "$(git -C "$RAIZ" log -1 --format=%h -F --grep="merge slice $id " "$BASE" 2>/dev/null)" ]] \
+     || grep -q '^\*\*Mergeado:\*\*' "$(spec_de "$id")" 2>/dev/null; then echo mergeado
   elif [[ -s "$out/escalado" ]]; then echo escalado
   elif corriendo "$id"; then echo corriendo
   elif [[ -f "$r" ]] && grep -q '"cerrado": true' "$r"; then echo cerro

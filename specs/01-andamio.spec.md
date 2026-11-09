@@ -1,6 +1,7 @@
 # Slice 01 — Andamio monorepo (issue #1)
 
 **Depende de:** nada — es la raíz del DAG.
+**Mergeado:** d7f82ac (hecho directo en master antes del loop de slices)
 **Fuente:** GitHub issue #1 (`gh issue view 1`)
 **Alcance de archivos:** `frontend/`, `backend/`, `docker-compose.yml`, `slices.conf`, `.env.example` (en cada paquete), `README.md`, `package.json` (raíz, solo si hace falta orquestar scripts)
 
