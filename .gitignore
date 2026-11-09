@@ -7,3 +7,5 @@ recibos/.orca-run
 **/.env.local
 node_modules/
 dist/
+# Playwright CLI output (may contain credentials)
+.playwright-cli/

@@ -10,7 +10,7 @@ Con cada pedido: **`start`**. Decide la ruta (solo lectura, directo u orquestar)
 | Worker | **Devin** | Toma **un slice por ola** en paralelo con los workers; al terminar el suyo, verifica los ajenos |
 | Workers | **Copilot vía Orca** | `LANZADOR=orca`, `AGENTE_ORCA=copilot` — verificado E2E (smoke test 002) |
 | Tareas mínimas | **Kimi** | `EJECUTOR=cmd` + `EJECUTOR_CMD` en `slices.conf`. Pausado: suscripción sin Kimi Code |
-| Juez | checks + `code-review-en-loop` de Devin | `JUEZ=""`: `claude` no conecta a la API (verificado 2026-11-05). Si aparece un LLM → `JUEZ=claude` (MODELO_JUEZ=haiku) o `JUEZ=jev` |
+| Juez | **Devin con subagente** (`JUEZ="devin"`) | Tras checks verdes, un subagente de solo lectura con contexto fresco juzga SPEC vs diff y escribe `recibos/<id>/juez.txt` (1ª línea `CIERRA`/`NO CIERRA` + un criterio no cubierto por línea); `verificar` lo exige antes de cerrar. Reserva de otro vendor: `JUEZ=claude` cuando `claude -p` vuelva a responder |
 | Reserva | `MAX_PARALELO=2` | Un solo plan Copilot. Si se agota: bajar a 1 o pausar workers |
 
 ## Checks (slices.conf)
@@ -53,7 +53,7 @@ Reconocé el momento y cargá la skill sin esperar a que la nombren.
 | | bug difícil o lentitud | "seguí `diagnosing-bugs`"; el SPEC lleva el repro |
 | | cambia la interfaz de un módulo | `codebase-design` |
 | | UI | `impeccable` para diseñar; `kero-audit` antes de decir que está listo |
-| **Verificar** | llegó un `worker_done` | `./slices verificar` (checks + juez): siempre |
+| **Verificar** | llegó un `worker_done` | `./slices verificar` (checks) → subagente-juez escribe `juez.txt` → `verificar` otra vez |
 | | dos versiones para elegir | `kero-blind` (que juzgue la persona, sin saber cuál es cuál) |
 | **Cerrar** | todo integrado | `code-review-en-loop` → `qa-con-video` si hay UI → `pr` |
 | | terminó la sesión | `retro` si algo salió mal dos veces |
@@ -67,7 +67,8 @@ El worker no carga skills por su cuenta: si un slice necesita `tdd` o `diagnosin
 ## Limitaciones conocidas (verificadas en el setup)
 
 - **Windows / `LANZADOR=local`:** `slices` desacopla con `setsid`, que no existe en Git Bash → `lanzar` queda "cortado a medias" con un `pid` huérfano. Local se corre en primer plano: `./slices _trabajar <id>`. El modo `orca` no lo necesita.
-- **`claude` sin API** (sin suscripción): no sirve de juez ni de worker hasta que conecte.
+- **`claude` logueado pero `-p` mudo:** auth OK (OAuth firstParty, verificado 2026-11-09) pero `claude -p` se cuelga sin responder → no sirve de juez ni worker hasta que print mode conteste.
+- **`worker-start` en modo terminal no entrega el `--spec` como tarea** (verificado 2026-11-09): el agente abre en chat interactivo vacío y termina su turno sin `worker_done`. `lanzar_en_orca` ya manda el puntero a `prompt.txt` por el buzón (`orchestration send`) después del start; si un worker dice "no me dieron tarea", ese send es la cura, no relanzar.
 - **`gemini` CLI no sirve de worker:** Google cerró el OAuth individual (migra a Antigravity) y la API key da 403 sin billing.
 - **`agy`/Antigravity:** cuenta nativa guardada en Orca (`46323573@…`), pero `worker-start --agent agy` da `agent_unconfigured` hasta crear el alias en Settings → Agents.
 - **`kimi` sin acceso a Kimi Code:** logueado pero la suscripción no lo cubre; `kimi -p` da auth_error. Pausado salvo upgrade u otro provider en `kimi provider`.

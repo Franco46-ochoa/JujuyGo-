@@ -52,7 +52,7 @@ EJECUTOR="cursor"                                # cursor | claude | codex | cmd
 MODELO=""                                        # vacío = el default del CLI
 LANZADOR="local"                                 # local: el hijo corre acá · orca: worker supervisado de Orca
 AGENTE_ORCA="cursor"                             # con LANZADOR=orca: agente de Orca (cursor = cursor-agent, claude, codex, grok = CLI de xAI)
-JUEZ=""                                          # vacío = solo chequeos · "jev" = Jev (TypeSafe) · "claude" = un modelo
+JUEZ=""                                          # vacío = solo chequeos · "jev" = Jev (TypeSafe) · "claude" = un modelo · "devin" = Devin con subagente-juez (exige juez.txt)
 MODELO_JUEZ="sonnet"
 MAX_PARALELO=3                                   # cuántos hijos a la vez (una máquina chica no aguanta más)
 MODO="semi"                                      # para `auto`: auto = mergea solo · semi = frena antes de cada
@@ -233,7 +233,7 @@ preparar_reintento() {
     echo "Seguí sobre lo que ya está escrito en este worktree y arreglá exactamente eso."
   } > "$out/reintento.txt"
   mv "$out/recibo.json" "$out/recibo.anterior.json"
-  rm -f "$out/recibo-agente.md"
+  rm -f "$out/recibo-agente.md" "$out/juez.txt"
 }
 
 # Worker supervisado de Orca en el worktree del slice. Un Run por repo.
@@ -254,6 +254,13 @@ lanzar_en_orca() {
     cat "$out/orca-start.json" >&2; morir "worker-start falló para $id (no relanzar a ciegas: ver $out/orca-start.json)"
   fi
   jq -r '.result.dispatchId // .result.dispatch.id // empty' "$out/orca-start.json" > "$out/orca-dispatch"
+  # En modo terminal el --spec del worker-start no llega como tarea (verificado
+  # 2026-11-09: el agente queda en chat vacío). El buzón sí llega: le mandamos el
+  # puntero al prompt guardado para que lo lea del propio worktree.
+  orca orchestration send --to "dispatch:$(cat "$out/orca-dispatch")" \
+    --subject "Tu tarea" \
+    --body "Leé $RECIBOS/$id/prompt.txt en este worktree: es tu tarea completa (SPEC + contexto). Ejecutala entera: implementá el código y los tests que exige el SPEC, corré los chequeos del proyecto, arreglá lo que rompas y terminá escribiendo el bloque ===RECIBO=== en $RECIBOS/$id/recibo-agente.md. No hagas git commit ni git push." \
+    >/dev/null 2>&1 || echo "slices: aviso — no llegó la tarea por el buzón; mandásela a mano"
   echo "$id: worker de Orca ($AGENTE_ORCA${MODELO:+ $MODELO}) · dispatch $(cat "$out/orca-dispatch") · run $run"
   echo "   al llegar su worker_done: ./slices verificar $id"
 }
@@ -365,6 +372,20 @@ $(git -C "$wt" diff --cached "$desde" -- . ":!$RECIBOS" | head -c 120000)" --mod
     # Un juez que no contesta no es un chequeo que pasó.
     [[ "$(head -1 <<<"$veredicto")" == CIERRA* ]] || { cerrado=false; motivo="${motivo:+$motivo; }el juez no cierra (ver juez.txt)"; }
     veredicto="$(head -1 <<<"$veredicto")"
+  elif $cerrado && [[ "$JUEZ" == "devin" ]]; then
+    # Devin juzga en sesión con un subagente de contexto fresco: verificar corre
+    # los chequeos y exige $out/juez.txt (primera línea CIERRA o NO CIERRA).
+    # Sin juez.txt el slice queda pendiente; con veredicto escrito se re-corre
+    # verificar y toma el resultado. El reintento lo borra (preparar_reintento)
+    # para que un veredicto viejo no apruebe trabajo nuevo.
+    if [[ -s "$out/juez.txt" ]]; then
+      [[ "$(head -1 "$out/juez.txt")" == CIERRA* ]] || { cerrado=false; motivo="${motivo:+$motivo; }el juez devin no cierra (ver juez.txt)"; }
+      veredicto="devin: $(head -1 "$out/juez.txt")"
+    else
+      cerrado=false
+      motivo="${motivo:+$motivo; }pendiente de juez: el subagente-juez escribe juez.txt y se re-corre verificar"
+      veredicto="devin: pendiente"
+    fi
   fi
   cat > "$out/recibo.json" <<EOF
 {
