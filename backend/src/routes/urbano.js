@@ -77,7 +77,9 @@ export function createUrbanoRouter(client = colejuyClient) {
           actualizado_en: new Date().toISOString(),
         });
       }
-      res.json(withMetadata(data));
+      const paths = Array.isArray(data.paths) ? data.paths
+        : Array.isArray(data.line?.paths) ? data.line.paths : [];
+      res.json(withMetadata({ ...data, paths }));
     } catch (error) {
       sendUpstreamError(error, res, next, { notFoundIs404: true });
     }

@@ -30,7 +30,12 @@ test('proxy de líneas, red, línea y flota preserva el shape y agrega metadatos
   const { app } = appWithResponses({
     lines: { lines: [{ id: '36', number: '36' }] },
     network: { lines: [{ id: '36', stops: [] }] },
-    'lines/36': { line: { id: '36', paths: [] } },
+    'lines/36': {
+      line: {
+        id: '36',
+        paths: [{ direction: 'ida', coordinates: [[-65.3, -24.2], [-65.31, -24.21]] }],
+      },
+    },
     fleet: { updatedAt: fleetTime, buses: [], stale: false },
   });
 
@@ -47,7 +52,10 @@ test('proxy de líneas, red, línea y flota preserva el shape y agrega metadatos
 
   const line = await request(app).get('/api/urbano/linea/36');
   assert.equal(line.status, 200);
-  assert.deepEqual(line.body.line, { id: '36', paths: [] });
+  assert.equal(line.body.line.id, '36');
+  assert.deepEqual(line.body.paths, [
+    { direction: 'ida', coordinates: [[-65.3, -24.2], [-65.31, -24.21]] },
+  ]);
   assert.equal(line.body.fuente, 'colejuy.vercel.app');
 
   const fleet = await request(app).get('/api/urbano/flota');
