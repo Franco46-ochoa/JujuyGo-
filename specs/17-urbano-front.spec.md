@@ -1,0 +1,68 @@
+# Slice 17 — Red urbana en "Cómo llegar": líneas, paradas y colectivos en vivo
+
+**Depende de:** 15-urbano-back mergeado (`a873f9a` — endpoints `/api/urbano/*` ya en master).
+**Alcance:** `frontend/src/app/como-llegar/` (como-llegar.ts/html/css/spec), `frontend/src/app/urbano.service.ts` (nuevo), `frontend/src/app/urbano*.types.ts` si hace falta, `frontend/src/app/transporte.service.ts` solo si hace falta un método nuevo. NO tocar backend, migraciones, `yapa-mapa/` (salvo inputs ya existentes), home, lugar-detalle, travesia, specs, docs.
+
+## Contexto
+
+- Slice 15 dejó la cañería: `GET /api/urbano/lineas`, `/red`, `/linea/:id`, `/flota`,
+  `/paradas-cercanas?lat=&lng=&radio_m=`. Cada respuesta trae `fuente` y `actualizado_en`.
+- `/api/urbano/red` devuelve `{lines:[{id,stops:[{id,name,lat,lng,direction,order}]}]}` —
+  TODAS las paradas de TODAS las líneas (payload grande, cacheado 10 min en backend).
+- `/api/urbano/linea/:id` devuelve `paths:[{direction,coordinates:[[lng,lat]...]}]` —
+  geometría del recorrido siguiendo calles.
+- `/api/urbano/flota` devuelve posiciones GPS: `{buses:[{id,line,number,lat,lng,speed,course,moving,fresh,age}],stale}`.
+- `/como-llegar` hoy arma un relato RN9 (Terminal→cruce→destino). Los puntos del mapa
+  (`puntos`) ya tienen `lat`/`lng`. `yapa-mapa` acepta `rutaPolyline` y pins.
+- Audiencia: turistas sin auto. El caso real: "estoy en mi hotel en SSJ y quiero ir a
+  la Terminal / a Yala / al aeropuerto" — tramos dentro de la ciudad que la RN9 no cubre.
+
+## Qué tiene que pasar
+
+1. **`urbano.service.ts`**: envuelve los endpoints `/api/urbano/*` con tipos TS.
+   Cachear `/red` en memoria del servicio (se pide una vez por sesión de página).
+2. **Sección "Colectivo urbano" en `/como-llegar`**: cuando el origen y el destino del
+   viaje tengan coordenadas dentro del área urbana de San Salvador (heurística simple:
+   ambos puntos dentro de un bbox de la ciudad, ej. lat -24.30 a -24.15, lng -65.35 a
+   -65.20 — documentar la constante), mostrar un bloque adicional **debajo** del relato RN9:
+   - **Líneas candidatas**: líneas que tengan una parada cerca del origen Y una cerca
+     del destino (umbral ~600 m, usar datos de `/red`; matching por distancia haversine
+     en el cliente o reusar `/paradas-cercanas` — decidir y documentar).
+   - Por cada línea candidata: nombre/número, empresa, paradas de ascenso y descenso con
+     nombres y distancia aproximada, y dirección (ida/vuelta según corresponda).
+   - Si ninguna línea conecta ambos puntos: decirlo claro ("no encontramos colectivo
+     urbano directo entre estos puntos") y listar las paradas más cercanas al origen
+     como referencia. Nunca inventar líneas ni paradas.
+3. **Mapa**: para la primera línea candidata (o la seleccionada si hay selector), dibujar
+   el recorrido con `rutaPolyline` usando la geometría de `/api/urbano/linea/:id`
+   (paths del sentido correcto) + pins de paradas de ascenso/descenso. Si la geometría
+   no está disponible, caer a la polilínea recta origen→destino como hoy.
+4. **Flota en vivo (opcional pero deseable)**: si `/api/urbano/flota` responde con
+   `buses` de las líneas candidatas y `fresh`, mostrar "colectivos ahora" con posición
+   en el mapa o lista (número de interno, antigüedad del dato). Marcar siempre la edad
+   del dato (`age` segundos → "hace X min") y la fuente. Si `stale` o vacío, no mostrar
+   nada de flota — nunca inventar posiciones.
+5. **Trazabilidad**: todo dato urbano visible lleva `fuente: 'colejuy.vercel.app'`
+   (o la que devuelva la API) y distinción publicado vs tiempo-real según `fresh`/`age`.
+6. **Tests**: specs del componente/servicio cubriendo: matching de líneas por paradas
+   cercanas, caso sin línea directa, fallback de geometría, flota solo cuando fresh,
+   y que nada se renderiza si la API urbana falla (la página sigue mostrando el relato RN9).
+
+## Criterios
+
+- [ ] `cd frontend && npm test -- --watch=false` verde con tests nuevos
+- [ ] `cd backend && npm test` verde (no debería tocarse)
+- [ ] `npm run build` OK
+- [ ] `/como-llegar` con origen/destino dentro de SSJ muestra la sección urbana; con
+      tramos RN9 sigue igual que antes (regresión cero)
+- [ ] Ningún dato inventado: líneas/paradas/posiciones vienen solo de `/api/urbano/*`
+- [ ] kero-audit 390x844 + 1440x900 de la sección nueva sin console errors
+- [ ] Recibo con gaps honestos
+
+## Fuera de alcance
+
+- Backend (endpoints ya existen)
+- Integración del tramo urbano dentro del generador de travesías (slice posterior)
+- Favoritos, alertas, notificaciones de colejuy
+- Rediseño general de `/como-llegar`
+- NO commitear.
