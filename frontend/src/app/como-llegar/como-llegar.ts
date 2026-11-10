@@ -173,12 +173,15 @@ export class ComoLlegarPage {
   protected readonly lugares = signal<Lugar[]>([]);
   protected readonly paradas = signal<PuntoTransporte[]>([]);
   protected readonly origen = signal('terminal-jjs');
+  protected readonly ubicacionGps = signal<{ lat: number; lng: number; precision?: number } | null>(null);
   protected readonly destino = signal('');
   protected readonly destinoFijado = signal(false);
   protected readonly guia = signal<RespuestaComoLlegar | null>(null);
   protected readonly cargando = signal(false);
   protected readonly error = signal('');
+  protected readonly errorUbicacion = signal('');
   protected readonly errorOpciones = signal('');
+  protected readonly solicitandoUbicacion = signal(false);
   protected readonly redUrbana = signal<UrbanoRed | null>(null);
   protected readonly detalleUrbano = signal<UrbanoDetalleLinea | null>(null);
   protected readonly flotaUrbana = signal<UrbanoColectivo[]>([]);
@@ -201,6 +204,9 @@ export class ComoLlegarPage {
         nombre: lugar.nombre,
         grupo: 'lugares' as const,
       })),
+      ...(this.ubicacionGps()
+        ? [{ slug: 'mi-ubicacion', nombre: 'Tu ubicación · GPS', grupo: 'ubicacion' as const }]
+        : []),
     ];
   });
 
@@ -309,6 +315,43 @@ export class ComoLlegarPage {
     this.origen.set((event.target as HTMLSelectElement).value);
   }
 
+  protected geolocalizacionDisponible(): boolean {
+    return typeof navigator !== 'undefined' && Boolean(navigator.geolocation);
+  }
+
+  protected usarMiUbicacion(): void {
+    if (!this.geolocalizacionDisponible()) {
+      this.errorUbicacion.set('Tu navegador no soporta la ubicación. Elegí una parada en el selector.');
+      return;
+    }
+
+    this.errorUbicacion.set('');
+    this.solicitandoUbicacion.set(true);
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude: lat, longitude: lng, accuracy: precision } = position.coords;
+        if (!coordenadasValidas(lat, lng)) {
+          this.solicitandoUbicacion.set(false);
+          this.errorUbicacion.set('No pudimos obtener una ubicación válida. Elegí una parada en el selector.');
+          return;
+        }
+        this.ubicacionGps.set({ lat, lng, precision });
+        this.origen.set('mi-ubicacion');
+        this.solicitandoUbicacion.set(false);
+        this.cargarRecorrido();
+      },
+      error => {
+        this.solicitandoUbicacion.set(false);
+        this.errorUbicacion.set(error.code === 1
+          ? 'Necesitamos permiso de ubicación para usar tu posición. También podés elegir una parada en el selector.'
+          : error.code === 3
+            ? 'La ubicación tardó demasiado. Intentá nuevamente o elegí una parada en el selector.'
+            : 'No pudimos determinar tu ubicación. Revisá que el servicio esté disponible o elegí una parada en el selector.');
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
+    );
+  }
+
   protected seleccionarDestino(event: Event): void {
     this.destino.set((event.target as HTMLSelectElement).value);
   }
@@ -320,7 +363,8 @@ export class ComoLlegarPage {
     this.error.set('');
     this.guia.set(null);
     this.limpiarUrbano();
-    this.transporte.getComoLlegar(this.origen(), this.destino())
+    const origenGps = this.origen() === 'mi-ubicacion' ? this.ubicacionGps() ?? undefined : undefined;
+    this.transporte.getComoLlegar(this.origen(), this.destino(), origenGps)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: guia => {
@@ -450,6 +494,12 @@ export class ComoLlegarPage {
     }
 
     const pasos: PasoRelato[] = [];
+    if (guia.origen.tipo === 'punto') {
+      pasos.push({
+        titulo: guia.origen.nombre,
+        detalle: 'Punto de partida obtenido con el GPS de tu dispositivo.',
+      });
+    }
     if (guia.traslado_inicial) {
       pasos.push({
         titulo: guia.traslado_inicial.titulo,
@@ -519,6 +569,7 @@ export class ComoLlegarPage {
       terminales: 'Terminales y aeropuerto',
       paradas: 'Paradas RN9',
       lugares: 'Lugares del catálogo',
+      ubicacion: 'Ubicación',
     }[grupo.grupo];
   }
 }

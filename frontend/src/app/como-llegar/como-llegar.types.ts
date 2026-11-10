@@ -17,6 +17,7 @@ export interface EntidadTransporte {
   tipo: string;
   lat: number | null;
   lng: number | null;
+  precision_m?: number;
   altitud_m?: number | null;
   descripcion?: string;
   como_llegar?: string;
@@ -77,5 +78,5 @@ export type RespuestaComoLlegar = RespuestaTrayecto | RespuestaMismoPunto;
 export interface OpcionOrigen {
   slug: string;
   nombre: string;
-  grupo: 'terminales' | 'paradas' | 'lugares';
+  grupo: 'terminales' | 'paradas' | 'lugares' | 'ubicacion';
 }

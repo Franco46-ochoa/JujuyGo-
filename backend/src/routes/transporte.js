@@ -23,6 +23,23 @@ function formatTime(t) {
   return t.slice(0, 5);
 }
 
+function distanciaMetros(lat1, lng1, lat2, lng2) {
+  const radians = degrees => degrees * Math.PI / 180;
+  const deltaLat = radians(lat2 - lat1);
+  const deltaLng = radians(lng2 - lng1);
+  const a = Math.sin(deltaLat / 2) ** 2
+    + Math.cos(radians(lat1)) * Math.cos(radians(lat2)) * Math.sin(deltaLng / 2) ** 2;
+  return 6_371_000 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function parseCoordenada(value, min, max) {
+  if (typeof value !== 'string' || value.trim() === '') return null;
+  const coordenada = Number(value);
+  return Number.isFinite(coordenada) && coordenada >= min && coordenada <= max
+    ? coordenada
+    : null;
+}
+
 // GET /api/transporte/paradas?linea=rn9
 // Lista de paradas en orden según orden_en_linea
 router.get(['/transporte/paradas', '/paradas'], async (req, res) => {
@@ -313,9 +330,25 @@ router.get(['/transporte/como-llegar', '/como-llegar'], async (req, res) => {
     const origenParam = (req.query.origen || 'terminal-jjs').trim();
     const destinoParam = (req.query.destino || 'cerro-siete-colores').trim();
     const hora = req.query.hora;
+    const origenEsGps = origenParam === 'mi-ubicacion';
 
     if (!origenParam || !destinoParam) {
       return res.status(400).json({ error: 'Se requieren origen y destino' });
+    }
+
+    let coordenadasGps = null;
+    if (origenEsGps) {
+      const lat = parseCoordenada(req.query.origen_lat, -90, 90);
+      const lng = parseCoordenada(req.query.origen_lng, -180, 180);
+      if (lat === null || lng === null) {
+        return res.status(400).json({
+          error: 'Para origen=mi-ubicacion se requieren origen_lat y origen_lng válidos (latitud -90 a 90, longitud -180 a 180).'
+        });
+      }
+
+      coordenadasGps = { lat, lng };
+      const precision = parseCoordenada(req.query.origen_precision, 0, Number.MAX_VALUE);
+      if (precision !== null) coordenadasGps.precision_m = precision;
     }
 
     if (origenParam === destinoParam) {
@@ -332,8 +365,55 @@ router.get(['/transporte/como-llegar', '/como-llegar'], async (req, res) => {
     let entidadOrigen = null;
     let trasladoInicial = null;
     let paradaOrigenSlug = null;
+    let paradaCercanaGps = null;
 
-    if (BASE_ORIGINS[origenParam]) {
+    if (coordenadasGps) {
+      entidadOrigen = {
+        slug: 'mi-ubicacion',
+        nombre: 'Tu ubicación',
+        tipo: 'punto',
+        lat: coordenadasGps.lat,
+        lng: coordenadasGps.lng,
+        ...(coordenadasGps.precision_m !== undefined
+          ? { precision_m: coordenadasGps.precision_m }
+          : {})
+      };
+
+      const { rows: paradasRN9 } = await query(
+        `SELECT nombre, slug, lat, lng
+         FROM parada
+         WHERE linea_id = 'rn9' AND lat IS NOT NULL AND lng IS NOT NULL`
+      );
+      paradaCercanaGps = paradasRN9
+        .map(parada => ({
+          ...parada,
+          lat: Number(parada.lat),
+          lng: Number(parada.lng),
+          distancia_m: distanciaMetros(
+            coordenadasGps.lat,
+            coordenadasGps.lng,
+            Number(parada.lat),
+            Number(parada.lng)
+          )
+        }))
+        .filter(parada => Number.isFinite(parada.lat) && Number.isFinite(parada.lng))
+        .sort((a, b) => a.distancia_m - b.distancia_m)[0] || null;
+
+      if (paradaCercanaGps && paradaCercanaGps.distancia_m <= 5000) {
+        paradaOrigenSlug = paradaCercanaGps.slug;
+        if (paradaCercanaGps.distancia_m > 300) {
+          const distanciaKm = Math.round(paradaCercanaGps.distancia_m / 100) / 10;
+          const minutos = Math.max(1, Math.round(paradaCercanaGps.distancia_m / 1000 / 5 * 60));
+          trasladoInicial = {
+            titulo: 'Caminá hacia la parada RN9',
+            tipo: 'caminata',
+            distancia_km: distanciaKm,
+            duracion_estimada: `~${minutos} min a pie`,
+            descripcion: `La parada RN9 más cercana es ${paradaCercanaGps.nombre}, a aproximadamente ${distanciaKm.toFixed(1)} km. Caminá hacia esa parada; el tiempo a pie es una estimación.`
+          };
+        }
+      }
+    } else if (BASE_ORIGINS[origenParam]) {
       entidadOrigen = BASE_ORIGINS[origenParam];
       paradaOrigenSlug = entidadOrigen.parada_slug;
       trasladoInicial = entidadOrigen.traslado_inicial || null;
@@ -391,6 +471,12 @@ router.get(['/transporte/como-llegar', '/como-llegar'], async (req, res) => {
     let tieneServicioRN9 = true;
     let motivoSinServicio = null;
     let alternativaHonesta = null;
+
+    if (coordenadasGps && !paradaOrigenSlug) {
+      tieneServicioRN9 = false;
+      motivoSinServicio = 'No hay una parada de la RN9 a menos de 5 km de tu ubicación.';
+      alternativaHonesta = 'Si estás en San Salvador de Jujuy, consultá el colectivo urbano. Si estás fuera de la ciudad, buscá una conexión local al corredor RN9; no identificamos una parada cercana.';
+    }
 
     const { rows: lugaresDest } = await query('SELECT * FROM lugar WHERE slug = $1', [destinoParam]);
     if (lugaresDest.length > 0) {
@@ -563,12 +649,12 @@ router.get(['/transporte/como-llegar', '/como-llegar'], async (req, res) => {
 
     // Armar Polyline para el mapa
     const polyline = [];
-    if (entidadOrigen.lat && entidadOrigen.lng) {
+    if (entidadOrigen.lat !== null && entidadOrigen.lng !== null) {
       polyline.push([entidadOrigen.lat, entidadOrigen.lng]);
     }
 
     for (const p of paradasTramo) {
-      if (p.lat && p.lng) {
+      if (p.lat !== null && p.lng !== null) {
         // Evitar duplicar punto si es casi idéntico al origen
         const last = polyline[polyline.length - 1];
         if (!last || Math.abs(last[0] - p.lat) > 0.0001 || Math.abs(last[1] - p.lng) > 0.0001) {
@@ -577,7 +663,7 @@ router.get(['/transporte/como-llegar', '/como-llegar'], async (req, res) => {
       }
     }
 
-    if (entidadDestino.lat && entidadDestino.lng) {
+    if (entidadDestino.lat !== null && entidadDestino.lng !== null) {
       const last = polyline[polyline.length - 1];
       if (!last || Math.abs(last[0] - entidadDestino.lat) > 0.0001 || Math.abs(last[1] - entidadDestino.lng) > 0.0001) {
         polyline.push([entidadDestino.lat, entidadDestino.lng]);

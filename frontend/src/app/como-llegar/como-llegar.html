@@ -13,11 +13,29 @@
   <section class="seleccion-recorrido" aria-label="Elegir recorrido">
     <div class="campo-recorrido">
       <label for="origen">Salís desde</label>
-      <select id="origen" [value]="origen()" (change)="seleccionarOrigen($event)">
-        @for (opcion of origenes(); track opcion.slug) {
-          <option [value]="opcion.slug">{{ etiquetaGrupo(opcion) }} · {{ opcion.nombre }}</option>
+      <div class="origen-controles">
+        <select id="origen" [value]="origen()" (change)="seleccionarOrigen($event)">
+          @for (opcion of origenes(); track opcion.slug) {
+            <option [value]="opcion.slug" [selected]="opcion.slug === origen()">
+              {{ opcion.grupo === 'ubicacion' ? opcion.nombre : etiquetaGrupo(opcion) + ' · ' + opcion.nombre }}
+            </option>
+          }
+        </select>
+        @if (geolocalizacionDisponible()) {
+          <button
+            class="boton-ubicacion"
+            type="button"
+            [disabled]="solicitandoUbicacion()"
+            (click)="usarMiUbicacion()"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 2v3m0 14v3M2 12h3m14 0h3M19.07 4.93l-2.12 2.12m-9.9 9.9-2.12 2.12m14.14 0-2.12-2.12m-9.9-9.9L4.93 4.93" />
+            </svg>
+            {{ solicitandoUbicacion() ? 'Buscando…' : 'Usar mi ubicación' }}
+          </button>
         }
-      </select>
+      </div>
     </div>
     <div class="campo-recorrido">
       @if (destinoFijado()) {
@@ -38,6 +56,9 @@
     </button>
   </section>
 
+  @if (errorUbicacion()) {
+    <p class="mensaje-error mensaje-ubicacion" role="alert">{{ errorUbicacion() }}</p>
+  }
   @if (errorOpciones()) {
     <p class="mensaje-error" role="alert">{{ errorOpciones() }}</p>
   }

@@ -124,4 +124,69 @@ describe('API Cómo Llegar (Slice 06)', () => {
     const res = await request(app).get('/api/transporte/como-llegar?origen=terminal-jjs&destino=inexistente-1234');
     assert.equal(res.status, 404);
   });
+
+  test('GET /api/transporte/como-llegar resuelve el origen GPS y no agrega caminata dentro de 300 m', async () => {
+    const res = await request(app).get(
+      '/api/transporte/como-llegar?origen=mi-ubicacion&origen_lat=-24.21549&origen_lng=-65.2891&origen_precision=12&destino=cerro-siete-colores'
+    );
+    assert.equal(res.status, 200);
+    assert.deepEqual(res.body.origen, {
+      slug: 'mi-ubicacion',
+      nombre: 'Tu ubicación',
+      tipo: 'punto',
+      lat: -24.21549,
+      lng: -65.2891,
+      precision_m: 12
+    });
+    assert.equal(res.body.paradaOrigen.slug, 'terminal-jjs');
+    assert.equal(res.body.tiene_servicio_rn9, true);
+    assert.equal(res.body.traslado_inicial, null);
+    assert.ok(res.body.servicios.length > 0);
+  });
+
+  test('GET /api/transporte/como-llegar informa caminata aproximada a la parada RN9 cercana', async () => {
+    const res = await request(app).get(
+      '/api/transporte/como-llegar?origen=mi-ubicacion&origen_lat=-24.217&origen_lng=-65.2891&destino=cerro-siete-colores'
+    );
+    assert.equal(res.status, 200);
+    assert.equal(res.body.paradaOrigen.slug, 'terminal-jjs');
+    assert.ok(res.body.traslado_inicial);
+    assert.equal(res.body.traslado_inicial.distancia_km, 0.5);
+    assert.match(res.body.traslado_inicial.descripcion, /Caminá hacia esa parada/);
+    assert.match(res.body.traslado_inicial.duracion_estimada, /min a pie/);
+  });
+
+  test('GET /api/transporte/como-llegar no inventa parada RN9 a más de 5 km', async () => {
+    const res = await request(app).get(
+      '/api/transporte/como-llegar?origen=mi-ubicacion&origen_lat=-24.35&origen_lng=-65.4&destino=cerro-siete-colores'
+    );
+    assert.equal(res.status, 200);
+    assert.equal(res.body.origen.tipo, 'punto');
+    assert.equal(res.body.paradaOrigen, null);
+    assert.equal(res.body.tiene_servicio_rn9, false);
+    assert.match(res.body.motivo_sin_servicio, /menos de 5 km/);
+    assert.match(res.body.alternativa_honesta, /colectivo urbano/);
+    assert.deepEqual(res.body.servicios, []);
+  });
+
+  test('GET /api/transporte/como-llegar valida coordenadas GPS y conserva el 404 de destino inválido', async () => {
+    const sinCoordenadas = await request(app).get(
+      '/api/transporte/como-llegar?origen=mi-ubicacion&destino=cerro-siete-colores'
+    );
+    assert.equal(sinCoordenadas.status, 400);
+    assert.match(sinCoordenadas.body.error, /origen_lat y origen_lng válidos/);
+
+    for (const coords of ['origen_lat=NaN&origen_lng=-65.2', 'origen_lat=-24.2&origen_lng=181']) {
+      const invalida = await request(app).get(
+        `/api/transporte/como-llegar?origen=mi-ubicacion&${coords}&destino=cerro-siete-colores`
+      );
+      assert.equal(invalida.status, 400);
+      assert.ok(invalida.body.error);
+    }
+
+    const destinoInvalido = await request(app).get(
+      '/api/transporte/como-llegar?origen=mi-ubicacion&origen_lat=-24.2&origen_lng=-65.2&destino=inexistente-1234'
+    );
+    assert.equal(destinoInvalido.status, 404);
+  });
 });
