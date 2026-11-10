@@ -124,8 +124,24 @@ export class HomePage {
     return nombre.split(/\s+/).slice(0, 2).map(parte => parte[0]).join('');
   }
 
-  protected fotoUrl(foto: string | null | undefined): string {
-    return foto ? `/img/${foto}` : '/img/purmamarca.jpg';
+  /**
+   * Devuelve la URL de la foto del lugar.
+   * Si `foto` es NULL, usa una imagen representativa de la zona (nunca la foto de otra zona).
+   * El parámetro zona_slug es opcional: sin él, el fallback es el placeholder de Quebrada.
+   */
+  protected fotoUrl(foto: string | null | undefined, zona_slug?: string): string {
+    if (foto) return `/img/${foto}`;
+    return `/img/${this.fallbackFotoZona(zona_slug)}`;
+  }
+
+  private fallbackFotoZona(zona_slug?: string): string {
+    const mapa: Record<string, string> = {
+      quebrada: 'purmamarca.jpg',
+      puna: 'puna.jpg',
+      yungas: 'calilegua.jpg',
+      valles: 'salsaju.jpg',
+    };
+    return mapa[zona_slug ?? ''] ?? 'purmamarca.jpg';
   }
 
   /**

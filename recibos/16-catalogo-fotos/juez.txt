@@ -1,0 +1,2 @@
+CIERRA
+SPEC cubierto: conteo dinamico en home, fallback por zona en home/lugar-detalle/travesia (nunca foto de otra zona), migracion 004 idempotente con humahuaca.jpg + asignaciones coherentes, CREDITS.md, tests nuevos. Menores: test de conteo poco estricto; Puna comparte puna.jpg y algunos NULL usan foto de otro destino de la misma zona (permitido por SPEC, pendiente curaduria editorial).
