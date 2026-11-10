@@ -13,8 +13,20 @@ export class TransporteService {
     return this.http.get<PuntoTransporte[]>(`${this.apiUrl}/transporte/paradas`);
   }
 
-  getComoLlegar(origen: string, destino: string): Observable<RespuestaComoLlegar> {
-    const params = new HttpParams().set('origen', origen).set('destino', destino);
+  getComoLlegar(
+    origen: string,
+    destino: string,
+    origenGps?: { lat: number; lng: number; precision?: number },
+  ): Observable<RespuestaComoLlegar> {
+    let params = new HttpParams().set('origen', origen).set('destino', destino);
+    if (origenGps) {
+      params = params
+        .set('origen_lat', origenGps.lat)
+        .set('origen_lng', origenGps.lng);
+      if (origenGps.precision !== undefined) {
+        params = params.set('origen_precision', origenGps.precision);
+      }
+    }
     return this.http.get<RespuestaComoLlegar>(`${this.apiUrl}/transporte/como-llegar`, { params });
   }
 }

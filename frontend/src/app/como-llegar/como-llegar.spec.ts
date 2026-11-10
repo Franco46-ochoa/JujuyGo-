@@ -160,6 +160,10 @@ const flota: UrbanoFlota = {
 describe('ComoLlegarPage', () => {
   let fixture: ComponentFixture<ComoLlegarPage>;
   let respuestaActual: RespuestaComoLlegar;
+  let transporteApi: {
+    getParadasRN9: ReturnType<typeof vi.fn>;
+    getComoLlegar: ReturnType<typeof vi.fn>;
+  };
   let urbanoApi: {
     getRed: ReturnType<typeof vi.fn>;
     getLineas: ReturnType<typeof vi.fn>;
@@ -169,6 +173,11 @@ describe('ComoLlegarPage', () => {
 
   beforeEach(async () => {
     respuestaActual = respuesta;
+    Object.defineProperty(navigator, 'geolocation', { configurable: true, value: undefined });
+    transporteApi = {
+      getParadasRN9: vi.fn(() => of([])),
+      getComoLlegar: vi.fn(() => of(respuestaActual)),
+    };
     urbanoApi = {
       getRed: vi.fn(() => of(redVacia)),
       getLineas: vi.fn(() => of({ ...redVacia, lines: [] })),
@@ -189,10 +198,7 @@ describe('ComoLlegarPage', () => {
         },
         {
           provide: TransporteService,
-          useValue: {
-            getParadasRN9: () => of([]),
-            getComoLlegar: vi.fn(() => of(respuestaActual)),
-          },
+          useValue: transporteApi,
         },
         { provide: UrbanoService, useValue: urbanoApi },
       ],
@@ -324,5 +330,99 @@ describe('ComoLlegarPage', () => {
 
     expect(fixture.nativeElement.textContent).toContain('Tomá el colectivo en Terminal Jujuy');
     expect(fixture.nativeElement.querySelector('.urbano-section')).toBeNull();
+  });
+
+  it('pide geolocalización y consulta el servicio con coordenadas y precisión', () => {
+    const gpsResponse: RespuestaComoLlegar = {
+      ...respuestaUrbana,
+      origen: {
+        slug: 'mi-ubicacion',
+        nombre: 'Tu ubicación',
+        tipo: 'punto',
+        lat: -24.212,
+        lng: -65.288,
+        precision_m: 18,
+      },
+      puntos: [
+        { nombre: 'Tu ubicación', tipo: 'origen', lat: -24.212, lng: -65.288 },
+        ...respuestaUrbana.puntos.slice(1),
+      ],
+    };
+    respuestaActual = gpsResponse;
+    transporteApi.getComoLlegar.mockReturnValue(of(gpsResponse));
+    const getCurrentPosition = vi.fn(success => success({
+      coords: { latitude: -24.212, longitude: -65.288, accuracy: 18 },
+    }));
+    Object.defineProperty(navigator, 'geolocation', {
+      configurable: true,
+      value: { getCurrentPosition },
+    });
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+    transporteApi.getComoLlegar.mockClear();
+    (fixture.nativeElement.querySelector('.boton-ubicacion') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(getCurrentPosition).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.any(Function),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
+    );
+    expect(transporteApi.getComoLlegar).toHaveBeenCalledWith('mi-ubicacion', lugar.slug, {
+      lat: -24.212,
+      lng: -65.288,
+      precision: 18,
+    });
+    expect(fixture.nativeElement.textContent).toContain('Tu ubicación · GPS');
+    expect((fixture.nativeElement.querySelector('#origen') as HTMLSelectElement).value).toBe('mi-ubicacion');
+    expect(fixture.nativeElement.textContent).toContain('Punto de partida obtenido con el GPS');
+    const mapa = fixture.debugElement.query(By.directive(YapaMapaComponent)).componentInstance as YapaMapaComponent;
+    expect(mapa.rutaPuntos().some(punto => punto.nombre === 'Tu ubicación')).toBe(true);
+  });
+
+  it('muestra la denegación de ubicación sin perder la guía previa', () => {
+    Object.defineProperty(navigator, 'geolocation', {
+      configurable: true,
+      value: {
+        getCurrentPosition: (_success: PositionCallback, error: PositionErrorCallback) =>
+          error({ code: 1, message: 'denied', PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 }),
+      },
+    });
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.boton-ubicacion') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Necesitamos permiso de ubicación');
+    expect(fixture.nativeElement.textContent).toContain('Tomá el colectivo en Terminal Jujuy');
+    expect(fixture.nativeElement.querySelector('#origen')).toBeTruthy();
+  });
+
+  it('oculta el botón cuando el navegador no ofrece geolocalización', () => {
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.boton-ubicacion')).toBeNull();
+    expect(fixture.nativeElement.querySelector('#origen')).toBeTruthy();
+  });
+
+  it('renderiza una respuesta de punto GPS en el relato y conserva su ubicación en el mapa', () => {
+    respuestaActual = {
+      ...respuestaUrbana,
+      origen: { slug: 'mi-ubicacion', nombre: 'Tu ubicación', tipo: 'punto', lat: -24.2128, lng: -65.2891 },
+      puntos: [
+        { nombre: 'Tu ubicación', tipo: 'origen', lat: -24.2128, lng: -65.2891 },
+        ...respuestaUrbana.puntos.slice(1),
+      ],
+    };
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Tu ubicación');
+    const mapa = fixture.debugElement.query(By.directive(YapaMapaComponent)).componentInstance as YapaMapaComponent;
+    expect(mapa.rutaPuntos().some(punto => punto.nombre === 'Tu ubicación')).toBe(true);
   });
 });

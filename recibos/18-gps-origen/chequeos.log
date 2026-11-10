@@ -1,0 +1,121 @@
+### tests: test ! -f package.json || npm test
+### fin tests (ok=true)
+
+### tests-front: test ! -d frontend || (cd frontend && npm test -- --watch=false)
+
+> frontend@0.0.0 test
+> ng test --watch=false
+
+Automatically searching for and using Vitest configuration file.
+❯ Building...
+✔ Building...
+Application bundle generation complete. [15.774 seconds] - 2026-11-10T15:28:54.595Z
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/Elect/orca/projects/JujuyGo/.slices/18-gps-origen/frontend[39m
+
+
+[2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[32m44 passed[39m[22m[90m (44)[39m
+[2m   Start at [22m 12:28:58
+[2m   Duration [22m 38.83s[2m (environment 78%, setup 9%, tests 8%, transform 3%, import 2%)[22m
+
+### fin tests-front (ok=true)
+
+### tests-back: test ! -d backend || (cd backend && npm test)
+
+> jujuygo-backend@0.1.0 test
+> node --test
+
+﹣ API de catálogo (2.2527ms) # requiere DATABASE_URL_TEST
+Seed de transporte RN9 completado con éxito.
+▶ API Cómo Llegar (Slice 06)
+  ✔ GET /api/transporte/como-llegar desde Terminal a Cerro de los Siete Colores (2475.4349ms)
+  ✔ GET /api/transporte/como-llegar desde Aeropuerto Jujuy incluye transfer inicial a Terminal (330.2795ms)
+  ✔ GET /api/transporte/como-llegar a Salinas Grandes advierte sin servicio directo RN9 y da alternativa honesta (335.0649ms)
+  ✔ GET /api/transporte/como-llegar a Yungas (Parque Calilegua) advierte corredor RN34 (300.8169ms)
+  ✔ GET /api/transporte/como-llegar con mismo origen y destino (25.7615ms)
+  ✔ GET /api/transporte/como-llegar con destino inexistente responde 404 (18.196ms)
+  ✔ GET /api/transporte/como-llegar resuelve el origen GPS y no agrega caminata dentro de 300 m (375.6783ms)
+  ✔ GET /api/transporte/como-llegar informa caminata aproximada a la parada RN9 cercana (349.4318ms)
+  ✔ GET /api/transporte/como-llegar no inventa parada RN9 a más de 5 km (314.8195ms)
+  ✔ GET /api/transporte/como-llegar valida coordenadas GPS y conserva el 404 de destino inválido (87.8241ms)
+✔ API Cómo Llegar (Slice 06) (5783.623ms)
+✔ GET /health responde ok (252.2169ms)
+sin migraciones nuevas
+▶ API de hospedajes y guías
+  ✔ lista hospedajes con fuente y estado de verificación (353.4118ms)
+  ✔ filtra hospedajes por zona (41.5364ms)
+  ✔ responde una lista vacía si no hay hospedajes en la zona (21.8519ms)
+  ✔ la lista de guías vacía responde correctamente (21.2725ms)
+  ✔ la migración puede aplicarse varias veces sin duplicar hospedajes (48.7073ms)
+✔ API de hospedajes y guías (1019.1545ms)
+✔ lista ciudades y empresas del dataset (13.2402ms)
+✔ buscarCiudad acepta id, slug y nombre con/sin acentos (1.0178ms)
+✔ salidas SSJ->Humahuaca devuelve servicios ordenados con tarifa y duración (80.8086ms)
+✔ salidas filtra por hora de salida (2.9837ms)
+✔ salidas incluye direccion ida/vuelta segun sentido del servicio (5.0528ms)
+✔ salidas con origen invalido devuelve error (1.7097ms)
+✔ salidas misma ciudad devuelve error (0.6895ms)
+✔ tarifaPar urbano usa SUBE y tarifa generica usa faresGeneric (0.8701ms)
+✔ duracionEstimadaMinutos urbano y generico (0.972ms)
+✔ endpoint /api/hq/salidas responde y valida params (449.126ms)
+▶ motor de validación de travesía
+  ✔ valida un día que llega a Tilcara y toma el regreso dentro del horario (24.7945ms)
+  ✔ detecta que el regreso de Humahuaca no llega antes del cierre y sugiere una alternativa (2.253ms)
+  ✔ mapea Purmamarca al cruce y nunca afirma que el colectivo llega al pueblo (0.8107ms)
+  ✔ advierte el traslado local desde Humahuaca hasta Hornocal (0.7229ms)
+  ✔ detecta eventos superpuestos aun cuando ocurren en la misma parada (1.5249ms)
+  ✔ no permite que una visita se prolongue al día siguiente (1.055ms)
+  ✔ marca como conflicto un tramo para el que no hay servicio cargado (2.1489ms)
+✔ motor de validación de travesía (39.3951ms)
+Seed de transporte RN9 completado con éxito.
+▶ Transporte y horarios RN9 (Slice 04)
+  ▶ Orden de paradas
+    ✔ GET /api/transporte/paradas devuelve lista completa en orden estricto de ruta (244.0989ms)
+    ✔ GET /api/transporte/paradas con línea inexistente devuelve 404 (21.8169ms)
+  ✔ Orden de paradas (268.6705ms)
+  ▶ Regla crítica: Cruce ≠ Pueblo
+    ✔ Purmamarca Cruce tiene tipo="cruce" y notas explicativas diferenciadas del pueblo (19.9144ms)
+    ✔ La base de datos rechaza tipos de parada no válidos (18.1662ms)
+  ✔ Regla crítica: Cruce ≠ Pueblo (39.5367ms)
+  ▶ Cálculo de próximos servicios
+    ✔ GET /api/transporte/proximos?origen=terminal-jjs&destino=tilcara devuelve servicios con hora estimada (204.4652ms)
+    ✔ GET /api/transporte/proximos dirección vuelta (Humahuaca -> SS.Jujuy) (22.5847ms)
+    ✔ GET /api/transporte/proximos con filtro ?hora=12:00 devuelve solo salidas posteriores (20.8231ms)
+    ✔ Validación de errores en parámetros origen y destino (38.84ms)
+  ✔ Cálculo de próximos servicios (288.6481ms)
+  ▶ Confianza y fuente presente en cada horario
+    ✔ Ningún horario en la DB carece de fuente o confianza (5.3727ms)
+    ✔ Todos los valores de confianza son válidos ("publicado", "estimado" o "tiempo-real") (3.3254ms)
+    ✔ Tramos que incluyen paradas intermedias sin boletería oficial marcan confianza="estimado" (18.4553ms)
+  ✔ Confianza y fuente presente en cada horario (28.0086ms)
+Seed de transporte RN9 completado con éxito.
+  ▶ Idempotencia del seed
+    ✔ Ejecutar el seed nuevamente no duplica registros (472.5852ms)
+  ✔ Idempotencia del seed (473.123ms)
+✔ Transporte y horarios RN9 (Slice 04) (1861.9518ms)
+▶ POST /api/travesia/validar
+  ✔ devuelve los tramos RN9 reales que permiten completar el plan (249.288ms)
+  ✔ propone una corrección cuando el regreso no llega antes de la hora de cierre (55.5542ms)
+  ✔ rechaza planes incompletos (21.7761ms)
+✔ POST /api/travesia/validar (332.5971ms)
+▶ GET /api/travesia/contexto
+  ✔ devuelve paradas ordenadas y solo servicios con tramos cargados (34.1367ms)
+✔ GET /api/travesia/contexto (34.8908ms)
+✔ proxy de líneas, red, línea y flota preserva el shape y agrega metadatos (203.9971ms)
+✔ el cliente reutiliza en caché la respuesta del endpoint dentro del TTL (1.3315ms)
+✔ errores HTTP y timeout upstream responden 502 con fuente (63.1527ms)
+✔ línea inexistente responde 404 (17.9755ms)
+✔ paradas cercanas filtra por distancia y ordena por proximidad (29.189ms)
+✔ paradas cercanas valida coordenadas y radio (85.322ms)
+ℹ tests 55
+ℹ suites 12
+ℹ pass 55
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8259.1189
+### fin tests-back (ok=true)
+
