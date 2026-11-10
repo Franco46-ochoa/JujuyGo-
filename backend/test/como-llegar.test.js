@@ -156,6 +156,19 @@ describe('API Cómo Llegar (Slice 06)', () => {
     assert.match(res.body.traslado_inicial.duracion_estimada, /min a pie/);
   });
 
+  test('GET /api/transporte/como-llegar conecta por la Terminal cuando el GPS está en el área metropolitana', async () => {
+    const res = await request(app).get(
+      '/api/transporte/como-llegar?origen=mi-ubicacion&origen_lat=-24.179565&origen_lng=-65.344874&destino=cerro-siete-colores'
+    );
+    assert.equal(res.status, 200);
+    assert.equal(res.body.origen.tipo, 'punto');
+    assert.equal(res.body.paradaOrigen.slug, 'terminal-jjs');
+    assert.equal(res.body.tiene_servicio_rn9, true);
+    assert.equal(res.body.traslado_inicial.tipo, 'urbano-o-remise');
+    assert.match(res.body.traslado_inicial.descripcion, /colectivo urbano|Santa Ana|El Urbano/);
+    assert.ok(res.body.servicios.length > 0);
+  });
+
   test('GET /api/transporte/como-llegar no inventa parada RN9 a más de 5 km', async () => {
     const res = await request(app).get(
       '/api/transporte/como-llegar?origen=mi-ubicacion&origen_lat=-24.35&origen_lng=-65.4&destino=cerro-siete-colores'

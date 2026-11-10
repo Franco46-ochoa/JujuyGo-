@@ -412,6 +412,25 @@ router.get(['/transporte/como-llegar', '/como-llegar'], async (req, res) => {
             descripcion: `La parada RN9 más cercana es ${paradaCercanaGps.nombre}, a aproximadamente ${distanciaKm.toFixed(1)} km. Caminá hacia esa parada; el tiempo a pie es una estimación.`
           };
         }
+      } else {
+        // Sin parada RN9 a <=5 km: si el punto cae en el área metropolitana de
+        // San Salvador (<=12 km de la Terminal), la Terminal es la conexión
+        // natural al corredor — se llega en colectivo urbano o remis.
+        const terminal = BASE_ORIGINS['terminal-jjs'];
+        const distanciaTerminal = distanciaMetros(
+          coordenadasGps.lat, coordenadasGps.lng, terminal.lat, terminal.lng
+        );
+        if (distanciaTerminal <= 12000) {
+          paradaOrigenSlug = 'terminal-jjs';
+          const distanciaKm = Math.round(distanciaTerminal / 100) / 10;
+          trasladoInicial = {
+            titulo: 'Traslado a la Terminal de Ómnibus',
+            tipo: 'urbano-o-remise',
+            distancia_km: distanciaKm,
+            duracion_estimada: `~${Math.max(5, Math.round(distanciaKm * 3))} min en colectivo urbano o remis`,
+            descripcion: `Desde tu ubicación hasta la Terminal de Ómnibus SS.Jujuy hay aproximadamente ${distanciaKm.toFixed(1)} km. Usá una línea urbana de Santa Ana o El Urbano, o un remis/taxi; desde la terminal salen los servicios RN9.`
+          };
+        }
       }
     } else if (BASE_ORIGINS[origenParam]) {
       entidadOrigen = BASE_ORIGINS[origenParam];
