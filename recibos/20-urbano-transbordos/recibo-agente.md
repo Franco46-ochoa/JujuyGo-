@@ -1,0 +1,6 @@
+===RECIBO===
+hecho: Agregué el ruteo puro de combinaciones urbanas con hasta un transbordo, deduplicación y top 5; la UI las muestra después de las directas con pasos y distancias aproximadas, o conserva el fallback si no hay opciones. En la red real de 54 líneas, el trayecto oeste de SSJ → Terminal produjo combinaciones plausibles, incluida la 35 → 21 vía Concejo Deliberante, Campero y Fadua.
+archivos: frontend/src/app/como-llegar/urbano-ruteo.ts, frontend/src/app/como-llegar/urbano-ruteo.spec.ts, frontend/src/app/como-llegar/como-llegar.ts, frontend/src/app/como-llegar/como-llegar.html, frontend/src/app/como-llegar/como-llegar.css, frontend/src/app/como-llegar/como-llegar.spec.ts, recibos/20-urbano-transbordos/recibo-agente.md
+chequeos: frontend `npm test -- --watch=false` (59/59); backend `npm test` (56 pasaron; catálogo omitido por falta de DATABASE_URL_TEST); frontend `npm run build` OK con advertencias de presupuesto JS/CSS; `git diff --check` OK; kero-audit 390x844 y 1440x900 sin fallas duras ni errores de consola; validación manual contra `/api/urbano/red` (54 líneas).
+gaps: El test de catálogo backend quedó omitido por no estar configurado DATABASE_URL_TEST. El audit no recorrió estados de teclado/reduced-motion y mantiene avisos no bloqueantes de texto pequeño en marcadores Leaflet y líneas cortas en pasos, especialmente en móvil.
+===FIN===

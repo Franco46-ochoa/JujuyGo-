@@ -169,7 +169,46 @@
                 </article>
               }
             </div>
-          } @else {
+          }
+
+          @if (urbanoData.combinaciones.length > 0) {
+            <section class="urbano-combinaciones" aria-labelledby="urbano-combinaciones-titulo">
+              <h3 id="urbano-combinaciones-titulo" class="serif">Con transbordo</h3>
+              <p class="urbano-combinaciones-aviso">
+                Combinación estimada con datos de paradas publicados; los cruces pueden variar — confirmá en la parada.
+              </p>
+              <div class="urbano-lineas">
+                @for (combinacion of urbanoData.combinaciones; track combinacion.lineaA.id + '-' + combinacion.lineaB.id) {
+                  <article class="urbano-linea urbano-combinacion">
+                    <ol>
+                      <li>
+                        Tomá la {{ etiquetaLinea(combinacion.lineaA) }} sentido {{ combinacion.direccionA }}
+                        en {{ combinacion.ascensoA.parada.name }}.
+                        <span class="urbano-distancia">Aprox. {{ distanciaParada(combinacion.ascensoA.distanciaM) }} m del origen.</span>
+                      </li>
+                      <li>
+                        Bajá en {{ combinacion.descensoA.name }} y tomá la
+                        {{ etiquetaLinea(combinacion.lineaB) }} sentido {{ combinacion.direccionB }}
+                        en {{ combinacion.ascensoB.parada.name }}.
+                        <span class="urbano-distancia">
+                          Aprox. {{ distanciaParada(combinacion.ascensoB.distanciaM) }} m entre paradas.
+                        </span>
+                      </li>
+                      <li>
+                        Bajá en {{ combinacion.descensoB.parada.name }}.
+                        <span class="urbano-distancia">
+                          Aprox. {{ distanciaParada(combinacion.descensoB.distanciaM) }} m del
+                          {{ urbanoData.esAccesoRn9 ? 'punto de salida RN9' : 'destino' }}.
+                        </span>
+                      </li>
+                    </ol>
+                  </article>
+                }
+              </div>
+            </section>
+          }
+
+          @if (urbanoData.candidatas.length === 0 && urbanoData.combinaciones.length === 0) {
             <div class="urbano-sin-linea">
               <p>
                 {{ urbanoData.esAccesoRn9
