@@ -1,0 +1,4 @@
+ frontend/src/app/como-llegar/como-llegar.html    |  23 ++++--
+ frontend/src/app/como-llegar/como-llegar.spec.ts | 101 +++++++++++++++++++++++
+ frontend/src/app/como-llegar/como-llegar.ts      |  56 ++++++++-----
+ 3 files changed, 156 insertions(+), 24 deletions(-)

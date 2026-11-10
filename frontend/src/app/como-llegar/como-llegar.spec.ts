@@ -109,6 +109,19 @@ const respuestaUrbana: RespuestaComoLlegar = {
   ],
 };
 
+const respuestaAccesoRn9: RespuestaComoLlegar = {
+  ...respuesta,
+  origen: { ...respuesta.origen, tipo: 'punto', lat: -24.2128, lng: -65.32 },
+  paradaOrigen: { ...respuesta.paradaOrigen!, lat: -24.2128, lng: -65.2891 },
+  polyline: [[-24.2128, -65.32], [-24.2128, -65.2891], [-23.741, -65.497], [-23.7448, -65.4995]],
+  puntos: [
+    { nombre: 'Tu ubicación', tipo: 'origen', lat: -24.2128, lng: -65.32 },
+    { nombre: 'Terminal Jujuy', tipo: 'terminal', lat: -24.2128, lng: -65.2891 },
+    { nombre: 'Purmamarca Cruce', tipo: 'cruce', lat: -23.741, lng: -65.497 },
+    { nombre: lugar.nombre, tipo: 'destino', lat: lugar.lat, lng: lugar.lng },
+  ],
+};
+
 const redVacia: UrbanoRed = {
   lines: [],
   fuente: 'colejuy.vercel.app',
@@ -125,6 +138,17 @@ const redConLinea: UrbanoRed = {
     stops: [
       { id: 'subida', name: 'Parada de origen', lat: -24.2128, lng: -65.2891, direction: 'ida', order: 1 },
       { id: 'bajada', name: 'Parada de destino', lat: -24.19, lng: -65.27, direction: 'ida', order: 2 },
+    ],
+  }],
+};
+
+const redAccesoRn9: UrbanoRed = {
+  ...redConLinea,
+  lines: [{
+    ...redConLinea.lines[0],
+    stops: [
+      { id: 'subida', name: 'Parada de origen', lat: -24.2128, lng: -65.32, direction: 'ida', order: 1 },
+      { id: 'bajada', name: 'Parada Terminal', lat: -24.2128, lng: -65.2891, direction: 'ida', order: 2 },
     ],
   }],
 };
@@ -151,6 +175,7 @@ const flota: UrbanoFlota = {
   buses: [
     { id: 'bus-live', line: '36', number: '101', lat: -24.2, lng: -65.28, fresh: true, age: 95 },
     { id: 'bus-stale', line: '36', number: '102', lat: -24.2, lng: -65.28, fresh: false, age: 600 },
+    { id: 'bus-other-line', line: '99', number: '103', lat: -24.2, lng: -65.28, fresh: true, age: 20 },
   ],
   stale: false,
   fuente: 'colejuy.vercel.app',
@@ -260,6 +285,7 @@ describe('ComoLlegarPage', () => {
     expect(texto).toContain('Interno 101');
     expect(texto).toContain('hace 1 min');
     expect(texto).not.toContain('Interno 102');
+    expect(texto).not.toContain('Interno 103');
     expect(texto).toContain('Fuente: colejuy.vercel.app');
 
     const mapa = fixture.debugElement.query(By.directive(YapaMapaComponent)).componentInstance as YapaMapaComponent;
@@ -267,6 +293,81 @@ describe('ComoLlegarPage', () => {
       ([lng, lat]) => [lat, lng],
     ));
     expect(mapa.rutaPuntos().some(punto => punto.nombre === 'Colectivo interno 101')).toBe(true);
+  });
+
+  it('muestra líneas urbanas hasta la parada RN9 y conserva la polilínea del viaje', () => {
+    respuestaActual = respuestaAccesoRn9;
+    urbanoApi.getRed.mockReturnValue(of(redAccesoRn9));
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+    const texto = fixture.nativeElement.textContent as string;
+    const mapa = fixture.debugElement.query(By.directive(YapaMapaComponent)).componentInstance as YapaMapaComponent;
+
+    expect(texto).toContain('Colectivo urbano hacia la salida RN9');
+    expect(texto).toContain('Línea 36');
+    expect(texto).toContain('Parada de origen');
+    expect(texto).toContain('Parada Terminal');
+    expect(texto).toContain('m de la parada de salida RN9');
+    expect(texto).toContain('Fuente: colejuy.vercel.app');
+    expect(urbanoApi.getRed).toHaveBeenCalledOnce();
+    expect(mapa.rutaPolyline()).toEqual(respuestaAccesoRn9.polyline);
+    expect(mapa.rutaPuntos().some(punto => punto.nombre === 'Parada Terminal')).toBe(false);
+    expect(texto).not.toContain('Recorrido publicado por sentido');
+  });
+
+  it('prioriza las candidatas origen-destino para un viaje intraurbano', () => {
+    respuestaActual = respuestaUrbana;
+    urbanoApi.getRed.mockReturnValue(of(redConLinea));
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+    const texto = fixture.nativeElement.textContent as string;
+    const mapa = fixture.debugElement.query(By.directive(YapaMapaComponent)).componentInstance as YapaMapaComponent;
+
+    expect(texto).toContain('Colectivo urbano');
+    expect(texto).not.toContain('salida RN9');
+    expect(texto).toContain('Aprox. 0 m del destino');
+    expect(mapa.rutaPolyline()).toEqual(detalleLinea.paths[0].coordinates.map(
+      ([lng, lat]) => [lat, lng],
+    ));
+  });
+
+  it('no inventa el bloque de acceso si falta paradaOrigen', () => {
+    respuestaActual = { ...respuestaAccesoRn9, paradaOrigen: null };
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.urbano-section')).toBeNull();
+    expect(urbanoApi.getRed).not.toHaveBeenCalled();
+  });
+
+  it('no inventa el bloque de acceso si paradaOrigen no tiene coordenadas válidas', () => {
+    respuestaActual = {
+      ...respuestaAccesoRn9,
+      paradaOrigen: { ...respuestaAccesoRn9.paradaOrigen!, lat: null, lng: null },
+    };
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.urbano-section')).toBeNull();
+    expect(urbanoApi.getRed).not.toHaveBeenCalled();
+  });
+
+  it('no carga la red urbana si el origen está fuera del área SSJ', () => {
+    respuestaActual = {
+      ...respuesta,
+      origen: { ...respuesta.origen, lat: -24.4, lng: -65.32 },
+    };
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Tomá el colectivo en Terminal Jujuy');
+    expect(fixture.nativeElement.querySelector('.urbano-section')).toBeNull();
+    expect(urbanoApi.getRed).not.toHaveBeenCalled();
   });
 
   it('avisa cuando no hay línea directa y ofrece las paradas cercanas al origen', () => {
