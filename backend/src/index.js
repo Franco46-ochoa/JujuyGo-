@@ -4,6 +4,7 @@ import { createCatalogoRouter } from './routes/catalogo.js';
 import { createTravesiaRouter } from './routes/travesia.js';
 import { createHospedajeRouter } from './routes/hospedaje.js';
 import transporteRouter from './routes/transporte.js';
+import hqRouter from './routes/hq.js';
 
 export function createApp({ pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL || process.env.DATABASE_URL_TEST,
@@ -25,6 +26,7 @@ export function createApp({ pool = new pg.Pool({
   app.use('/api', createCatalogoRouter(pool));
   app.use('/api', createHospedajeRouter(pool));
   app.use('/api', createTravesiaRouter(pool));
+  app.use('/api/hq', hqRouter);
   app.use('/api', transporteRouter);
   app.use(transporteRouter);
   app.use((error, _req, res, _next) => {
