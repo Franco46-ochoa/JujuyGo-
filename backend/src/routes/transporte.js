@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { query } from '../db.js';
+import { obtenerGeometriaRuta } from '../osrm.js';
 
 const router = Router();
 
@@ -613,6 +614,9 @@ router.get(['/transporte/como-llegar', '/como-llegar'], async (req, res) => {
       detalle: entidadDestino.tipo === 'lugar' ? 'Destino final' : 'Destino terminal'
     });
 
+    // Trazado siguiendo calles (OSRM); si falla, queda el polyline recto.
+    const polylineRuta = await obtenerGeometriaRuta(polyline);
+
     res.json({
       origen: entidadOrigen,
       destino: entidadDestino,
@@ -626,7 +630,7 @@ router.get(['/transporte/como-llegar', '/como-llegar'], async (req, res) => {
       traslado_final: trasladoFinal,
       servicios,
       paradas_tramo: paradasTramo,
-      polyline,
+      polyline: polylineRuta ?? polyline,
       puntos
     });
   } catch (err) {
