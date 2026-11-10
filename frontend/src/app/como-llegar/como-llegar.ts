@@ -237,6 +237,12 @@ export class ComoLlegarPage {
       ? guia.paradaOrigen
       : guia.destino;
     if (!destinoUrbano || !puntoValido(destinoUrbano)) return null;
+    // Si el origen ya es (o está a <300 m de) la parada de salida RN9,
+    // no hay tramo urbano que sugerir.
+    if (esAccesoRn9 &&
+      distanciaMetros(guia.origen.lat, guia.origen.lng, destinoUrbano.lat, destinoUrbano.lng) < 300) {
+      return null;
+    }
     const candidatas = buscarLineasCandidatas(red, guia.origen, destinoUrbano);
     return {
       red,
