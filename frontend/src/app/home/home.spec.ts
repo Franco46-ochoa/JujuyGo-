@@ -181,4 +181,46 @@ describe('HomePage', () => {
     expect(fixture.nativeElement.textContent).toContain('08:00');
     expect(fixture.nativeElement.textContent).toContain('horario de prueba');
   });
+
+  it('shows the real catalog count dynamically in the map section intro', async () => {
+    const fixture = TestBed.createComponent(HomePage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const mapIntro = fixture.nativeElement.querySelector('#mapa .section-intro') as HTMLElement;
+    expect(mapIntro).toBeTruthy();
+    // The count must reflect lugares().length from the catalog API (not a hardcoded number)
+    expect(mapIntro.textContent).toContain('1');
+    expect(mapIntro.textContent).not.toContain('17');
+  });
+
+  it('fotoUrl returns zone-coherent fallback for NULL photos, never a photo from another zone', () => {
+    const fixture = TestBed.createComponent(HomePage);
+    const component = fixture.componentInstance as unknown as {
+      fotoUrl: (foto: string | null | undefined, zona_slug?: string) => string;
+    };
+    fixture.detectChanges();
+
+    // With a valid photo, returns that photo's URL
+    expect(component.fotoUrl('purmamarca.jpg', 'quebrada')).toBe('/img/purmamarca.jpg');
+
+    // NULL + zona quebrada → quebrada image (purmamarca.jpg)
+    expect(component.fotoUrl(null, 'quebrada')).toBe('/img/purmamarca.jpg');
+
+    // NULL + zona puna → puna image, NOT purmamarca (Quebrada)
+    const punaFallback = component.fotoUrl(null, 'puna');
+    expect(punaFallback).toBe('/img/puna.jpg');
+    expect(punaFallback).not.toBe('/img/purmamarca.jpg');
+
+    // NULL + zona yungas → yungas image, NOT purmamarca (Quebrada)
+    const yungasFallback = component.fotoUrl(null, 'yungas');
+    expect(yungasFallback).toBe('/img/calilegua.jpg');
+    expect(yungasFallback).not.toBe('/img/purmamarca.jpg');
+
+    // NULL + zona valles → valles image, NOT purmamarca (Quebrada)
+    const vallesFallback = component.fotoUrl(null, 'valles');
+    expect(vallesFallback).toBe('/img/salsaju.jpg');
+    expect(vallesFallback).not.toBe('/img/purmamarca.jpg');
+  });
 });

@@ -1,0 +1,13 @@
+ backend/migrations/004-fotos-lugares.sql           |  76 +++++++++++++++++++++
+ frontend/public/img/CREDITS.md                     |   1 +
+ frontend/public/img/humahuaca.jpg                  | Bin 0 -> 1281787 bytes
+ frontend/src/app/home/home.html                    |  10 +--
+ frontend/src/app/home/home.spec.ts                 |  42 ++++++++++++
+ frontend/src/app/home/home.ts                      |  20 +++++-
+ .../src/app/lugar-detalle/lugar-detalle.spec.ts    |  23 +++++++
+ frontend/src/app/lugar-detalle/lugar-detalle.ts    |  16 ++++-
+ frontend/src/app/travesia/travesia.html            |   2 +-
+ frontend/src/app/travesia/travesia.spec.ts         |  44 ++++++++++++
+ frontend/src/app/travesia/travesia.ts              |  15 +++-
+ specs/16-catalogo-fotos.spec.md                    |  65 ++++++++++++++++++
+ 12 files changed, 302 insertions(+), 12 deletions(-)

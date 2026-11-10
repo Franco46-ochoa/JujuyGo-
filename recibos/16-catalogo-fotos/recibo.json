@@ -1,0 +1,12 @@
+{
+  "slice": "16-catalogo-fotos",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "03101e0",
+  "verificado": "2026-11-10T01:02:29-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 12,
+  "juez": "devin: CIERRA",
+  "cerrado": true,
+  "motivo": ""
+}

@@ -54,7 +54,7 @@
             [attr.aria-haspopup]="'dialog'"
           >
             <img
-              [src]="fotoUrl(zona.lugar_destacado?.foto)"
+              [src]="fotoUrl(zona.lugar_destacado?.foto, zona.slug)"
               [alt]="zona.lugar_destacado?.nombre || zona.nombre"
               [attr.loading]="index === 0 ? 'eager' : 'lazy'"
             >
@@ -117,7 +117,7 @@
         <h2 id="map-title">El mapa de <em>nuestras cuatro regiones</em></h2>
       </div>
       <p class="section-intro">
-        Pueblos, salares, quebradas y selva. Los 17 atractivos del catálogo georreferenciados con distancias y altitudes.
+        Pueblos, salares, quebradas y selva. Los {{ lugares().length }} atractivos del catálogo georreferenciados con distancias y altitudes.
       </p>
     </div>
 
@@ -194,7 +194,7 @@
             [routerLink]="['/lugares', lugar.slug]"
           >
             <span class="place-number">{{ index + 1 | number:'2.0-0' }}</span>
-            <img class="place-thumb" [src]="fotoUrl(lugar.foto)" [alt]="lugar.nombre" loading="lazy">
+            <img class="place-thumb" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [alt]="lugar.nombre" loading="lazy">
             <span class="place-title">
               <strong>{{ lugar.nombre }}</strong>
               <small>{{ lugar.zona }} · {{ lugar.datos_json.localidad || 'Jujuy' }}</small>
@@ -334,7 +334,7 @@
     <button type="button" class="zona-cerrar" (click)="cerrarZona()" aria-label="Cerrar panel">×</button>
 
     <div class="zona-panel-hero">
-      <img [src]="fotoUrl(zona.lugar_destacado?.foto)" [alt]="zona.lugar_destacado?.nombre || zona.nombre">
+      <img [src]="fotoUrl(zona.lugar_destacado?.foto, zona.slug)" [alt]="zona.lugar_destacado?.nombre || zona.nombre">
       <div class="zona-panel-veil" aria-hidden="true"></div>
       <div class="zona-panel-titulo">
         <p class="kicker">Región · {{ lugaresDeZona(zona).length }} lugares</p>
@@ -347,7 +347,7 @@
       <p class="zona-lista-titulo">Qué ver en {{ zona.nombre }}</p>
       @for (lugar of lugaresDeZona(zona); track lugar.slug) {
         <a class="zona-lugar" [routerLink]="['/lugares', lugar.slug]" (click)="cerrarZona()">
-          <img class="zona-lugar-foto" [src]="fotoUrl(lugar.foto)" [alt]="lugar.nombre" loading="lazy">
+          <img class="zona-lugar-foto" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [alt]="lugar.nombre" loading="lazy">
           <span class="zona-lugar-info">
             <strong>{{ lugar.nombre }}</strong>
             <small>{{ lugar.datos_json.localidad || 'Jujuy' }}@if (lugar.altitud_m) { · {{ lugar.altitud_m | number }} msnm }</small>

@@ -165,8 +165,19 @@ export class TravesiaPage {
     return [...grupos.entries()].map(([zona, lugares]) => ({ zona, lugares }));
   }
 
-  protected fotoUrl(foto: string | null): string {
-    return foto ? `/img/${foto}` : '/img/purmamarca.jpg';
+  /**
+   * Devuelve la URL de la foto. Si foto es NULL, usa una imagen representativa
+   * de la zona del lugar (nunca la foto de otra zona como fallback).
+   */
+  protected fotoUrl(foto: string | null, zona_slug?: string): string {
+    if (foto) return `/img/${foto}`;
+    const mapa: Record<string, string> = {
+      quebrada: 'purmamarca.jpg',
+      puna: 'puna.jpg',
+      yungas: 'calilegua.jpg',
+      valles: 'salsaju.jpg',
+    };
+    return `/img/${mapa[zona_slug ?? ''] ?? 'purmamarca.jpg'}`;
   }
 
   protected lugaresDisponibles(): Lugar[] {

@@ -183,4 +183,48 @@ describe('TravesiaPage', () => {
     pasar();
     expect(fixture.nativeElement.querySelector('.yapa-card')).toBeNull();
   });
+
+  it('fotoUrl returns zone-coherent fallback for NULL photos, never a photo from another zone', async () => {
+    await TestBed.configureTestingModule({
+      imports: [TravesiaPage],
+      providers: [
+        provideRouter([]),
+        { provide: CatalogoService, useValue: { getLugares: () => of(lugares) } },
+        {
+          provide: TravesiaService,
+          useValue: {
+            validar: vi.fn(),
+            getContexto: () => of({ paradas: [], horarios: [] }),
+            getProximos: () => of({
+              origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
+              destino: { slug: 'tilcara', nombre: 'Tilcara' },
+              direccion: 'ida',
+              servicios: [],
+            }),
+          },
+        },
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(TravesiaPage);
+    const component = fixture.componentInstance as unknown as {
+      fotoUrl: (foto: string | null, zona_slug?: string) => string;
+    };
+    fixture.detectChanges();
+
+    expect(component.fotoUrl('purmamarca.jpg', 'quebrada')).toBe('/img/purmamarca.jpg');
+    expect(component.fotoUrl(null, 'quebrada')).toBe('/img/purmamarca.jpg');
+
+    const puna = component.fotoUrl(null, 'puna');
+    expect(puna).toBe('/img/puna.jpg');
+    expect(puna).not.toBe('/img/purmamarca.jpg');
+
+    const yungas = component.fotoUrl(null, 'yungas');
+    expect(yungas).toBe('/img/calilegua.jpg');
+    expect(yungas).not.toBe('/img/purmamarca.jpg');
+
+    const valles = component.fotoUrl(null, 'valles');
+    expect(valles).toBe('/img/salsaju.jpg');
+    expect(valles).not.toBe('/img/purmamarca.jpg');
+  });
 });
