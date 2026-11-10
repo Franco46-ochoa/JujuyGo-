@@ -105,17 +105,90 @@
         </section>
       }
 
+      @if (urbano(); as urbanoData) {
+        <section class="urbano-section" aria-labelledby="urbano-titulo">
+          <div class="urbano-heading">
+            <p class="kicker">Dentro de San Salvador</p>
+            <h2 id="urbano-titulo" class="serif">Colectivo urbano</h2>
+            <p>Paradas próximas al origen y al destino, tomadas de la red publicada.</p>
+          </div>
+
+          @if (urbanoData.candidatas.length > 0) {
+            <div class="urbano-lineas">
+              @for (candidata of urbanoData.candidatas; track candidata.linea.id) {
+                <article class="urbano-linea">
+                  <div class="urbano-linea-titulo">
+                    <h3 class="serif">{{ etiquetaLinea(candidata.linea) }}</h3>
+                    @if (candidata.linea.company) {
+                      <p>{{ candidata.linea.company }}</p>
+                    }
+                  </div>
+                  <p class="urbano-sentido">Sentido {{ candidata.direccion }}</p>
+                  <dl class="urbano-paradas">
+                    <div>
+                      <dt>Subís en</dt>
+                      <dd>{{ candidata.ascenso.parada.name }}</dd>
+                      <dd class="urbano-distancia">Aprox. {{ distanciaParada(candidata.ascenso.distanciaM) }} m del origen</dd>
+                    </div>
+                    <div>
+                      <dt>Bajás en</dt>
+                      <dd>{{ candidata.descenso.parada.name }}</dd>
+                      <dd class="urbano-distancia">Aprox. {{ distanciaParada(candidata.descenso.distanciaM) }} m del destino</dd>
+                    </div>
+                  </dl>
+                </article>
+              }
+            </div>
+          } @else {
+            <div class="urbano-sin-linea">
+              <p>No encontramos colectivo urbano directo entre estos puntos.</p>
+              @if (urbanoData.cercanas.length > 0) {
+                <h3>Paradas más cercanas al origen</h3>
+                <ul>
+                  @for (cercana of urbanoData.cercanas; track cercana.parada.parada.id) {
+                    <li>{{ cercana.parada.parada.name }} · {{ etiquetaLinea(cercana.linea) }} · aprox. {{ distanciaParada(cercana.parada.distanciaM) }} m</li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+
+          @if (urbanoData.candidatas.length > 0 && flotaUrbana().length > 0) {
+            <div class="urbano-flota">
+              <h3>Colectivos ahora</h3>
+              <ul>
+                @for (colectivo of flotaUrbana(); track colectivo.id) {
+                  <li>
+                    <span>Interno {{ colectivo.number ?? colectivo.id }}</span>
+                    <span>Tiempo real · {{ antiguedadColectivo(colectivo.age) }}</span>
+                  </li>
+                }
+              </ul>
+              <p class="urbano-fuente">Fuente: {{ fuenteFlota() }}</p>
+            </div>
+          }
+
+          <p class="urbano-fuente">
+            Red publicada · Fuente: {{ urbanoData.red.fuente }} · Actualizada: {{ urbanoData.red.actualizado_en | date:'dd/MM/yyyy HH:mm' }}
+          </p>
+        </section>
+      }
+
       <section class="mapa-section" aria-labelledby="mapa-titulo">
         <div class="mapa-heading">
           <div>
             <p class="kicker">Sobre el territorio</p>
             <h2 id="mapa-titulo" class="serif">El recorrido en el mapa</h2>
           </div>
-          <p>La línea une los puntos informados; no representa un camino calle por calle.</p>
+          @if (datosMapaUrbano()) {
+            <p>{{ geometriaUrbanaDisponible() ? 'Recorrido publicado por sentido; los internos marcados tienen GPS reciente.' : 'Geometría no disponible; se muestra un tramo directo. Los internos marcados tienen GPS reciente.' }}</p>
+          } @else {
+            <p>La línea une los puntos informados; no representa un camino calle por calle.</p>
+          }
         </div>
         <yapa-mapa
           [rutaPuntos]="puntosMapa()"
-          [rutaPolyline]="guia.polyline"
+          [rutaPolyline]="polylineMapa()"
           [altura]="'440px'"
           [interactive]="true"
         ></yapa-mapa>
