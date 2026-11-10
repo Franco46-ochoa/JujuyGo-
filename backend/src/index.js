@@ -5,10 +5,12 @@ import { createTravesiaRouter } from './routes/travesia.js';
 import { createHospedajeRouter } from './routes/hospedaje.js';
 import transporteRouter from './routes/transporte.js';
 import hqRouter from './routes/hq.js';
+import { colejuyClient } from './colejuy.js';
+import { createUrbanoRouter } from './routes/urbano.js';
 
 export function createApp({ pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL || process.env.DATABASE_URL_TEST,
-}) } = {}) {
+}), urbanoClient = colejuyClient } = {}) {
   const app = express();
   app.use(express.json());
 
@@ -27,6 +29,7 @@ export function createApp({ pool = new pg.Pool({
   app.use('/api', createHospedajeRouter(pool));
   app.use('/api', createTravesiaRouter(pool));
   app.use('/api/hq', hqRouter);
+  app.use('/api/urbano', createUrbanoRouter(urbanoClient));
   app.use('/api', transporteRouter);
   app.use(transporteRouter);
   app.use((error, _req, res, _next) => {

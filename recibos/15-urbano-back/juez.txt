@@ -1,0 +1,2 @@
+CIERRA
+Cobertura completa del SPEC: cliente con fetch inyectable + timeout + cache TTL por endpoint, router /api/urbano con lineas/red/linea/:id/flota/paradas-cercanas, fuente+actualizado_en en toda respuesta, upstream caido -> 502, tests con fetch mockeado (51/51 backend verde). Observaciones menores no bloqueantes: linea puede quedar undefined si /api/network no trae name; cache de 1h para getLine con {line:null} (caso borde).

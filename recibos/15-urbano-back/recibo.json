@@ -1,0 +1,12 @@
+{
+  "slice": "15-urbano-back",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "0719bd0",
+  "verificado": "2026-11-10T01:08:26-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 5,
+  "juez": "devin: CIERRA",
+  "cerrado": true,
+  "motivo": ""
+}
