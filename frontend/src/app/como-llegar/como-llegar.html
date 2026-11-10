@@ -129,9 +129,15 @@
       @if (urbano(); as urbanoData) {
         <section class="urbano-section" aria-labelledby="urbano-titulo">
           <div class="urbano-heading">
-            <p class="kicker">Dentro de San Salvador</p>
-            <h2 id="urbano-titulo" class="serif">Colectivo urbano</h2>
-            <p>Paradas próximas al origen y al destino, tomadas de la red publicada.</p>
+            <p class="kicker">{{ urbanoData.esAccesoRn9 ? 'Acceso al corredor RN9' : 'Dentro de San Salvador' }}</p>
+            <h2 id="urbano-titulo" class="serif">
+              {{ urbanoData.esAccesoRn9 ? 'Colectivo urbano hacia la salida RN9' : 'Colectivo urbano' }}
+            </h2>
+            <p>
+              {{ urbanoData.esAccesoRn9
+                ? 'Líneas y paradas para llegar desde tu ubicación a la parada RN9 indicada, según la red publicada.'
+                : 'Paradas próximas al origen y al destino, tomadas de la red publicada.' }}
+            </p>
           </div>
 
           @if (urbanoData.candidatas.length > 0) {
@@ -154,7 +160,10 @@
                     <div>
                       <dt>Bajás en</dt>
                       <dd>{{ candidata.descenso.parada.name }}</dd>
-                      <dd class="urbano-distancia">Aprox. {{ distanciaParada(candidata.descenso.distanciaM) }} m del destino</dd>
+                      <dd class="urbano-distancia">
+                        Aprox. {{ distanciaParada(candidata.descenso.distanciaM) }} m
+                        {{ urbanoData.esAccesoRn9 ? 'de la parada de salida RN9' : 'del destino' }}
+                      </dd>
                     </div>
                   </dl>
                 </article>
@@ -162,7 +171,11 @@
             </div>
           } @else {
             <div class="urbano-sin-linea">
-              <p>No encontramos colectivo urbano directo entre estos puntos.</p>
+              <p>
+                {{ urbanoData.esAccesoRn9
+                  ? 'No encontramos colectivo urbano directo hacia la parada de salida.'
+                  : 'No encontramos colectivo urbano directo entre estos puntos.' }}
+              </p>
               @if (urbanoData.cercanas.length > 0) {
                 <h3>Paradas más cercanas al origen</h3>
                 <ul>

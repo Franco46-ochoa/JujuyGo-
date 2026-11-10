@@ -1,0 +1,2 @@
+CIERRA
+SPEC cubierto: caso acceso-RN9 con candidatas origen->paradaOrigen cuando destino fuera de bbox, prioridad intra-urbano intacta, carga de red por origen en bbox, mapa conserva polyline RN9 sin marcadores urbanos en acceso, flota solo fresh de candidatas con edad+fuente, tests cubren los escenarios del SPEC, alcance respetado. Menores: panel "Colectivos ahora" visible sin marcadores en mapa en acceso-RN9; getLinea se pide aunque la geometria no se use; gap DATABASE_URL_TEST declarado en recibo.

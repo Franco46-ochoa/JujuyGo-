@@ -1,0 +1,85 @@
+Sos el ejecutor del slice 19-urbano-acceso-rn9 de este repo. Estás parado en el worktree del
+slice: trabajá acá y solo acá.
+
+Leé AGENTS.md y seguí sus reglas. Implementá el SPEC que sigue, completo:
+el código, y los tests que exige. Corré los chequeos del proyecto antes de
+terminar y arreglá lo que rompas.
+
+No hagas git commit ni git push. No toques archivos fuera del alcance.
+
+Terminá tu respuesta con este bloque, honesto:
+
+===RECIBO===
+hecho: <qué quedó implementado>
+archivos: <lista>
+chequeos: <qué corriste y con qué resultado>
+gaps: <qué NO quedó o no pudiste verificar; "ninguno" solo si es verdad>
+===FIN===
+
+Guardá ese mismo bloque en recibos/19-urbano-acceso-rn9/recibo-agente.md antes de terminar.
+
+
+──────────── SPEC ────────────
+# Slice 19 — Acceso urbano a la salida RN9 en "Cómo llegar"
+
+**Depende de:** 17-urbano-front (`ef6d986`) y 18-gps-origen (`bb6ae1a`) mergeados;
+fix `9af7ec5` (GPS metropolitano conecta por Terminal) ya en master.
+**Alcance:** `frontend/src/app/como-llegar/` (como-llegar.ts/html/css/spec),
+`frontend/src/app/urbano.service.ts`/`urbano.types.ts` solo si hace falta.
+NO tocar backend, migraciones, catálogo, home, lugar-detalle, travesia, specs, docs.
+
+## Contexto
+
+- La sección "Colectivo urbano" (slice 17) solo aparece cuando **origen Y destino**
+  caen dentro del bbox de SSJ (`BBOX_URBANO_SSJ` en como-llegar.ts).
+- Con origen GPS dentro de SSJ y destino **interurbano** (ej. usuario en el oeste
+  de la ciudad → Cerro de los Siete Colores), el backend ahora responde
+  `tiene_servicio_rn9:true` con `traslado_inicial` tipo `urbano-o-remise` hacia la
+  Terminal y `paradaOrigen` con `lat`/`lng` reales — pero el front solo dice
+  "usá una línea urbana o remis" **sin decir qué línea**. Es el hueco que ve el
+  turista real.
+- `buscarLineasCandidatas(red, puntoA, puntoB)` ya resuelve líneas por paradas a
+  ≤600 m mismo sentido; `paradasCercanas`, detalle de línea y flota ya están.
+
+## Qué tiene que pasar
+
+1. **Nueva condición de sección urbana**: cuando `guia.origen` está dentro del
+   bbox SSJ y `guia.destino` está **fuera**, y `guia.paradaOrigen` tiene
+   `lat`/`lng` válidas → mostrar un bloque "Colectivo urbano hacia la salida RN9"
+   (o título equivalente del tono de la página) con las líneas candidatas entre
+   **origen y `paradaOrigen`** (la parada RN9 de salida: Terminal u otra).
+   - Cada candidata: línea/empresa, paradas de ascenso y descenso con distancia
+     aproximada, sentido — igual que la sección actual pero rotulada como acceso.
+   - Si ninguna línea conecta: "no encontramos colectivo urbano directo hacia la
+     parada de salida" + paradas cercanas al origen (reusar `paradasCercanas`).
+   - Nunca inventar líneas.
+2. **Prioridad**: si origen Y destino están dentro del bbox, el comportamiento
+   actual (candidatas origen→destino) NO cambia. El caso nuevo solo aplica cuando
+   el destino queda fuera del bbox urbano.
+3. **Carga de datos**: hoy `cargarRedUrbana` solo se dispara cuando ambos puntos
+   están en el bbox. Extender para que cargue la red cuando **origen** está en el
+   bbox (el destino puede estar fuera). Mantener `solicitudUrbana` y
+   `takeUntilDestroyed` tal cual.
+4. **Mapa**: en el caso "acceso a salida RN9", la polilínea principal sigue siendo
+   la RN9 (`guia.polyline` / OSRM) — NO pisarla con la geometría urbana. Se
+   permite marcar ascenso/descenso urbanos como puntos informativos si no
+   confunde; documentar la decisión en el recibo.
+5. **Flota**: misma regla del slice 17 — solo colectivos `fresh` de las líneas
+   candidatas, con edad y fuente; si `stale` o vacío, no mostrar nada.
+6. **Trazabilidad**: `fuente: colejuy.vercel.app` visible como hoy.
+7. **Tests**: specs nuevos cubriendo: caso acceso-RN9 (origen en bbox, destino
+   fuera, paradaOrigen con coords → candidatas hacia la parada), prioridad del
+   caso intra-urbano, sin `paradaOrigen`/sin coords → sin bloque urbano inventado,
+   origen fuera de bbox → comportamiento actual intacto, y flota solo fresh.
+
+## Criterios
+
+- [ ] `cd frontend && npm test -- --watch=false` verde con tests nuevos
+- [ ] `cd backend && npm test` verde (no debería tocarse)
+- [ ] `npm run build` OK
+- [ ] Manual: `/como-llegar/cerro-siete-colores` con "Usar mi ubicación" dentro de
+      SSJ muestra líneas urbanas reales hacia la Terminal; `/como-llegar/
+      plaza-belgrano-jujuy` sigue mostrando candidatas origen→destino
+- [ ] Ningún dato inventado
+- [ ] kero-audit 390x844 + 1440x900 sin fallas duras ni console errors
+- [ ] Recibo con gaps honestos

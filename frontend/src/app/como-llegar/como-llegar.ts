@@ -230,10 +230,17 @@ export class ComoLlegarPage {
     const guia = this.guia();
     const red = this.redUrbana();
     if (!guia || guia.mismo_punto || !red ||
-      !puntoValido(guia.origen) || !puntoValido(guia.destino)) return null;
-    const candidatas = buscarLineasCandidatas(red, guia.origen, guia.destino);
+      !puntoValido(guia.origen) || !puntoValido(guia.destino) ||
+      !dentroDelAreaUrbana(guia.origen)) return null;
+    const esAccesoRn9 = !dentroDelAreaUrbana(guia.destino);
+    const destinoUrbano = esAccesoRn9
+      ? guia.paradaOrigen
+      : guia.destino;
+    if (!destinoUrbano || !puntoValido(destinoUrbano)) return null;
+    const candidatas = buscarLineasCandidatas(red, guia.origen, destinoUrbano);
     return {
       red,
+      esAccesoRn9,
       candidatas,
       cercanas: candidatas.length === 0 ? paradasCercanas(red, guia.origen) : [],
     };
@@ -245,7 +252,9 @@ export class ComoLlegarPage {
 
   protected readonly polylineMapa = computed<[number, number][]>(() => {
     const guia = this.guia();
-    const candidata = this.urbano()?.candidatas[0];
+    const urbano = this.urbano();
+    if (urbano?.esAccesoRn9) return guia?.polyline ?? [];
+    const candidata = urbano?.candidatas[0];
     if (!guia || guia.mismo_punto || !candidata) return guia?.polyline ?? [];
 
     const detalle = this.detalleUrbano();
@@ -265,13 +274,14 @@ export class ComoLlegarPage {
     return guia.polyline;
   });
 
-  protected readonly datosMapaUrbano = computed(() =>
-    Boolean(this.urbano()?.candidatas[0]),
-  );
+  protected readonly datosMapaUrbano = computed(() => {
+    const urbano = this.urbano();
+    return Boolean(urbano?.candidatas[0] && !urbano.esAccesoRn9);
+  });
 
   private puntosDeMapa(): RutaMapaPunto[] {
     const guia = this.guia();
-    const candidata = this.urbano()?.candidatas[0];
+    const urbano = this.urbano();
     const puntosBase = (guia?.puntos ?? [])
       .filter((punto): punto is PuntoTransporte & { lat: number; lng: number } =>
         typeof punto.lat === 'number' && Number.isFinite(punto.lat) &&
@@ -283,6 +293,8 @@ export class ComoLlegarPage {
         lat: punto.lat,
         lng: punto.lng,
       }));
+    if (urbano?.esAccesoRn9) return puntosBase;
+    const candidata = urbano?.candidatas[0];
     if (!guia || !candidata) return puntosBase;
     return [
       ...puntosBase,
@@ -381,8 +393,7 @@ export class ComoLlegarPage {
           this.guia.set(guia);
           this.cargando.set(false);
           if (!guia.mismo_punto &&
-            dentroDelAreaUrbana(guia.origen) &&
-            dentroDelAreaUrbana(guia.destino)) {
+            dentroDelAreaUrbana(guia.origen)) {
             this.cargarRedUrbana(guia);
           }
         },
@@ -403,9 +414,14 @@ export class ComoLlegarPage {
   }
 
   private cargarRedUrbana(guia: Exclude<RespuestaComoLlegar, { mismo_punto: true }>): void {
-    if (!puntoValido(guia.origen) || !puntoValido(guia.destino)) return;
+    if (!puntoValido(guia.origen) || !puntoValido(guia.destino) ||
+      !dentroDelAreaUrbana(guia.origen)) return;
     const origen = { lat: guia.origen.lat, lng: guia.origen.lng };
-    const destino = { lat: guia.destino.lat, lng: guia.destino.lng };
+    const destinoUrbano = dentroDelAreaUrbana(guia.destino)
+      ? guia.destino
+      : guia.paradaOrigen;
+    if (!destinoUrbano || !puntoValido(destinoUrbano)) return;
+    const destino = { lat: destinoUrbano.lat, lng: destinoUrbano.lng };
     const solicitud = this.solicitudUrbana;
     forkJoin({
       red: this.urbanoService.getRed(),
@@ -425,10 +441,10 @@ export class ComoLlegarPage {
           })),
         };
         this.redUrbana.set(redCompleta);
-        const candidata = buscarLineasCandidatas(redCompleta, origen, destino)[0];
-        if (!candidata) return;
-        this.cargarDetalleUrbano(candidata, solicitud);
-        this.cargarFlotaUrbana(candidata.linea, solicitud);
+        const candidatas = buscarLineasCandidatas(redCompleta, origen, destino);
+        if (candidatas.length === 0) return;
+        this.cargarDetalleUrbano(candidatas[0], solicitud);
+        this.cargarFlotaUrbana(candidatas.map(candidata => candidata.linea), solicitud);
       },
       error: () => {
         if (solicitud === this.solicitudUrbana) this.limpiarUrbano();
@@ -457,13 +473,15 @@ export class ComoLlegarPage {
       });
   }
 
-  private cargarFlotaUrbana(linea: UrbanoLinea, solicitud: number): void {
+  private cargarFlotaUrbana(lineasCandidatas: UrbanoLinea[], solicitud: number): void {
     this.urbanoService.getFlota().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: flota => {
         if (solicitud !== this.solicitudUrbana) return;
-        const lineas = new Set([linea.id, linea.name, linea.number]
-          .filter((valor): valor is string | number => valor !== undefined)
-          .map(valor => String(valor).toLocaleLowerCase()));
+        const lineas = new Set(lineasCandidatas.flatMap(linea =>
+          [linea.id, linea.name, linea.number]
+            .filter((valor): valor is string | number => valor !== undefined)
+            .map(valor => String(valor).toLocaleLowerCase()),
+        ));
         const colectivos = flota.stale === false && Array.isArray(flota.buses) &&
           typeof flota.fuente === 'string' && flota.fuente.length > 0
           ? flota.buses.filter(bus =>
