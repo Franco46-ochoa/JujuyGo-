@@ -1,0 +1,2 @@
+CIERRA
+SPEC cubierto: matching 600m mismo sentido sobre /red, geometria del direction correcto con inversion lng/lat, flota solo fresh+stale con edad y fuente, bbox documentado, fallbacks honestos, tests 40/40, alcance respetado. Menores: copy del mapa puede quedar generico sin flota; getRed sin tope de candidatas ni E2E real contra API (verificado con mocks).
