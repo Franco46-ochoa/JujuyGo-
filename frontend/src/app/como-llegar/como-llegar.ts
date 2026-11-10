@@ -23,6 +23,7 @@ import {
   ServicioTransporte,
   TrasladoLocal,
 } from './como-llegar.types';
+import { buscarCombinacionesUrbanas, type UrbanoCombinacion } from './urbano-ruteo';
 
 interface PasoRelato {
   titulo: string;
@@ -244,11 +245,15 @@ export class ComoLlegarPage {
       return null;
     }
     const candidatas = buscarLineasCandidatas(red, guia.origen, destinoUrbano);
+    const combinaciones = buscarCombinacionesUrbanas(red, guia.origen, destinoUrbano);
     return {
       red,
       esAccesoRn9,
       candidatas,
-      cercanas: candidatas.length === 0 ? paradasCercanas(red, guia.origen) : [],
+      combinaciones,
+      cercanas: candidatas.length === 0 && combinaciones.length === 0
+        ? paradasCercanas(red, guia.origen)
+        : [],
     };
   });
 

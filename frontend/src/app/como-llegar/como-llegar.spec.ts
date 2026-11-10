@@ -142,6 +142,52 @@ const redConLinea: UrbanoRed = {
   }],
 };
 
+const redConTransbordo: UrbanoRed = {
+  ...redVacia,
+  lines: [
+    {
+      id: 'A',
+      name: 'Línea A',
+      number: 'A',
+      stops: [
+        { id: 'A1', name: 'Parada de origen A', lat: -24.2128, lng: -65.2891, direction: 'ida', order: 1 },
+        { id: 'A2', name: 'Parada de transbordo A', lat: -24.2, lng: -65.28, direction: 'ida', order: 2 },
+      ],
+    },
+    {
+      id: 'B',
+      name: 'Línea B',
+      number: 'B',
+      stops: [
+        { id: 'B1', name: 'Parada de transbordo B', lat: -24.199, lng: -65.28, direction: 'vuelta', order: 4 },
+        { id: 'B2', name: 'Parada de destino B', lat: -24.19, lng: -65.27, direction: 'vuelta', order: 5 },
+      ],
+    },
+  ],
+};
+
+const redAccesoRn9ConTransbordo: UrbanoRed = {
+  ...redVacia,
+  lines: [
+    {
+      id: 'A',
+      name: 'Línea A',
+      stops: [
+        { id: 'A1', name: 'Parada oeste A', lat: -24.2128, lng: -65.32, direction: 'ida', order: 1 },
+        { id: 'A2', name: 'Parada transbordo A', lat: -24.2128, lng: -65.305, direction: 'ida', order: 2 },
+      ],
+    },
+    {
+      id: 'B',
+      name: 'Línea B',
+      stops: [
+        { id: 'B1', name: 'Parada transbordo B', lat: -24.2128, lng: -65.304, direction: 'vuelta', order: 3 },
+        { id: 'B2', name: 'Parada Terminal B', lat: -24.2128, lng: -65.2891, direction: 'vuelta', order: 4 },
+      ],
+    },
+  ],
+};
+
 const redAccesoRn9: UrbanoRed = {
   ...redConLinea,
   lines: [{
@@ -333,6 +379,56 @@ describe('ComoLlegarPage', () => {
     ));
   });
 
+  it('muestra combinaciones estimadas para un viaje intraurbano cuando no hay línea directa', () => {
+    respuestaActual = respuestaUrbana;
+    urbanoApi.getRed.mockReturnValue(of(redConTransbordo));
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+    const texto = fixture.nativeElement.textContent as string;
+
+    expect(texto).toContain('Con transbordo');
+    expect(texto).toContain('Tomá la Línea A sentido ida');
+    expect(texto).toContain('Parada de transbordo A');
+    expect(texto).toContain('Línea B sentido vuelta');
+    expect(texto).toContain('Parada de destino B');
+    expect(texto).toContain('Combinación estimada con datos de paradas publicados');
+    expect(texto).toContain('los cruces pueden variar — confirmá en la parada');
+    expect(texto).toContain('Fuente: colejuy.vercel.app');
+    expect(fixture.nativeElement.querySelector('.urbano-sin-linea')).toBeNull();
+  });
+
+  it('muestra combinaciones para llegar a la parada de salida RN9', () => {
+    respuestaActual = respuestaAccesoRn9;
+    urbanoApi.getRed.mockReturnValue(of(redAccesoRn9ConTransbordo));
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+    const texto = fixture.nativeElement.textContent as string;
+    const mapa = fixture.debugElement.query(By.directive(YapaMapaComponent)).componentInstance as YapaMapaComponent;
+
+    expect(texto).toContain('Colectivo urbano hacia la salida RN9');
+    expect(texto).toContain('Con transbordo');
+    expect(texto).toContain('Parada Terminal B');
+    expect(texto).toContain('punto de salida RN9');
+    expect(texto).toContain('Fuente: colejuy.vercel.app');
+    expect(mapa.rutaPolyline()).toEqual(respuestaAccesoRn9.polyline);
+  });
+
+  it('muestra las candidatas directas antes que las combinaciones', () => {
+    respuestaActual = respuestaUrbana;
+    urbanoApi.getRed.mockReturnValue(of({
+      ...redConLinea,
+      lines: [...redConLinea.lines, ...redConTransbordo.lines],
+    }));
+
+    fixture = TestBed.createComponent(ComoLlegarPage);
+    fixture.detectChanges();
+    const texto = fixture.nativeElement.textContent as string;
+
+    expect(texto.indexOf('Línea 36')).toBeLessThan(texto.indexOf('Con transbordo'));
+  });
+
   it('no inventa el bloque de acceso si falta paradaOrigen', () => {
     respuestaActual = { ...respuestaAccesoRn9, paradaOrigen: null };
 
@@ -388,6 +484,7 @@ describe('ComoLlegarPage', () => {
     expect(texto).toContain('Paradas más cercanas al origen');
     expect(texto).toContain('Parada de origen');
     expect(fixture.nativeElement.querySelector('.urbano-linea')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.urbano-combinaciones')).toBeNull();
     expect(urbanoApi.getLinea).not.toHaveBeenCalled();
     expect(urbanoApi.getFlota).not.toHaveBeenCalled();
   });

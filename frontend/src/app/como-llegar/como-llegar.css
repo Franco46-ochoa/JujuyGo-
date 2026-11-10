@@ -64,6 +64,11 @@
 .urbano-paradas dt { color: var(--verde); font-size: 14px; font-weight: 600; }
 .urbano-paradas dd { margin: 8px 0 0; color: var(--tinta); font-size: 15px; line-height: 1.45; }
 .urbano-paradas dd.urbano-distancia { color: var(--tinta); font-size: 14px; }
+.urbano-combinaciones { margin-top: 24px; }
+.urbano-combinaciones-aviso { margin-top: 10px; color: var(--t60); font-size: 14px; line-height: 1.6; }
+.urbano-combinacion ol { padding-left: 22px; }
+.urbano-combinacion li + li { margin-top: 8px; }
+.urbano-combinacion .urbano-distancia { display: block; color: var(--tinta); font-size: 14px; }
 .urbano-sin-linea { margin-top: 24px; padding: 24px; border-left: 3px solid var(--ocre); background: var(--arena); color: var(--tinta); line-height: 1.6; }
 .urbano-sin-linea h3 { margin-top: 16px; font-size: 20px; }
 .urbano-sin-linea ul, .urbano-flota ul { margin: 12px 0 0; padding-left: 20px; }
