@@ -190,6 +190,12 @@ export class ComoLlegarPage {
 
   protected readonly origenes = computed(() => {
     const slugsBase = new Set(ORIGENES_BASE.map(opcion => opcion.slug));
+    const slugsParadas = new Set(
+      this.paradas()
+        .map(parada => parada.slug)
+        .filter((slug): slug is string => Boolean(slug)),
+    );
+    const slugsOcupados = new Set([...slugsBase, ...slugsParadas]);
     return [
       ...ORIGENES_BASE,
       ...this.paradas()
@@ -199,11 +205,15 @@ export class ComoLlegarPage {
           nombre: parada.nombre,
           grupo: 'paradas' as const,
         })),
-      ...this.lugares().map(lugar => ({
-        slug: lugar.slug,
-        nombre: lugar.nombre,
-        grupo: 'lugares' as const,
-      })),
+      // Las paradas RN9 tienen precedencia: un lugar con el mismo slug
+      // (ej. Abra Pampa, La Quiaca) ya está cubierto por su parada.
+      ...this.lugares()
+        .filter(lugar => !slugsOcupados.has(lugar.slug))
+        .map(lugar => ({
+          slug: lugar.slug,
+          nombre: lugar.nombre,
+          grupo: 'lugares' as const,
+        })),
       ...(this.ubicacionGps()
         ? [{ slug: 'mi-ubicacion', nombre: 'Tu ubicación · GPS', grupo: 'ubicacion' as const }]
         : []),
