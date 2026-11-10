@@ -4,7 +4,7 @@
 
 ## Master
 
-`ef6d986` — todo local, **sin push**. `./slices estado` muestra los 12 slices en `mergeado`.
+`4a4f5b0`+ (slice 18 mergeado) — pusheado a `origin/master`. `./slices estado` muestra los 13 slices en `mergeado`.
 
 ## Qué hay nuevo en master (esta sesión)
 
@@ -24,12 +24,19 @@
   `004-fotos-lugares.sql`, CREDITS.md.
 - **Tests frontend**: `frontend/vitest-base.config.mts` con `testTimeout: 20000`
   (los timeouts de 5s bloqueaban verificar con workers en paralelo).
+- **Origen GPS** (slice 18): `/api/transporte/como-llegar?origen=mi-ubicacion&origen_lat&origen_lng`
+  resuelve la parada RN9 más cercana por haversine (≤5 km) y `trasladoInicial` honesto
+  si queda a >300 m. Front: botón "Usar mi ubicación" en `/como-llegar` con
+  `navigator.geolocation`; la sección urbana funciona igual con origen GPS.
+- **Fix paths urbanos**: `/api/urbano/linea/:id` aplana `line.paths` a top-level
+  `paths` (el upstream los anida; sin esto el mapa caía a la recta).
 
 ## Pendiente (Fase 2 del plan)
 
-1. **Prueba en vivo** del flujo urbano: levantar backend+front y verificar
-   `/como-llegar` con puntos dentro de SSJ contra colejuy real (nunca se hizo E2E,
-   todo con mocks).
+1. ~~Prueba en vivo del flujo urbano~~ — hecha 2026-11-10: `/como-llegar` con
+   Terminal→Plaza Belgrano mostró 7 líneas candidatas reales y la RN9 honesta;
+   detectó y fixeó el bug de `paths` anidados. Pendiente solo: flota en vivo
+   cuando el feed de colejuy no esté stale.
 2. **Conectar `/api/hq` al frontend** para la ruta piloto Terminal→Maimará→Tilcara→
    Humahuaca (el dataset no tiene coordenadas de ciudades; geocodificar las 18 una vez).
 3. **AUTH Google (Supabase)** + SAV: sin `SUPABASE_URL`/`SUPABASE_ANON_KEY` en `.env`.
