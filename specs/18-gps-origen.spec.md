@@ -1,0 +1,75 @@
+# Slice 18 — Origen GPS: "usar mi ubicación" en Cómo llegar
+
+**Depende de:** 17-urbano-front mergeado (`ef6d986` — sección urbana y flota en `/como-llegar`).
+**Alcance:** `backend/src/routes/transporte.js`, `backend/test/transporte.test.js` (o el spec que cubra como-llegar), `frontend/src/app/como-llegar/` (como-llegar.ts/html/css/spec), `frontend/src/app/transporte.service.ts`, `frontend/src/app/como-llegar/como-llegar.types.ts` si hace falta. NO tocar migraciones, catálogo, home, lugar-detalle, travesia, specs, docs, ni otros endpoints.
+
+## Contexto
+
+- `/api/transporte/como-llegar?origen=<slug>&destino=<slug>` resuelve el origen por
+  slug: `BASE_ORIGINS` (terminal-jjs, aeropuerto-jujuy), tabla `parada`, tabla `lugar`.
+  La respuesta `origen` ya incluye `lat`/`lng` — la sección urbana del front (slice 17)
+  se activa sola cuando ambos puntos caen dentro del bbox de SSJ
+  (`BBOX_URBANO_SSJ` en como-llegar.ts).
+- `TransporteService.getComoLlegar(origen, destino)` arma `HttpParams` con solo esos dos.
+- El turista sin auto muchas veces NO sabe el nombre de la parada más cercana: hoy tiene
+  que adivinar un slug del select. Con GPS el origen es "donde estoy".
+
+## Qué tiene que pasar
+
+### Backend (`transporte.js` + tests)
+
+1. Nuevo origen libre: `origen=mi-ubicacion` **obligatoriamente** acompañado de
+   `origen_lat` y `origen_lng` (números finitos, lat ∈ [-90,90], lng ∈ [-180,180]).
+   - Sin coords o coords inválidas → `400` prolijo (`{error, fuente?}` con mensaje claro).
+   - `origen=mi-ubicacion` sin coords NO debe caer al 404 genérico.
+2. Respuesta `origen`: `{slug:'mi-ubicacion', nombre:'Tu ubicación', tipo:'punto',
+   lat, lng}` (+ `precision_m` si el front la manda como `origen_precision`, opcional).
+3. `paradaOrigenSlug`: la `parada` RN9 más cercana por haversine **solo si está a
+   ≤ 5 km**; si no hay ninguna en ese radio, `paradaOrigenSlug = null` y la guía
+   responde honesto (`tiene_servicio_rn9:false` + motivo tipo "estás lejos del
+   corredor RN9; si estás en San Salvador usá el colectivo urbano" — nunca inventar
+   una parada lejana como si fuera la tuya).
+4. Si la parada RN9 más cercana queda a **> 300 m** del punto GPS, agregar
+   `trasladoInicial` con distancia aproximada en km y "caminá/caminá hacia la parada"
+   (redondear honesto, ej. `distancia_km` con 1 decimal, `duracion_estimada` ~5 km/h).
+   Si está a ≤300 m, no hace falta traslado.
+5. El resto del pipeline (destino, servicios, polyline, puntos) queda igual.
+6. Tests backend: origen GPS válido dentro de SSJ (resuelve terminal-jjs como parada
+   cercana), GPS lejos de toda parada (>5 km → sin servicio RN9 honesto), coords
+   faltantes/inválidas → 400, y que `destino` inválido siga 404 como antes.
+
+### Frontend (`como-llegar`)
+
+7. Botón **"Usar mi ubicación"** junto al selector de origen (icono GPS/ubicación,
+   estilo consistente con la página). Al hacer click:
+   `navigator.geolocation.getCurrentPosition` con `enableHighAccuracy:false`,
+   `timeout:10000`, `maximumAge:60000`.
+8. Con posición válida: guardar coords en signal, mostrar opción dinámica
+   "Tu ubicación · GPS" como origen seleccionado, y disparar `cargarRecorrido`
+   llamando al endpoint con `origen=mi-ubicacion&origen_lat&origen_lng
+   (&origen_precision=accuracy)`.
+9. Errores honestos (sin inventar):
+   - permiso denegado → mensaje claro ("necesitamos permiso de ubicación…"),
+   - `code===3` timeout / posición no disponible → mensaje propio,
+   - contexto sin geolocation (`!navigator.geolocation`) → ocultar el botón o
+     mostrar "tu navegador no soporta ubicación".
+   En todos los casos el select y la guía previa quedan intactos.
+10. La sección "Colectivo urbano" (slice 17) debe funcionar igual con origen GPS:
+    usa `guia.origen.lat/lng` del backend — verificar que el flujo no dependa del slug.
+11. Tests frontend: geolocation mockeada (éxito → llama al servicio con coords y
+    muestra "Tu ubicación"), denegación → mensaje sin romper la página, sin
+    `navigator.geolocation` → botón oculto o mensaje, y que la respuesta con
+    `origen.tipo:'punto'` renderiza nombre "Tu ubicación" en el relato/mapa.
+
+## Criterios
+
+- [ ] `cd backend && npm test` verde con tests nuevos del origen GPS
+- [ ] `cd frontend && npm test -- --watch=false` verde con tests nuevos
+- [ ] `npm run build` OK
+- [ ] Manual: `/como-llegar/plaza-belgrano-jujuy` con "Usar mi ubicación" dentro de
+      SSJ muestra líneas urbanas candidatas; fuera de SSJ muestra la guía RN9
+      honesta o "lejos del corredor"
+- [ ] Ningún dato inventado: paradas RN9 solo de la tabla `parada`, urbano solo de
+      `/api/urbano/*`
+- [ ] kero-audit 390x844 + 1440x900 de la página con el botón nuevo, sin console errors
+- [ ] Recibo con gaps honestos
