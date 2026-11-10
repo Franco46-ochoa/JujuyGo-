@@ -1,12 +1,32 @@
 # Estado actual del proyecto
 
-> Actualizar al cierre de cada ola de slices. Última actualización: 2026-11-10.
+> Actualizar al cierre de cada ola de slices. Última actualización: 2026-11-11.
 
 ## Master
 
-`4a4f5b0`+ (slice 18 mergeado) — pusheado a `origin/master`. `./slices estado` muestra los 13 slices en `mergeado`.
+`2ea5e50` — pusheado a `origin/master`. `./slices estado` muestra los 14 slices en `mergeado`.
 
 ## Qué hay nuevo en master (esta sesión)
+
+- **Slice 19 (acceso RN9)**: sección "Colectivo urbano hacia la salida RN9" en
+  `/como-llegar` cuando el origen es GPS/ciudad y el destino es interurbano.
+  Muestra líneas urbanas reales que conectan con la parada RN9 de salida
+  (oculta el bloque si ya estás a <300 m de la parada).
+- **Slice 20 (transbordos)**: `frontend/src/app/como-llegar/urbano-ruteo.ts`
+  calcula combinaciones con **1 transbordo** sobre `/api/urbano/red` real
+  (mismo `direction`, `order` ascendente por tramo, transferencia ≤250 m,
+  dedupe por par de líneas, top-5). La UI las lista como "Con transbordo"
+  después de las directas: línea A → parada de combinación → línea B → parada
+  RN9, con pasos y distancias aproximadas honestas. Fallback intacto si no hay
+  opciones. Verificado contra la red real: caso oeste-SSJ → Terminal produce
+  combinaciones plausibles (ej. 35 → 21 vía Concejo Deliberante).
+- **Fix Terminal cercana**: si el GPS queda a ≤12 km de la Terminal de Ómnibus
+  pero >5 km de paradas RN9, el backend la usa como punto de conexión con
+  `trasladoInicial` honesto (~6.8 km, ~20 min urbano/remis).
+- **Fix NG0955**: dedupe de slugs duplicados (abra-pampa/la-quiaca) en el
+  selector de origen — las paradas RN9 ganan sobre lugares del catálogo.
+
+## Qué hay nuevo (sesiones anteriores)
 
 - **Dataset propio de horarios interurbanos** (`backend/src/data/horario-quebrada.js`,
   generado por `backend/scripts/importar-horario-quebrada.mjs` desde la app pública
