@@ -1,6 +1,6 @@
 :host { display: block; }
 
-.travesia-shell { --t60: #6f5f54; max-width: 1280px; margin: 0 auto; padding: 0 5% 88px; }
+.travesia-shell { max-width: 1280px; margin: 0 auto; padding: 0 5% 88px; }
 .travesia-nav { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; border-bottom: 1px solid var(--t14); }
 .volver-inicio { display: inline-flex; align-items: center; min-height: 44px; color: var(--t60); font-size: 14px; text-decoration: none; touch-action: manipulation; }
 
