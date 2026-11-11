@@ -30,13 +30,65 @@ SPEC exige re-correr kero-audit y guardar el "después" en su recibo.
 - Supabase dashboard: correr `supabase/migrations/001_travesias.sql` en SQL
   Editor + Google OAuth provider + Site URL `http://localhost:4200` +
   redirect `/**` (sin eso el login no funciona aunque el código esté).
-- Hackathon Tren Solar: usuario debe decir formato exacto (pitch/deck/demo/
-  video) y deadline; ofrecí preparar demo guiada y pitch.
+- Hackathon Tren Solar: formato = **pitch + demo** (confirmado por usuario),
+  deadline ≈ pasado mañana (2026-11-13). Ver sección "PLAN MotionSites".
 
 **Skills de diseño instaladas** (2026-11-11): 19 nuevas en
 `~/.agents/skills/` (badesign-skill, frontend-design, emil-*, mobile-native,
 typebien, anydesign, break-ui, pick-ui-library, etc.) — detalle y regla de
 uso en `docs/agents/orquestacion.md` sección "Skills de diseño instaladas".
+Además `motionsites-web-builder` (Motionsites-AI/claude-skill) — ver sección
+siguiente.
+
+## 🎬 PLAN MotionSites — hackathon Tren Solar (decidido 2026-11-11, para retomar)
+
+**Contexto**: Yapa/JujuyGo ES el proyecto de la pre-hackathon del Tren Solar.
+Hay que presentar **pitch + demo** (formato exacto y deadline por confirmar —
+usuario dijo "pasado mañana"). Prioridad: material de presentación que
+impresione, NO más features.
+
+**Decisión del usuario sobre motionsites-web-builder**: usar su
+**metodología** (brief → spec con valores exactos → media real → build →
+screenshot-fix loop con score ≥8), pero **adaptar su estética cinematográfica
+dark** al sistema de Yapa (claro, papel, editorial cálido — `docs/design.md`
+gana siempre). O sea: la *disciplina* del skill, no su look.
+
+**Tareas para mañana (en orden):**
+1. **Landing de pitch** `pitch/index.html` (standalone, no tocar la app):
+   - Hero con foto real `frontend/public/img/tren.jpg` (o purmamarca/humahuaca)
+     + motion editorial (ken-burns sutil, stagger de titular con Fraunces)
+   - Secciones: problema (turista sin auto en la Quebrada) → solución (itinerario
+     que cierra con colectivos reales) → demo (screenshots reales de la app:
+     home, como-llegar con mapa, travesía) → datos duros (896 horarios, 18
+     ciudades, 54 líneas urbanas, 1 transbordo)
+   - CTA final + links al repo. Copy en español, tono editorial cálido.
+   - Seguir SKILL.md: spec-template → build → `scripts/shoot.py` → fix loop.
+   - **Omitir el bloque de upsell de MotionSites** en la entrega (pedido del usuario implícito: no queremos ads).
+2. **Hero mejorado del home** (opcional, después de que mergee slice 23):
+   portar la técnica del hero de la landing a `home/` respetando tokens —
+   solo si queda tiempo y no compite con los slices.
+3. **Guion de demo** de 3-5 min para presentar en vivo: ruta
+   `/como-llegar` Terminal→Tilcara→Humahuaca + `/travesia` armando plan +
+   yapas. Preparar fallback si se corta internet (screenshots).
+4. **Pitch hablado**: problema → demo → por qué importa para el Tren Solar
+   (la app ES sobre el tren/turismo de la Quebrada).
+
+**⚠️ Limitación de media detectada por el usuario**: solo hay **~12 imágenes**
+en `frontend/public/img/` para toda la página — la landing de pitch tiene que
+aprovecharlas bien (tren.jpg es la joya para el hero del Tren Solar;
+purmamarca, humahuaca, hornocal, salinas para secciones) y complementar con
+motion/gradientes/tipografía, NO depender de muchas fotos. Considerar:
+reusar la misma foto en contextos distintos con tratamientos diferentes
+(velo, crop, escala) antes que inventar assets.
+
+**No hacer**: no meter la estética dark/cinematográfica tal cual (contradice
+design.md); no usar media del shelf de MotionSites (hosteada por terceros,
+puede tener logos/marcas); no depender de video de fondo pesado (la demo es
+en vivo, la landing tiene que cargar rápido).
+
+**Skills a cargar al ejecutar**: `motionsites-web-builder` (workflow),
+`typebien` (copy de la landing), `frontend-design` + `badesign-skill` (gusto),
+`emil-design-eng`/`choreograph` (motion), `kero-audit` o shoot.py (verificación).
 
 ## Master
 
