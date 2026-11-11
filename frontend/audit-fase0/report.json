@@ -1,0 +1,3403 @@
+{
+  "base": "http://localhost:4200",
+  "minText": 14,
+  "report": [
+    {
+      "route": "/",
+      "viewport": "390x844",
+      "screenshot": "audit-fase0\\home-390.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Las cuatro regiones",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Del altiplano a la selva. Elegí ",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Cómo funciona",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Ni folleto ni trámite: la histor",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Las cuatro regiones en capítulos",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Elegí fechas; el plan se arma so",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "La guía en la parada: qué línea,",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Tu travesía guardada, compartibl",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Territorio vivo",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pueblos, salares, quebradas y se",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Leaflet",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "17",
+          "px": 18,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pasá el cursor o tocá para ubica",
+          "px": 12,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Purmamarca",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Maimará",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Volcán",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Puna · Abra Pampa",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Puna · La Quiaca",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Puna · Rinconada",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Puna · Salinas Grandes",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Yungas · Libertador General San ",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Yungas · San Francisco",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Yungas · Caimancito",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Valles · San Salvador de Jujuy",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Valles · Yala",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Valles · Villa Jardín de Reyes",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Imperdibles",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Con su dato honesto: cuánto toma",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "01",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Purmamarca",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "02",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "03",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "04",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Maimará",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "05",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "06",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Dónde dormir",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Una base en la Quebrada para sal",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Huacalera · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Purmamarca · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Purmamarca · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Tilcara · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Tilcara · Posada",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Tilcara · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Guías registrados",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Guías registrados por zona y esp",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "No mostramos nombres sin una fue",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Registro Provincial de Guías ↗",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "El extra que te regala Jujuy: lu",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Jujuy, Argentina",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "23.1858° S — 65.2995° O",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        }
+      ],
+      "smallText": [
+        {
+          "text": "Quebrada · 4",
+          "px": 13
+        },
+        {
+          "text": "Humahuaca · 2",
+          "px": 13
+        },
+        {
+          "text": "Tren Solar de la Quebrada — esta",
+          "px": 12
+        },
+        {
+          "text": "Abra Pampa",
+          "px": 12
+        },
+        {
+          "text": "La Quiaca",
+          "px": 12
+        },
+        {
+          "text": "Laguna de los Pozuelos",
+          "px": 12
+        },
+        {
+          "text": "Salinas Grandes",
+          "px": 12
+        },
+        {
+          "text": "Yungas · 2",
+          "px": 13
+        },
+        {
+          "text": "Termas de Caimancito",
+          "px": 12
+        },
+        {
+          "text": "Valles · 3",
+          "px": 13
+        },
+        {
+          "text": "Leaflet",
+          "px": 12
+        },
+        {
+          "text": "Leaflet | © OpenStreetMap contri",
+          "px": 12
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12
+        },
+        {
+          "text": "Grupo Quebrada · 4 (4 lugares). ",
+          "px": 13.3333
+        },
+        {
+          "text": "Grupo Humahuaca · 2 (2 lugares).",
+          "px": 13.3333
+        },
+        {
+          "text": "Tren Solar de la Quebrada — esta",
+          "px": 13.3333
+        },
+        {
+          "text": "Abra Pampa en Puna (3484 msnm)",
+          "px": 13.3333
+        },
+        {
+          "text": "La Quiaca en Puna (3442 msnm)",
+          "px": 13.3333
+        },
+        {
+          "text": "Laguna de los Pozuelos en Puna (",
+          "px": 13.3333
+        },
+        {
+          "text": "Salinas Grandes en Puna (3450 ms",
+          "px": 13.3333
+        },
+        {
+          "text": "Grupo Yungas · 2 (2 lugares). Cl",
+          "px": 13.3333
+        },
+        {
+          "text": "Termas de Caimancito en Yungas (",
+          "px": 13.3333
+        },
+        {
+          "text": "Grupo Valles · 3 (3 lugares). Cl",
+          "px": 13.3333
+        },
+        {
+          "text": "Pasá el cursor o tocá para ubica",
+          "px": 12
+        },
+        {
+          "text": "Quebrada · Purmamarca",
+          "px": 11
+        },
+        {
+          "text": "2.324 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 11
+        },
+        {
+          "text": "2.900 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 11
+        },
+        {
+          "text": "2.939 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Maimará",
+          "px": 11
+        },
+        {
+          "text": "2.390 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 11
+        },
+        {
+          "text": "2.500 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 11
+        },
+        {
+          "text": "4.350 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Volcán",
+          "px": 11
+        },
+        {
+          "text": "2.080 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Puna · Abra Pampa",
+          "px": 11
+        },
+        {
+          "text": "3.484 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Puna · La Quiaca",
+          "px": 11
+        },
+        {
+          "text": "3.442 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Puna · Rinconada",
+          "px": 11
+        },
+        {
+          "text": "3.600 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Puna · Salinas Grandes",
+          "px": 11
+        },
+        {
+          "text": "3.450 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Yungas · Libertador General San ",
+          "px": 11
+        },
+        {
+          "text": "600 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Yungas · San Francisco",
+          "px": 11
+        },
+        {
+          "text": "1.500 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Yungas · Caimancito",
+          "px": 11
+        },
+        {
+          "text": "450 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Valles · San Salvador de Jujuy",
+          "px": 11
+        },
+        {
+          "text": "1.259 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Valles · Yala",
+          "px": 11
+        },
+        {
+          "text": "2.100 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Valles · Villa Jardín de Reyes",
+          "px": 11
+        },
+        {
+          "text": "1.850 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        }
+      ],
+      "overImage": 0,
+      "texts": 226,
+      "smallTargets": [],
+      "noTouchAction": [
+        "Quebrada · 4",
+        "Humahuaca · 2",
+        "Tren Solar de la Quebrada — esta",
+        "Abra Pampa",
+        "La Quiaca",
+        "Laguna de los Pozuelos",
+        "Salinas Grandes",
+        "Yungas · 2",
+        "Termas de Caimancito",
+        "Valles · 3"
+      ],
+      "offScale": [],
+      "unbalanced": [
+        "Imaginá",
+        "Armalo",
+        "Vivilo",
+        "Acordate",
+        "Hotel Huacalera",
+        "La Comarca",
+        "Las Terrazas",
+        "El Reposo del Diablo",
+        "Posada Con Los Ángeles",
+        "Vientonorte",
+        "Próximos servicios · Terminal a "
+      ],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 36,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 10
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 14,
+            "uses": 109
+          },
+          {
+            "value": 6,
+            "uses": 86
+          },
+          {
+            "value": 2,
+            "uses": 46
+          },
+          {
+            "value": 7,
+            "uses": 20
+          },
+          {
+            "value": 18,
+            "uses": 19
+          },
+          {
+            "value": 19.5,
+            "uses": 16
+          },
+          {
+            "value": 22,
+            "uses": 15
+          },
+          {
+            "value": 21,
+            "uses": 12
+          },
+          {
+            "value": 15,
+            "uses": 10
+          },
+          {
+            "value": 5,
+            "uses": 9
+          },
+          {
+            "value": 10,
+            "uses": 6
+          },
+          {
+            "value": 27.3,
+            "uses": 4
+          },
+          {
+            "value": 62,
+            "uses": 4
+          },
+          {
+            "value": 13,
+            "uses": 2
+          },
+          {
+            "value": 23.4,
+            "uses": 2
+          },
+          {
+            "value": 34,
+            "uses": 1
+          }
+        ],
+        "distinct": 33,
+        "total": 580,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [
+          {
+            "text": "Las cuatro regiones en capítulos",
+            "chars": 26,
+            "lines": 3
+          },
+          {
+            "text": "Elegí fechas; el plan se arma so",
+            "chars": 25,
+            "lines": 3
+          },
+          {
+            "text": "Pueblos, salares, quebradas y se",
+            "chars": 38,
+            "lines": 3
+          },
+          {
+            "text": "Una base en la Quebrada para sal",
+            "chars": 35,
+            "lines": 3
+          },
+          {
+            "text": "No mostramos nombres sin una fue",
+            "chars": 37,
+            "lines": 3
+          },
+          {
+            "text": "05:30Línea RN9 (Quebrada y Puna)",
+            "chars": 17,
+            "lines": 6
+          },
+          {
+            "text": "06:15Línea RN9 (Quebrada y Puna)",
+            "chars": 21,
+            "lines": 5
+          },
+          {
+            "text": "07:00Línea RN9 (Quebrada y Puna)",
+            "chars": 17,
+            "lines": 6
+          }
+        ],
+        "blocks": 8,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 40,
+        "controls": 40
+      },
+      "focus": {
+        "walked": 40,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/como-llegar",
+      "viewport": "390x844",
+      "screenshot": "audit-fase0\\como-llegar-390.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Volver a explorar",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Jujuy · guía de viaje",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Un recorrido explicado paso a pa",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Salís desde",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Vas a",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        }
+      ],
+      "smallText": [],
+      "overImage": 0,
+      "texts": 9,
+      "smallTargets": [],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 2,
+        "textOnly": 1,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 0
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 10,
+            "uses": 6
+          },
+          {
+            "value": 9,
+            "uses": 4
+          },
+          {
+            "value": 14,
+            "uses": 4
+          },
+          {
+            "value": 5,
+            "uses": 2
+          },
+          {
+            "value": 42,
+            "uses": 2
+          },
+          {
+            "value": 38,
+            "uses": 2
+          }
+        ],
+        "distinct": 12,
+        "total": 39,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [],
+        "blocks": 0,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 10,
+        "controls": 5
+      },
+      "focus": {
+        "walked": 5,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/como-llegar/cerro-siete-colores",
+      "viewport": "390x844",
+      "screenshot": "audit-fase0\\como-llegar-cerro-siete-colores-390.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Volver a explorar",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Jujuy · guía de viaje",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Un recorrido explicado paso a pa",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Salís desde",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Vas a",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "El camino",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Línea RN9 (Quebrada y Puna): sal",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Es un cruce sobre la RN9; el col",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Purmamarca Cruce queda sobre la ",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Sobre el territorio",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "La línea une los puntos informad",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Leaflet",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        }
+      ],
+      "smallText": [
+        {
+          "text": "Terminal de Ómnibus SS.Jujuy",
+          "px": 12
+        },
+        {
+          "text": "Purmamarca Cruce",
+          "px": 12
+        },
+        {
+          "text": "Cerro de los Siete Colores",
+          "px": 12
+        },
+        {
+          "text": "Leaflet",
+          "px": 12
+        },
+        {
+          "text": "Leaflet | © OpenStreetMap contri",
+          "px": 12
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12
+        }
+      ],
+      "overImage": 0,
+      "texts": 34,
+      "smallTargets": [],
+      "noTouchAction": [
+        "Terminal de Ómnibus SS.Jujuy",
+        "Purmamarca Cruce",
+        "Cerro de los Siete Colores"
+      ],
+      "offScale": [],
+      "unbalanced": [
+        "Tomá el colectivo en Terminal de",
+        "Bajá en Purmamarca Cruce",
+        "Traslado de la parada al destino"
+      ],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 1,
+        "textOnly": 7,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 0
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 15,
+            "uses": 8
+          },
+          {
+            "value": 9,
+            "uses": 7
+          },
+          {
+            "value": 10,
+            "uses": 7
+          },
+          {
+            "value": 7,
+            "uses": 6
+          },
+          {
+            "value": 5,
+            "uses": 4
+          },
+          {
+            "value": 22,
+            "uses": 4
+          },
+          {
+            "value": 14,
+            "uses": 3
+          },
+          {
+            "value": 42,
+            "uses": 2
+          },
+          {
+            "value": 38,
+            "uses": 2
+          },
+          {
+            "value": 54,
+            "uses": 1
+          },
+          {
+            "value": 34,
+            "uses": 1
+          }
+        ],
+        "distinct": 19,
+        "total": 104,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [
+          {
+            "text": "Horario estimadoFuente: horario-",
+            "chars": 35,
+            "lines": 4
+          },
+          {
+            "text": "Purmamarca Cruce queda sobre la ",
+            "chars": 37,
+            "lines": 6
+          },
+          {
+            "text": "Acceso local3 kmEstimado: 5-10 m",
+            "chars": 21,
+            "lines": 3
+          }
+        ],
+        "blocks": 3,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 23,
+        "controls": 12
+      },
+      "focus": {
+        "walked": 13,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/travesia",
+      "viewport": "390x844",
+      "screenshot": "audit-fase0\\travesia-390.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Armá tu travesía",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        }
+      ],
+      "smallText": [],
+      "overImage": 0,
+      "texts": 21,
+      "smallTargets": [],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 2,
+        "textOnly": 1,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 0
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 5,
+            "uses": 10
+          }
+        ],
+        "distinct": 9,
+        "total": 53,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [
+          {
+            "text": "Elegí cuándo vas, cómo llegás y ",
+            "chars": 36,
+            "lines": 3
+          }
+        ],
+        "blocks": 1,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 10,
+        "controls": 5
+      },
+      "focus": {
+        "walked": 3,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/lugares/plaza-belgrano-jujuy",
+      "viewport": "390x844",
+      "screenshot": "audit-fase0\\lugares-plaza-belgrano-jujuy-390.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Altitud aproximada del centro de",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "En el centro de San Salvador de ",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Todo el año; confirmar horarios ",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "-24,1858°, -65,2995°",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Valles",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Territorio · Valles",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "-24,1858° S, -65,2995° O",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Valles · San Salvador de Jujuy",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Plaza central de San Salvador de",
+          "px": 13,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Ver detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Leaflet",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "Seguí explorando Jujuy →",
+          "px": 15,
+          "ratio": 4.57,
+          "min": 4.5
+        }
+      ],
+      "smallText": [
+        {
+          "text": "Territorio · Valles",
+          "px": 13
+        },
+        {
+          "text": "Casa de Gobierno y Plaza Belgran",
+          "px": 12
+        },
+        {
+          "text": "Lagunas de Yala",
+          "px": 12
+        },
+        {
+          "text": "Termas de Reyes",
+          "px": 12
+        },
+        {
+          "text": "Valles · San Salvador de Jujuy",
+          "px": 11
+        },
+        {
+          "text": "1259 msnm",
+          "px": 12
+        },
+        {
+          "text": "Plaza central de San Salvador de",
+          "px": 13
+        },
+        {
+          "text": "Ver detalle →",
+          "px": 13
+        },
+        {
+          "text": "Leaflet",
+          "px": 12
+        },
+        {
+          "text": "Leaflet | © OpenStreetMap contri",
+          "px": 12
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12
+        },
+        {
+          "text": "Casa de Gobierno y Plaza Belgran",
+          "px": 13.3333
+        },
+        {
+          "text": "Lagunas de Yala en Valles (2100 ",
+          "px": 13.3333
+        },
+        {
+          "text": "Termas de Reyes en Valles (1850 ",
+          "px": 13.3333
+        }
+      ],
+      "overImage": 0,
+      "texts": 35,
+      "smallTargets": [
+        {
+          "text": "Ver detalle →",
+          "w": 76,
+          "h": 17
+        },
+        {
+          "text": "×",
+          "w": 24,
+          "h": 24
+        }
+      ],
+      "noTouchAction": [
+        "Casa de Gobierno y Plaza Belgran",
+        "Lagunas de Yala",
+        "Termas de Reyes"
+      ],
+      "offScale": [],
+      "unbalanced": [
+        "En el mapa",
+        "Casa de Gobierno y Plaza Belgran"
+      ],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 10,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 3
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 6,
+            "uses": 24
+          },
+          {
+            "value": 14,
+            "uses": 10
+          },
+          {
+            "value": 15,
+            "uses": 8
+          },
+          {
+            "value": 19.5,
+            "uses": 6
+          },
+          {
+            "value": 5,
+            "uses": 6
+          },
+          {
+            "value": 10,
+            "uses": 6
+          },
+          {
+            "value": 22,
+            "uses": 3
+          },
+          {
+            "value": 13,
+            "uses": 2
+          },
+          {
+            "value": 42,
+            "uses": 1
+          },
+          {
+            "value": 18,
+            "uses": 1
+          },
+          {
+            "value": 26,
+            "uses": 1
+          },
+          {
+            "value": 3,
+            "uses": 1
+          },
+          {
+            "value": 16.9,
+            "uses": 1
+          },
+          {
+            "value": 38,
+            "uses": 1
+          }
+        ],
+        "distinct": 26,
+        "total": 121,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [
+          {
+            "text": "Plaza central de San Salvador de",
+            "chars": 23,
+            "lines": 4
+          },
+          {
+            "text": "Plaza central de San Salvador de",
+            "chars": 30,
+            "lines": 3
+          }
+        ],
+        "blocks": 2,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 30,
+        "controls": 17
+      },
+      "focus": {
+        "walked": 18,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/",
+      "viewport": "1440x900",
+      "screenshot": "audit-fase0\\home-1440.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Las cuatro regiones",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Del altiplano a la selva. Elegí ",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Cómo funciona",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Ni folleto ni trámite: la histor",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Las cuatro regiones en capítulos",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Elegí fechas; el plan se arma so",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "La guía en la parada: qué línea,",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Tu travesía guardada, compartibl",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Territorio vivo",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pueblos, salares, quebradas y se",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Leaflet",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "17",
+          "px": 18,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pasá el cursor o tocá para ubica",
+          "px": 12,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Purmamarca",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Maimará",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Volcán",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Puna · Abra Pampa",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Puna · La Quiaca",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Puna · Rinconada",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Puna · Salinas Grandes",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Yungas · Libertador General San ",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Yungas · San Francisco",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Yungas · Caimancito",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Valles · San Salvador de Jujuy",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Valles · Yala",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Valles · Villa Jardín de Reyes",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Imperdibles",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Con su dato honesto: cuánto toma",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "01",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Purmamarca",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Formaciones de distintos tonos r",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Todo el año; la estación seca su",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "02",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Cañón y cascada en las afueras d",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Abril a noviembre suele tener me",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "03",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Monumento y mirador sobre Humahu",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Todo el año; considerá el sol in",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "04",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Maimará",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Ladera de colores frente a Maima",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Todo el año; la luz de la mañana",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "05",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Sitio arqueológico prehispánico ",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Todo el año; primavera y otoño s",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "06",
+          "px": 22,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Mirador de la serranía multicolo",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Abril a noviembre suele ofrecer ",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Dónde dormir",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Una base en la Quebrada para sal",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Huacalera · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Purmamarca · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Purmamarca · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Tilcara · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Tilcara · Posada",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Tilcara · Hotel",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Consultá disponibilidad",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Pendiente de verificar · Fuente:",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Guías registrados",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Guías registrados por zona y esp",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "No mostramos nombres sin una fue",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Registro Provincial de Guías ↗",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "El extra que te regala Jujuy: lu",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Jujuy, Argentina",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "23.1858° S — 65.2995° O",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        }
+      ],
+      "smallText": [
+        {
+          "text": "Quebrada · 4",
+          "px": 13
+        },
+        {
+          "text": "Humahuaca · 2",
+          "px": 13
+        },
+        {
+          "text": "Tren Solar de la Quebrada — esta",
+          "px": 12
+        },
+        {
+          "text": "Abra Pampa",
+          "px": 12
+        },
+        {
+          "text": "La Quiaca",
+          "px": 12
+        },
+        {
+          "text": "Laguna de los Pozuelos",
+          "px": 12
+        },
+        {
+          "text": "Salinas Grandes",
+          "px": 12
+        },
+        {
+          "text": "Yungas · 2",
+          "px": 13
+        },
+        {
+          "text": "Termas de Caimancito",
+          "px": 12
+        },
+        {
+          "text": "Valles · 3",
+          "px": 13
+        },
+        {
+          "text": "Leaflet",
+          "px": 12
+        },
+        {
+          "text": "Leaflet | © OpenStreetMap contri",
+          "px": 12
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12
+        },
+        {
+          "text": "Grupo Quebrada · 4 (4 lugares). ",
+          "px": 13.3333
+        },
+        {
+          "text": "Grupo Humahuaca · 2 (2 lugares).",
+          "px": 13.3333
+        },
+        {
+          "text": "Tren Solar de la Quebrada — esta",
+          "px": 13.3333
+        },
+        {
+          "text": "Abra Pampa en Puna (3484 msnm)",
+          "px": 13.3333
+        },
+        {
+          "text": "La Quiaca en Puna (3442 msnm)",
+          "px": 13.3333
+        },
+        {
+          "text": "Laguna de los Pozuelos en Puna (",
+          "px": 13.3333
+        },
+        {
+          "text": "Salinas Grandes en Puna (3450 ms",
+          "px": 13.3333
+        },
+        {
+          "text": "Grupo Yungas · 2 (2 lugares). Cl",
+          "px": 13.3333
+        },
+        {
+          "text": "Termas de Caimancito en Yungas (",
+          "px": 13.3333
+        },
+        {
+          "text": "Grupo Valles · 3 (3 lugares). Cl",
+          "px": 13.3333
+        },
+        {
+          "text": "Pasá el cursor o tocá para ubica",
+          "px": 12
+        },
+        {
+          "text": "Quebrada · Purmamarca",
+          "px": 11
+        },
+        {
+          "text": "2.324 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 11
+        },
+        {
+          "text": "2.900 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 11
+        },
+        {
+          "text": "2.939 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Maimará",
+          "px": 11
+        },
+        {
+          "text": "2.390 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Tilcara",
+          "px": 11
+        },
+        {
+          "text": "2.500 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Humahuaca",
+          "px": 11
+        },
+        {
+          "text": "4.350 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Quebrada · Volcán",
+          "px": 11
+        },
+        {
+          "text": "2.080 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Puna · Abra Pampa",
+          "px": 11
+        },
+        {
+          "text": "3.484 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Puna · La Quiaca",
+          "px": 11
+        },
+        {
+          "text": "3.442 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Puna · Rinconada",
+          "px": 11
+        },
+        {
+          "text": "3.600 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Puna · Salinas Grandes",
+          "px": 11
+        },
+        {
+          "text": "3.450 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Yungas · Libertador General San ",
+          "px": 11
+        },
+        {
+          "text": "600 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Yungas · San Francisco",
+          "px": 11
+        },
+        {
+          "text": "1.500 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Yungas · Caimancito",
+          "px": 11
+        },
+        {
+          "text": "450 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Valles · San Salvador de Jujuy",
+          "px": 11
+        },
+        {
+          "text": "1.259 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Valles · Yala",
+          "px": 11
+        },
+        {
+          "text": "2.100 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        },
+        {
+          "text": "Valles · Villa Jardín de Reyes",
+          "px": 11
+        },
+        {
+          "text": "1.850 msnm",
+          "px": 12
+        },
+        {
+          "text": "Detalle →",
+          "px": 13
+        }
+      ],
+      "overImage": 0,
+      "texts": 250,
+      "smallTargets": [],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [
+        "Imaginá",
+        "Armalo",
+        "Vivilo",
+        "Acordate",
+        "Hotel Huacalera",
+        "La Comarca",
+        "Las Terrazas",
+        "El Reposo del Diablo",
+        "Posada Con Los Ángeles",
+        "Vientonorte",
+        "Próximos servicios · Terminal a "
+      ],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 36,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 11
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 14,
+            "uses": 95
+          },
+          {
+            "value": 6,
+            "uses": 86
+          },
+          {
+            "value": 2,
+            "uses": 36
+          },
+          {
+            "value": 22,
+            "uses": 27
+          },
+          {
+            "value": 7,
+            "uses": 20
+          },
+          {
+            "value": 5,
+            "uses": 13
+          },
+          {
+            "value": 26,
+            "uses": 12
+          },
+          {
+            "value": 9,
+            "uses": 10
+          },
+          {
+            "value": 15,
+            "uses": 10
+          },
+          {
+            "value": 110,
+            "uses": 8
+          },
+          {
+            "value": 62,
+            "uses": 4
+          },
+          {
+            "value": 10,
+            "uses": 4
+          },
+          {
+            "value": 18,
+            "uses": 3
+          },
+          {
+            "value": 115.2,
+            "uses": 2
+          },
+          {
+            "value": 34,
+            "uses": 1
+          }
+        ],
+        "distinct": 32,
+        "total": 629,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [
+          {
+            "text": "Las cuatro regiones en capítulos",
+            "chars": 26,
+            "lines": 3
+          },
+          {
+            "text": "Elegí fechas; el plan se arma so",
+            "chars": 25,
+            "lines": 3
+          },
+          {
+            "text": "05:30Línea RN9 (Quebrada y Puna)",
+            "chars": 34,
+            "lines": 3
+          },
+          {
+            "text": "06:15Línea RN9 (Quebrada y Puna)",
+            "chars": 34,
+            "lines": 3
+          },
+          {
+            "text": "07:00Línea RN9 (Quebrada y Puna)",
+            "chars": 34,
+            "lines": 3
+          }
+        ],
+        "blocks": 5,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 74,
+        "controls": 40
+      },
+      "focus": {
+        "walked": 40,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/como-llegar",
+      "viewport": "1440x900",
+      "screenshot": "audit-fase0\\como-llegar-1440.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Volver a explorar",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Jujuy · guía de viaje",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Un recorrido explicado paso a pa",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Salís desde",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Vas a",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        }
+      ],
+      "smallText": [],
+      "overImage": 0,
+      "texts": 9,
+      "smallTargets": [],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 2,
+        "textOnly": 1,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 0
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 10,
+            "uses": 6
+          },
+          {
+            "value": 9,
+            "uses": 4
+          },
+          {
+            "value": 14,
+            "uses": 4
+          },
+          {
+            "value": 5,
+            "uses": 2
+          },
+          {
+            "value": 38,
+            "uses": 2
+          },
+          {
+            "value": 42,
+            "uses": 1
+          }
+        ],
+        "distinct": 15,
+        "total": 41,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [],
+        "blocks": 0,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 10,
+        "controls": 5
+      },
+      "focus": {
+        "walked": 5,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/como-llegar/cerro-siete-colores",
+      "viewport": "1440x900",
+      "screenshot": "audit-fase0\\como-llegar-cerro-siete-colores-1440.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Volver a explorar",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Jujuy · guía de viaje",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Un recorrido explicado paso a pa",
+          "px": 16,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Salís desde",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Vas a",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "El camino",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Línea RN9 (Quebrada y Puna): sal",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Es un cruce sobre la RN9; el col",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Purmamarca Cruce queda sobre la ",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Sobre el territorio",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "La línea une los puntos informad",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Leaflet",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        }
+      ],
+      "smallText": [
+        {
+          "text": "Terminal de Ómnibus SS.Jujuy",
+          "px": 12
+        },
+        {
+          "text": "Purmamarca Cruce",
+          "px": 12
+        },
+        {
+          "text": "Cerro de los Siete Colores",
+          "px": 12
+        },
+        {
+          "text": "Leaflet",
+          "px": 12
+        },
+        {
+          "text": "Leaflet | © OpenStreetMap contri",
+          "px": 12
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12
+        }
+      ],
+      "overImage": 0,
+      "texts": 34,
+      "smallTargets": [],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [
+        "Tomá el colectivo en Terminal de",
+        "Bajá en Purmamarca Cruce",
+        "Traslado de la parada al destino"
+      ],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 1,
+        "textOnly": 7,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 0
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 15,
+            "uses": 8
+          },
+          {
+            "value": 9,
+            "uses": 7
+          },
+          {
+            "value": 10,
+            "uses": 6
+          },
+          {
+            "value": 18,
+            "uses": 6
+          },
+          {
+            "value": 7,
+            "uses": 6
+          },
+          {
+            "value": 5,
+            "uses": 4
+          },
+          {
+            "value": 14,
+            "uses": 3
+          },
+          {
+            "value": 22,
+            "uses": 3
+          },
+          {
+            "value": 54,
+            "uses": 2
+          },
+          {
+            "value": 42,
+            "uses": 1
+          },
+          {
+            "value": 38,
+            "uses": 1
+          },
+          {
+            "value": 34,
+            "uses": 1
+          }
+        ],
+        "distinct": 23,
+        "total": 103,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [],
+        "blocks": 1,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 23,
+        "controls": 12
+      },
+      "focus": {
+        "walked": 13,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/travesia",
+      "viewport": "1440x900",
+      "screenshot": "audit-fase0\\travesia-1440.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Armá tu travesía",
+          "px": 14,
+          "ratio": 4.57,
+          "min": 4.5
+        }
+      ],
+      "smallText": [],
+      "overImage": 0,
+      "texts": 21,
+      "smallTargets": [],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 2,
+        "textOnly": 1,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 0
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 5,
+            "uses": 2
+          }
+        ],
+        "distinct": 13,
+        "total": 53,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [],
+        "blocks": 0,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 10,
+        "controls": 5
+      },
+      "focus": {
+        "walked": 3,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/lugares/plaza-belgrano-jujuy",
+      "viewport": "1440x900",
+      "screenshot": "audit-fase0\\lugares-plaza-belgrano-jujuy-1440.png",
+      "hard": [],
+      "lowContrast": [],
+      "borderline": [
+        {
+          "text": "Altitud aproximada del centro de",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "En el centro de San Salvador de ",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Todo el año; confirmar horarios ",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "-24,1858°, -65,2995°",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Valles",
+          "px": 15,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Territorio · Valles",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "-24,1858° S, -65,2995° O",
+          "px": 14,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Valles · San Salvador de Jujuy",
+          "px": 11,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Plaza central de San Salvador de",
+          "px": 13,
+          "ratio": 4.66,
+          "min": 4.5
+        },
+        {
+          "text": "Ver detalle →",
+          "px": 13,
+          "ratio": 4.57,
+          "min": 4.5
+        },
+        {
+          "text": "Leaflet",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12,
+          "ratio": 4.82,
+          "min": 4.5
+        },
+        {
+          "text": "Seguí explorando Jujuy →",
+          "px": 15,
+          "ratio": 4.57,
+          "min": 4.5
+        }
+      ],
+      "smallText": [
+        {
+          "text": "Territorio · Valles",
+          "px": 13
+        },
+        {
+          "text": "Casa de Gobierno y Plaza Belgran",
+          "px": 12
+        },
+        {
+          "text": "Lagunas de Yala",
+          "px": 12
+        },
+        {
+          "text": "Termas de Reyes",
+          "px": 12
+        },
+        {
+          "text": "Valles · San Salvador de Jujuy",
+          "px": 11
+        },
+        {
+          "text": "1259 msnm",
+          "px": 12
+        },
+        {
+          "text": "Plaza central de San Salvador de",
+          "px": 13
+        },
+        {
+          "text": "Ver detalle →",
+          "px": 13
+        },
+        {
+          "text": "Leaflet",
+          "px": 12
+        },
+        {
+          "text": "Leaflet | © OpenStreetMap contri",
+          "px": 12
+        },
+        {
+          "text": "OpenStreetMap",
+          "px": 12
+        },
+        {
+          "text": "Casa de Gobierno y Plaza Belgran",
+          "px": 13.3333
+        },
+        {
+          "text": "Lagunas de Yala en Valles (2100 ",
+          "px": 13.3333
+        },
+        {
+          "text": "Termas de Reyes en Valles (1850 ",
+          "px": 13.3333
+        }
+      ],
+      "overImage": 0,
+      "texts": 35,
+      "smallTargets": [
+        {
+          "text": "Ver detalle →",
+          "w": 76,
+          "h": 17
+        }
+      ],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [
+        "En el mapa",
+        "Casa de Gobierno y Plaza Belgran"
+      ],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 10,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 3
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 6,
+            "uses": 24
+          },
+          {
+            "value": 14,
+            "uses": 10
+          },
+          {
+            "value": 15,
+            "uses": 8
+          },
+          {
+            "value": 5,
+            "uses": 6
+          },
+          {
+            "value": 10,
+            "uses": 6
+          },
+          {
+            "value": 18,
+            "uses": 3
+          },
+          {
+            "value": 22,
+            "uses": 3
+          },
+          {
+            "value": 13,
+            "uses": 2
+          },
+          {
+            "value": 26,
+            "uses": 1
+          },
+          {
+            "value": 3,
+            "uses": 1
+          },
+          {
+            "value": 16.9,
+            "uses": 1
+          },
+          {
+            "value": 38,
+            "uses": 1
+          }
+        ],
+        "distinct": 25,
+        "total": 123,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [
+          {
+            "text": "Plaza central de San Salvador de",
+            "chars": 30,
+            "lines": 3
+          }
+        ],
+        "blocks": 1,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 31,
+        "controls": 17
+      },
+      "focus": {
+        "walked": 18,
+        "missing": []
+      },
+      "moving": 0
+    }
+  ],
+  "errors": []
+}
