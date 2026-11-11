@@ -52,7 +52,13 @@ Reconocé el momento y cargá la skill sin esperar a que la nombren.
 | **Dentro del slice** (va al SPEC del worker) | comportamiento nuevo con tests | "trabajá con `tdd`" |
 | | bug difícil o lentitud | "seguí `diagnosing-bugs`"; el SPEC lleva el repro |
 | | cambia la interfaz de un módulo | `codebase-design` |
-| | UI | `impeccable` para diseñar; `kero-audit` antes de decir que está listo |
+| | UI nueva o rediseño | `impeccable` + `frontend-design` + `badesign-skill`; `kero-audit` antes de decir que está listo |
+| | motion/transiciones | `emil-design-eng` al construir; `animate` para una animación nueva; `review-animations` antes de entregar; `mobile-native` si es táctil |
+| | copy de landing/marca | `typebien` (nunca inventar datos que no existen) |
+| | encontrar dónde animar o qué sobra | `find-animation-opportunities` / `remove-animations` |
+| | stress-test visual de una pantalla | `break-ui` (datos peores casos) |
+| | analizar una referencia externa | `anydesign` (referencia → design.md) |
+| | elegir librería de UI | `pick-ui-library` antes de hand-rollear un componente |
 | **Verificar** | llegó un `worker_done` | `./slices verificar` (checks) → subagente-juez escribe `juez.txt` → `verificar` otra vez |
 | | dos versiones para elegir | `kero-blind` (que juzgue la persona, sin saber cuál es cuál) |
 | **Cerrar** | todo integrado | `code-review-en-loop` → `qa-con-video` si hay UI → `pr` |
@@ -62,7 +68,19 @@ Reconocé el momento y cargá la skill sin esperar a que la nombren.
 | **Orca** | workers, terminales, worktrees | `orchestration` / `orca-cli` |
 | **No sé cuál** | | `ask-matt` (router de las de mattpocock) |
 
-El worker no carga skills por su cuenta: si un slice necesita `tdd` o `diagnosing-bugs`, decilo en el SPEC.
+El worker no carga skills por su cuenta: si un slice necesita `tdd`, `diagnosing-bugs` o cualquier skill de diseño, decilo en el SPEC ("cargá `badesign-skill` y `emil-design-eng`").
+
+## Skills de diseño instaladas (2026-11-11)
+
+Fuente: `uxKero/*` (ecosistema Kero), `emilkowalski/skills`, `anthropics/skills/frontend-design`. Viven en `~/.agents/skills/` — las ven Devin y los workers que corren en esta máquina.
+
+- **Juicio de diseño:** `badesign-skill` (la skill central anti-genérico), `frontend-design` (Anthropic, dirección estética con punto de vista), `impeccable` (ya estaba).
+- **Motion:** `emil-design-eng` (filosofía UI polish), `animate`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `remove-animations`, `animation-performance`, `animation-vocabulary`, `choreograph`, `gestures`, `apple-design`.
+- **Móvil web:** `mobile-native` (hover pegajoso, tap highlight, 100vh, safe areas).
+- **Copy:** `typebien` (textos de landing/secciones; nunca inventar datos).
+- **Análisis:** `anydesign` (referencia → design.md), `break-ui` (peores casos visuales), `pick-ui-library` (elegir librería antes de hand-rollear), `optimize-search-answers-agents` (SAGA, discoverability — solo si se pide).
+
+**Regla para slices de UI:** `docs/design.md` (sistema Kero aprobado, mock-04) es la skill del proyecto y **gana sobre cualquier skill genérica** donde discrepen — misma regla que `kero-system`. El SPEC de un slice estético debe decir: "el sistema visual es `docs/design.md`; cargá `badesign-skill` + `emil-design-eng`; medí con `kero-audit` antes de `worker_done`". Sin eso, un worker de UI produce el look template que el producto rechaza.
 
 ## Limitaciones conocidas (verificadas en el setup)
 
