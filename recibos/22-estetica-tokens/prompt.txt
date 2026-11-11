@@ -1,0 +1,116 @@
+Sos el ejecutor del slice 22-estetica-tokens de este repo. Estás parado en el worktree del
+slice: trabajá acá y solo acá.
+
+Leé AGENTS.md y seguí sus reglas. Implementá el SPEC que sigue, completo:
+el código, y los tests que exige. Corré los chequeos del proyecto antes de
+terminar y arreglá lo que rompas.
+
+No hagas git commit ni git push. No toques archivos fuera del alcance.
+
+Terminá tu respuesta con este bloque, honesto:
+
+===RECIBO===
+hecho: <qué quedó implementado>
+archivos: <lista>
+chequeos: <qué corriste y con qué resultado>
+gaps: <qué NO quedó o no pudiste verificar; "ninguno" solo si es verdad>
+===FIN===
+
+Guardá ese mismo bloque en recibos/22-estetica-tokens/recibo-agente.md antes de terminar.
+
+
+──────────── SPEC ────────────
+# Slice 22 — Pulido del sistema visual (tokens globales)
+
+**Depende de:** master actual (`4f39c12`). Auditoría kero completa en
+`frontend/audit-fase0/report.json` (5 rutas × 2 viewports, 0 fallas duras).
+
+**Alcance:** `frontend/src/styles.css`, `frontend/src/index.html` si hace
+falta, y CSS global de Leaflet/controles compartidos. CSS de componentes
+solo si el cambio es claramente global (ej. labels de mapa que se repiten).
+NO tocar lógica TS, templates HTML salvo clases/atributos mínimos, ni specs
+de otros slices.
+
+## Contexto — lo que midió el audit (Fase 0)
+
+- **Contraste borderline sistémico**: `--t60: rgba(36,22,16,.62)` sobre
+  `--papel` da ratio ~4.57-4.82 (pasa AA 4.5 pero "por el hilo"): home 89-101
+  textos, como-llegar 13, lugar-detalle 13. El audit lo marca borderline.
+- **Piso tipográfico**: el sistema exige lectura ≥14px; hay meta-textos de
+  11-13px en cards/mapas (detalle por componente en slices siguientes; acá
+  solo lo que sea global).
+- **Espaciado fuera de escala**: valores 5,6,7,9,10,14,15,18,19.5,22… la
+  escala es 4·n. Home: 109 usos de 14px, 86 de 6px. NO reconvertir todo a
+  fuerza (rompería layouts finos) — el objetivo es que los valores nuevos y
+  los claramente errados entren a escala; documentar excepciones.
+- **Títulos sin balance**: headings sin `text-wrap: balance/pretty` en
+  varias pantallas → regla global.
+- **Atribución Leaflet** a 12px ("Leaflet | © OpenStreetMap") y labels de
+  parada/markers a 12px: se pueden subir por CSS global de clases Leaflet.
+- **`touch-action`**: controles interactivos con `auto` → `manipulation`
+  (regla mobile-native: elimina el delay de doble-tap).
+
+## Skills OBLIGATORIAS (cargar antes de diseñar)
+
+El sistema visual es `docs/design.md` (mock-04 aprobado) — **gana sobre
+cualquier skill genérica** donde discrepen. Además cargá:
+
+- `badesign-skill` (`~/.agents/skills/badesign-skill/SKILL.md`) — juicio
+  de diseño; sus hard limits no tienen excepción.
+- `frontend-design` (`~/.agents/skills/frontend-design/SKILL.md`) —
+  dirección estética anti-template.
+- `mobile-native` (`~/.agents/skills/mobile-native/SKILL.md`) — touch,
+  100vh, tap highlight, inputs que zoom.
+- `kero-audit` (`~/.agents/skills/kero-audit/SKILL.md`) — medición;
+  su `scripts/checks.js` es la vara.
+- `impeccable` si está disponible — polish general de UI.
+
+## Qué tiene que pasar
+
+1. **`--t60`**: ajustar hasta que el texto secundario sobre `--papel`/`--arena`
+   dé ≥4.8:1 medido (puede ser más tinta, menos alpha, o tono intermedio).
+   Verificar TAMBIÉN sobre `--verde` si se usa texto claro encima, y sobre
+   fondos de foto (los `t60` sobre imagen no se pueden medir — dejar nota).
+   Actualizar el token en `styles.css` y donde se redefina localmente
+   (ej. `.travesia-shell` redefine `--t60: #6f5f54` — unificar o justificar).
+2. **Piso tipográfico global**: regla CSS global que impida texto de UI
+   <14px donde sea seguro (NO tocar canvas de mapas ni texto dentro de
+   imágenes/SVG generados). Labels Leaflet (`leaflet-tooltip`, controles,
+   atribución) a ≥12px solo si es legible sin romper el mapa; si la
+   atribución no puede subir sin verse mal, documentarlo como excepción
+   con razón.
+3. **`text-wrap: balance`** en headings (h1-h3, `.kicker` no) de forma
+   global o por selector compartido; `pretty` en párrafos largos si aplica.
+4. **`touch-action: manipulation`** en botones, links, selects, chips y
+   cualquier control clickeable (global: `button, a, select, input,
+   [role=button], label` — cuidando no romper scroll en contenedores).
+5. **Escala de espaciado**: corregir los valores claramente errados en
+   `styles.css` global ( márgenes/paddings/gaps hardcodeados); en
+   componentes dejarlos para sus slices — acá solo lo global.
+6. **Focus visible consistente**: un solo patrón de focus (outline óxido
+   2px offset 3px) — si algún control global lo rompe, arreglarlo.
+7. **Revisión de `--ocre`/`--verde`/`--oxido`**: confirmar que ningún texto
+   los usa con contraste <4.5 sobre su fondo real (medir con checks.js).
+8. **NO rediseñar**: nada de cambiar layout, componentes ni identidad.
+   Es calibración del sistema, no una nueva dirección.
+
+## Criterios
+
+- [ ] `cd frontend && npm test -- --watch=false` verde
+- [ ] `cd frontend && npm run build` OK
+- [ ] `git diff --check` limpio
+- [ ] Re-correr kero-audit (`audit.mjs` con playwright-core, ya instalado
+      --no-save) en las mismas 5 rutas × 2 viewports: borderline contrast
+      debe bajar visiblemente (home de ~90 a <20 idealmente), smallText de
+      textos de UI a 0 donde sea alcanzable, sin regresiones duras.
+      Guardar el reporte en `recibos/22-estetica-tokens/audit-despues/`.
+- [ ] Screenshots before/after de home y lugar-detalle para el recibo.
+- [ ] Recibo con: tokens cambiados + ratio medido antes/después, archivos,
+      comandos, gaps y excepciones justificadas.
+
+## Fuera de alcance
+
+- CSS por-componente de home, como-llegar, lugar-detalle, travesia
+  (slices 23-25).
+- Cambios de layout, copy, imágenes, ni lógica.
+- Texto dentro de fotos/SVG/canvas de mapas que no sea CSS.

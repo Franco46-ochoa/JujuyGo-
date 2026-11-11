@@ -1,0 +1,4 @@
+CIERRA
+kero-audit re-ejecutado (audit-despues) y screenshots before/after: NO realizados — gap declarado por el worker/coordinador, aceptado para merge como verificación pendiente.
+Nota "--t60 sobre fondos de foto" pedida por el SPEC (punto 1) no quedó documentada en el recibo.
+Observación (no bloquea): `small { font-size: max(var(--fs-min), 1em) !important }` eleva todo `small` al font-size del contexto (~16px), por encima del piso de 14px y pisando reglas de componente que fijaban 13-14px (.opcion small, .place-title small, .zona-lugar-info small, .tramo small). Cumple el piso pero cambia la jerarquía visual; conviene revisarlo en el audit posterior.

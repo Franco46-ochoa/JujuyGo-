@@ -8,11 +8,12 @@
   --papel: #F4EDE3;
   --arena: #EDE2D0;
   --oxido: #B5492A;
-  --ocre: #C9A86A;
+  --ocre: #D2B477;
   --verde: #2E4A3E;
-  --t60: rgba(36, 22, 16, 0.62);
+  --t60: rgba(36, 22, 16, 0.66);
   --t30: rgba(36, 22, 16, 0.32);
   --t14: rgba(36, 22, 16, 0.14);
+  --fs-min: 14px;
   --serif: "Fraunces", Georgia, serif;
   --sans: "Archivo", system-ui, sans-serif;
 
@@ -37,16 +38,32 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+small { font-size: max(var(--fs-min), 1em) !important; }
+.leaflet-container small { font-size: 12px !important; }
+.leaflet-control-attribution, .leaflet-tooltip { font-size: 12px; }
+.leaflet-popup-content .yapa-popup-kicker { font-size: 12px !important; }
+
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
 ::selection { background: var(--oxido); color: #fff; }
 
 .serif { font-family: var(--serif); }
 
-a:focus-visible, button:focus-visible {
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, [role="button"]:focus-visible, [role="tab"]:focus-visible,
+[role="switch"]:focus-visible, [role="checkbox"]:focus-visible {
   outline: 2px solid var(--oxido);
-  outline-offset: 4px;
+  outline-offset: 3px;
 }
 
-a[href], button, select, .mover-evento { touch-action: manipulation; }
+button, a[href], select, input, textarea, [role="button"], [role="tab"],
+[role="switch"], label, .mover-evento { touch-action: manipulation; }
+
+@media (pointer: coarse) {
+  input, textarea, select { font-size: 16px !important; }
+}
+
 .status-error a { color: var(--oxido); }
 
 @media (prefers-reduced-motion: reduce) {

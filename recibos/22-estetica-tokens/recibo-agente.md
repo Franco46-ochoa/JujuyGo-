@@ -1,0 +1,6 @@
+===RECIBO===
+hecho: Pulido del sistema visual global en styles.css: --ocre aclarado a #D2B477, --t60 a 0.66 (ratio real ~4.8:1), nuevo token --fs-min:14px con piso tipográfico en `small` (excepciones explícitas para controles Leaflet: attribution/tooltip/kicker a 12px), text-wrap balance en headings y pretty en párrafos, focus-visible ampliado a inputs/selects/roles interactivos con outline-offset 3px, touch-action: manipulation en todos los controles, font-size 16px en inputs bajo pointer:coarse (evita zoom iOS), y se eliminó el override local --t60 de travesia.css para heredar el token global.
+archivos: frontend/src/styles.css, frontend/src/app/travesia/travesia.css, recibos/22-estetica-tokens/recibo-agente.md
+chequeos: `./slices verificar 22-estetica-tokens` corrida por el coordinador (el worker murió antes de dejar recibo): tests-front pasa, tests-back pasa, tests pasa. Diff revisado: 27 líneas en styles.css + 1 en travesia.css, todo dentro del alcance del SPEC.
+gaps: El worker (Copilot, dispatch ctx_54d67f5226c3) murió con la sesión de Orca antes de re-correr kero-audit y escribir este recibo — el coordinador lo reconstruyó desde el diff. NO se re-corrió kero-audit "después" ni el build de producción en este worktree; queda como verificación pendiente del merge. No se tocó ningún archivo fuera del alcance.
+===FIN===
