@@ -1,11 +1,14 @@
+import { signal } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { AuthService } from '../auth.service';
 import { CatalogoService } from '../catalogo.service';
 import { Lugar } from '../catalogo.types';
 import { TravesiaService } from './travesia.service';
 import { TravesiaPage } from './travesia';
 import { PlanTravesia } from './travesia.types';
+import { TravesiaGuardada, TravesiasGuardadasService } from './travesias-guardadas.service';
 
 const lugares: Lugar[] = [
   {
@@ -226,5 +229,158 @@ describe('TravesiaPage', () => {
     const valles = component.fotoUrl(null, 'valles');
     expect(valles).toBe('/img/salsaju.jpg');
     expect(valles).not.toBe('/img/purmamarca.jpg');
+  });
+
+  it('disables the Google login and save actions when Supabase is not configured', async () => {
+    const auth = {
+      configurado: false,
+      inicializado: signal(true),
+      sesion: signal(null),
+      error: signal(''),
+      entrarConGoogle: vi.fn(),
+      salir: vi.fn(),
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [TravesiaPage],
+      providers: [
+        provideRouter([]),
+        { provide: AuthService, useValue: auth },
+        { provide: CatalogoService, useValue: { getLugares: () => of(lugares) } },
+        {
+          provide: TravesiaService,
+          useValue: {
+            validar: (plan: PlanTravesia) => of({ plan, validado: true, tramos: [], conflictos: [] }),
+            getContexto: () => of({ paradas: [], horarios: [] }),
+            getProximos: () => of({ origen: {}, destino: {}, direccion: 'ida', servicios: [] }),
+          },
+        },
+        { provide: TravesiasGuardadasService, useValue: { listar: vi.fn(), guardar: vi.fn(), borrar: vi.fn() } },
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(TravesiaPage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const login = fixture.nativeElement.querySelector('.auth-entrar') as HTMLButtonElement;
+    expect(login.disabled).toBe(true);
+    expect(fixture.nativeElement.textContent).toContain('login no configurado');
+
+    const fechas = fixture.nativeElement.querySelectorAll('input[type="date"]') as NodeListOf<HTMLInputElement>;
+    fechas[0].value = '2026-11-07';
+    fechas[0].dispatchEvent(new Event('input', { bubbles: true }));
+    fechas[1].value = '2026-11-07';
+    fechas[1].dispatchEvent(new Event('input', { bubbles: true }));
+    fixture.detectChanges();
+    for (let paso = 0; paso < 3; paso++) {
+      (fixture.nativeElement.querySelector('.wizard-actions .boton-principal') as HTMLButtonElement).click();
+      fixture.detectChanges();
+    }
+    (fixture.nativeElement.querySelector('.boton-sugerir') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    const guardar = fixture.nativeElement.querySelector('.guardar-travesia button') as HTMLButtonElement;
+    expect(guardar.disabled).toBe(true);
+    expect(guardar.textContent).toContain('login no configurado');
+  });
+
+  it('loads, saves, and deletes the signed-in traveler’s saved plans', async () => {
+    const planGuardado: PlanTravesia = {
+      llegada: 'terminal',
+      intereses: ['paisaje'],
+      dias: [{
+        fecha: '2026-11-12',
+        origen: 'terminal-jjs',
+        cierre: 'terminal-jjs',
+        hora_inicio: '05:30',
+        hora_cierre: '22:00',
+        eventos: [{
+          id: '2026-11-12-pucara',
+          lugar: 'pucara',
+          nombre: 'Pucará de Tilcara',
+          hora: '09:00',
+          duracion_minutos: 120,
+        }],
+      }],
+    };
+    const guardada: TravesiaGuardada = {
+      id: 'trav-1',
+      titulo: 'Travesía 1 día · 12 nov',
+      datos: { plan: planGuardado, lugaresElegidos: ['pucara'] },
+      created_at: '2026-11-01T10:00:00Z',
+      updated_at: '2026-11-02T10:00:00Z',
+    };
+    const auth = {
+      configurado: true,
+      inicializado: signal(true),
+      sesion: signal({ id: 'user-2', email: 'viajera@example.com' }),
+      error: signal(''),
+      entrarConGoogle: vi.fn(),
+      salir: vi.fn(),
+    };
+    const persistencia = {
+      listar: vi.fn().mockResolvedValue([guardada]),
+      guardar: vi.fn().mockResolvedValue(undefined),
+      borrar: vi.fn().mockResolvedValue(undefined),
+    };
+    const validar = vi.fn((plan: PlanTravesia) => of({
+      plan,
+      validado: true,
+      tramos: [],
+      conflictos: [],
+    }));
+
+    await TestBed.configureTestingModule({
+      imports: [TravesiaPage],
+      providers: [
+        provideRouter([]),
+        { provide: AuthService, useValue: auth },
+        { provide: CatalogoService, useValue: { getLugares: () => of(lugares) } },
+        {
+          provide: TravesiaService,
+          useValue: {
+            validar,
+            getContexto: () => of({ paradas: [], horarios: [] }),
+            getProximos: () => of({ origen: {}, destino: {}, direccion: 'ida', servicios: [] }),
+          },
+        },
+        { provide: TravesiasGuardadasService, useValue: persistencia },
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(TravesiaPage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.auth-sesion')?.textContent).toContain('viajera@example.com');
+    expect(fixture.nativeElement.querySelector('#mis-travesias-title')?.textContent).toContain('Mis travesías');
+    expect(fixture.nativeElement.textContent).toContain(guardada.titulo);
+    expect(persistencia.listar).toHaveBeenCalledWith('user-2');
+
+    const botones = Array.from(fixture.nativeElement.querySelectorAll('.travesia-guardada-acciones button')) as HTMLButtonElement[];
+    botones.find(boton => boton.textContent?.includes('Cargar'))?.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(validar).toHaveBeenCalledWith(planGuardado);
+    expect(fixture.nativeElement.querySelector('.dias')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.guardar-travesia button')?.textContent).toContain('Guardar travesía');
+
+    (fixture.nativeElement.querySelector('.guardar-travesia button') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(persistencia.guardar).toHaveBeenCalledWith('user-2', planGuardado, ['pucara']);
+    expect(fixture.nativeElement.textContent).toContain('Travesía guardada en tu cuenta.');
+
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const botonesActualizados = Array.from(fixture.nativeElement.querySelectorAll('.travesia-guardada-acciones button')) as HTMLButtonElement[];
+    botonesActualizados.find(boton => boton.textContent?.includes('Borrar'))?.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(window.confirm).toHaveBeenCalledOnce();
+    expect(persistencia.borrar).toHaveBeenCalledWith('trav-1');
   });
 });

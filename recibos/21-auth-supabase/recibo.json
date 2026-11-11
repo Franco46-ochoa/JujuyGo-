@@ -1,0 +1,12 @@
+{
+  "slice": "21-auth-supabase",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "d7cb69b",
+  "verificado": "2026-11-11T00:42:22-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 15,
+  "juez": "devin: CIERRA",
+  "cerrado": true,
+  "motivo": ""
+}
