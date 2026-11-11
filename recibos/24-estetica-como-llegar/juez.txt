@@ -1,0 +1,6 @@
+CIERRA
+kero-audit NO re-corrido en /como-llegar ni /como-llegar/cerro-siete-colores (gap declarado y aceptado por el coordinador; sin reporte en recibos/24-estetica-como-llegar/audit-despues/).
+npm run build no verificado (el worker murió antes; ng test compiló el bundle OK y el coordinador confirmó tests front/back verdes).
+git diff --check no ejecutado por el juez (git denegado en background); revisión manual de los 3 archivos no muestra CSS roto ni whitespace evidente.
+Verificación funcional con captura (relato RN9 + sección urbana + mapa) no existe en el recibo.
+Nota del juez: no pude generar el diff con git (permiso denegado); comparé los 3 archivos del worktree contra master del checkout principal. Diff = como-llegar.css, como-llegar.html (solo agrega [class.select-empty]), yapa-mapa.component.css. Cobertura del SPEC verificada por lectura: selects diseñados con chevron SVG y font 16px, labels Leaflet a 14px con touch-action: manipulation, text-wrap: balance en pasos, urbano/transbordos como filas con regla fina y numeración itálica, estados hover/focus/disabled completos. Sin tocar lógica ni archivos fuera de alcance.

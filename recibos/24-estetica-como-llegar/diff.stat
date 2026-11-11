@@ -1,0 +1,4 @@
+ frontend/src/app/como-llegar/como-llegar.css       | 112 ++++++++++++++-------
+ frontend/src/app/como-llegar/como-llegar.html      |   7 +-
+ frontend/src/app/yapa-mapa/yapa-mapa.component.css |  88 ++++++++++------
+ 3 files changed, 141 insertions(+), 66 deletions(-)

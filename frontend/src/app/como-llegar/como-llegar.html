@@ -43,7 +43,12 @@
         <p class="destino-fijo">{{ nombreDestino() }}</p>
       } @else {
         <label for="destino">Vas a</label>
-        <select id="destino" [value]="destino()" (change)="seleccionarDestino($event)">
+        <select
+          id="destino"
+          [value]="destino()"
+          [class.select-empty]="!destino()"
+          (change)="seleccionarDestino($event)"
+        >
           <option value="">Elegí un lugar</option>
           @for (lugar of lugares(); track lugar.slug) {
             <option [value]="lugar.slug">{{ lugar.nombre }}</option>
