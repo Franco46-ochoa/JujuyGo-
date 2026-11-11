@@ -2,33 +2,17 @@
 
 > Actualizar al cierre de cada ola de slices. Última actualización: 2026-11-11 (cierre de sesión — retomar abajo).
 
-## ⚠️ RETOMAR — pasada estética 22-25 (actualizado 2026-11-11 mediodía)
+## ✅ PASADA ESTÉTICA COMPLETA — los 25 slices mergeados (2026-11-11)
 
-**Estado real al momento de esta edición:**
-
-- **22-estetica-tokens: MERGEADO** (`d9e2b84`). Worker murió sin recibo;
-  coordinador verificó checks + juez subagente CIERRA.
-- **23-estetica-home: MERGEADO** (`bc9f3aa`). Ídem.
-- **24-estetica-como-llegar**: worker Gemini murió por cuota → relanzado con
-  Copilot → murió otra vez a mitad de verificación PERO dejó diff sustancial
-  (como-llegar.css/html + yapa-mapa.css, 141+/66-). `verificar` corre checks
-  verdes; juez subagente en curso. Recibo reconstruido por coordinador.
-- **25-estetica-detalle-travesia**: worker Copilot murió en recta final
-  (tests/build en curso). Diff: lugar-detalle.css + travesia*.css/ts +
-  travesia-plan.css nuevo (135+/66-). `verificar` en curso; falta juez.
-
-**Si los jueces dan NO CIERRA**: relanzar con `./slices lanzar <id>` (Copilot;
-Gemini cuota agotada ~57h desde el 11/11).
-
-**Landing de pitch LISTA**: `pitch/index.html` (pusheada `a4bc03b`) — hero
-cinematográfico con tren.jpg + secciones problema/solución/ruta/datos/demo
-(screenshots reales)/CTA. Metodología motionsites aplicada: tokens de
-design.md, kero-audit limpio (los "low contrast" restantes son falsos
-positivos del audit sobre texto-en-foto). Servir con `python -m http.server`
-desde `pitch/` o abrir el archivo directo.
-
-**Pendiente hackathon**: guion de demo 3-5 min + pitch hablado (ver PLAN
-MotionSites abajo). Confirmar formato exacto con el organizador.
+- **22 tokens** `d9e2b84` · **23 home** `bc9f3aa` · **24 como-llegar**
+  `be30dc9` · **25 detalle/travesía** `cbc013c` — todos con checks verdes
+  y juez CIERRA. Los workers murieron sin recibo (inestabilidad de Orca +
+  cuota Gemini agotada ~57h); el coordinador reconstruyó recibos, corrió
+  verificar y juzgó cada diff.
+- **Gap conocido**: ningún slice re-corrió kero-audit "después" — queda
+  como verificación post-merge pendiente (correr audit en master actual).
+- **Landing de pitch LISTA**: `pitch/index.html` + `pitch/guion-demo.md`
+  (guion de 4 min para presentar). Ver PLAN MotionSites abajo.
 
 **Pendientes del usuario (no dependen de mí):**
 - Supabase dashboard: correr `supabase/migrations/001_travesias.sql` en SQL
