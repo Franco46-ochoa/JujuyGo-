@@ -1,10 +1,46 @@
 # Estado actual del proyecto
 
-> Actualizar al cierre de cada ola de slices. Última actualización: 2026-11-11.
+> Actualizar al cierre de cada ola de slices. Última actualización: 2026-11-11 (cierre de sesión — retomar abajo).
+
+## ⚠️ RETOMAR ACÁ — sesión dormida con 4 slices estéticos EN VUELO
+
+Al guardar, los 4 workers de la pasada estética estaban corriendo en Orca
+(run `run_3ce49a5f5e5f`). **Puede que hayan quedado frenados en prompts de
+aprobación de Copilot** — al volver: `orca orchestration check --run
+run_3ce49a5f5e5f`, aprobar con `orca terminal send --terminal <handle>
+--enter` (y `--text $'\x1b[B'` antes para "don't ask again"/"remember path").
+
+| Slice | Dispatch | Terminal | Agente | Estado al dormir |
+|---|---|---|---|---|
+| 22-estetica-tokens | ctx_54d67f5226c3 | term_8342d777-b4b7-4160-9b3e-8ddae58ede81 | Copilot | chequeos finales |
+| 23-estetica-home | ctx_242673c730f7 | term_726076ac-be7f-499e-b727-8f2f80ab09c8 | Copilot | analizando baseline + mock |
+| 24-estetica-como-llegar | ctx_4359e8362a6c | term_a54c3529-dba9-44ee-ad4f-814b010b1067 | Antigravity gemini-3.8-flash-high | corriendo tests |
+| 25-estetica-detalle-travesia | ctx_43db3d15925f | term_3aaa05f8-01ac-4762-a652-e63c5778988f | Copilot | leyendo archivos |
+
+**Al retomar, por cada worker_done:** `./slices verificar <id>` → subagente
+juez escribe `juez.txt` (CIERRA/NO CIERRA) → `verificar` otra vez →
+`./slices mergear <id>` → `git push`. Los 4 tocan archivos disjoint
+(styles.css global solo en 22; home/, como-llegar/+yapa-mapa/, lugar-detalle/
++travesia/ separados) — mergear en orden 22→23→24→25.
+
+**Audit Fase 0 commiteado** en `frontend/audit-fase0/report.json` — cada
+SPEC exige re-correr kero-audit y guardar el "después" en su recibo.
+
+**Pendientes del usuario (no dependen de mí):**
+- Supabase dashboard: correr `supabase/migrations/001_travesias.sql` en SQL
+  Editor + Google OAuth provider + Site URL `http://localhost:4200` +
+  redirect `/**` (sin eso el login no funciona aunque el código esté).
+- Hackathon Tren Solar: usuario debe decir formato exacto (pitch/deck/demo/
+  video) y deadline; ofrecí preparar demo guiada y pitch.
+
+**Skills de diseño instaladas** (2026-11-11): 19 nuevas en
+`~/.agents/skills/` (badesign-skill, frontend-design, emil-*, mobile-native,
+typebien, anydesign, break-ui, pick-ui-library, etc.) — detalle y regla de
+uso en `docs/agents/orquestacion.md` sección "Skills de diseño instaladas".
 
 ## Master
 
-`cacec0c` — pusheado a `origin/master`. `./slices estado` muestra los 15 slices en `mergeado`.
+`4f39c12`+ — pusheado a `origin/master`. `./slices estado` muestra los 15 slices en `mergeado`.
 
 ## Slice 21 — Auth Supabase + guardar travesías (mergeado)
 
