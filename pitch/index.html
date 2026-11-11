@@ -126,6 +126,17 @@ section{padding:112px 0}
 .final h2{margin:0 auto;max-width:18ch;font:340 clamp(36px,5vw,68px)/1.05 var(--serif);letter-spacing:-.02em;text-wrap:balance}
 .final p{margin:20px auto 0;max-width:48ch;color:var(--t60)}
 
+/* waitlist */
+.waitlist{max-width:520px;margin:56px auto 0;text-align:left}
+.waitlist-label{display:block;margin-bottom:12px;font:500 14px var(--sans);color:var(--tinta)}
+.waitlist-row{display:flex;gap:8px}
+.waitlist-row input{flex:1;min-height:48px;padding:0 20px;border:1px solid var(--t30);border-radius:999px;background:#fff;color:var(--tinta);font:400 15px var(--sans)}
+.waitlist-row input:focus{outline:2px solid var(--oxido);outline-offset:2px;border-color:transparent}
+.waitlist-note{margin:12px 0 0;font-size:13px;color:var(--t60)}
+.waitlist-msg{margin:10px 0 0;font-size:14px;color:var(--verde);min-height:20px}
+.waitlist-msg.error{color:var(--oxido)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+
 /* footer */
 footer{border-top:1px solid var(--t14);padding:64px 0 40px;overflow:hidden}
 .foot-word{font:340 clamp(80px,16vw,220px)/.9 var(--serif);letter-spacing:-.03em;color:var(--tinta);white-space:nowrap}
@@ -250,8 +261,19 @@ a,button{touch-action:manipulation}
   <p class="reveal">Open source, sin reservas, sin comisiones. Hecho con los que conocen la quebrada y los que programan para ella.</p>
   <div class="hero-ctas reveal" style="justify-content:center">
     <a class="btn btn-solid" href="https://github.com/Franco46-ochoa/JujuyGo-" rel="noopener">Ver el código ↗</a>
-    <a class="btn btn-ghost" href="http://localhost:4200" rel="noopener">Abrir la app →</a>
+    <a class="btn btn-ghost" id="btn-app" href="https://jujuygo-web.vercel.app" rel="noopener">Abrir la app →</a>
   </div>
+
+  <form id="waitlist" class="waitlist reveal" novalidate>
+    <label class="waitlist-label" for="wl-email">Enterate cuando esté lista</label>
+    <div class="waitlist-row">
+      <input id="wl-email" name="email" type="email" required placeholder="tu@email.com" autocomplete="email">
+      <button class="btn btn-solid" type="submit">Anotarme</button>
+    </div>
+    <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <p class="waitlist-note">Usaremos tu email solo para avisarte del lanzamiento. Nada más.</p>
+    <p id="wl-msg" class="waitlist-msg" role="status"></p>
+  </form>
 </section>
 
 <footer>
@@ -269,6 +291,37 @@ a,button{touch-action:manipulation}
 // reveals al hacer scroll
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// ── analytics + waitlist (Supabase REST, anon key pública) ──
+const SB_URL='https://uaydgrcdpnjtcabrcmfd.supabase.co';
+const SB_KEY='sb_publishable_H_RIpfCuR63yaiuA_Me42g_-_NcL597';
+const esLocal=['localhost','127.0.0.1'].includes(location.hostname);
+function track(tipo,datos={}){
+  if(esLocal)return; // no contar tráfico propio ni pruebas
+  fetch(`${SB_URL}/rest/v1/eventos`,{method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({tipo,datos})}).catch(()=>{});
+}
+track('page_view',{path:location.pathname});
+document.getElementById('btn-app')?.addEventListener('click',()=>track('cta_app'));
+
+const form=document.getElementById('waitlist');
+const msg=document.getElementById('wl-msg');
+form?.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const data=new FormData(form);
+  if(data.get('website'))return; // honeypot: bot
+  const email=String(data.get('email')||'').trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){msg.textContent='Revisá el email.';msg.className='waitlist-msg error';return}
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/waitlist`,{method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({email})});
+    if(!r.ok)throw 0;
+    msg.textContent='Listo — te avisamos cuando esté lista.';msg.className='waitlist-msg';
+    form.reset();track('waitlist_signup');
+  }catch{msg.textContent='No pudimos guardar tu email, probá de nuevo.';msg.className='waitlist-msg error'}
+});
 </script>
 </body>
 </html>

@@ -29,4 +29,8 @@ export class TravesiaService {
       .set('hora', hora);
     return this.http.get<RespuestaProximos>(`${this.apiUrl}/transporte/proximos`, { params });
   }
+
+  redactarYapas(yapas: { tipo: string; lugar: string; mensaje: string; contexto?: string }[]): Observable<{ mensajes: { mensaje: string; fuente: string }[] }> {
+    return this.http.post<{ mensajes: { mensaje: string; fuente: string }[] }>(`${this.apiUrl}/yapa/redactar`, { yapas });
+  }
 }

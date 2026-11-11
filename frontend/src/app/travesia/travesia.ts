@@ -54,6 +54,8 @@ export class TravesiaPage {
   protected readonly lugaresElegidos = signal<string[]>([]);
   protected readonly descartadas = signal<string[]>([]);
   protected readonly yapasMostradas = signal<Record<string, number>>({});
+  private readonly yapaMensajes = signal<Record<string, string>>({});
+  private readonly yapaPedidas = new Set<string>();
   protected readonly lugarPendientePorDia = signal<Record<number, string>>({});
   protected readonly errorTransporte = signal('');
   protected readonly travesias = signal<TravesiaGuardada[]>([]);
@@ -254,9 +256,38 @@ export class TravesiaPage {
         : 0;
       const sugerencias = generarYapas(lugaresDelDia, this.lugares(), contexto, horaDisponible);
       const yapa = sugerencias.find(opcion => !this.descartadas().includes(`${diaKey}:${opcion.lugar_sugerido_slug}`));
-      if (yapa) return { diaIndex, yapa };
+      if (yapa) {
+        const lugar = this.lugares().find(l => l.slug === yapa.lugar_sugerido_slug);
+        const key = `${diaKey}:${yapa.lugar_sugerido_slug}:${yapa.mensaje}`;
+        const inicio = this.fechaInicio();
+        const fin = this.fechaFin();
+        this.pedirRedaccionYapa(key, yapa, lugar?.nombre ?? yapa.lugar_sugerido_slug,
+          inicio || fin ? `viaje del ${inicio || '?'} al ${fin || '?'}` : undefined);
+        const mensaje = this.yapaMensajes()[key];
+        return { diaIndex, yapa: mensaje ? { ...yapa, mensaje } : yapa };
+      }
     }
     return null;
+  }
+
+  // El LLM solo decora el mensaje; las reglas ya decidieron qué yapa va.
+  private pedirRedaccionYapa(key: string, yapa: YapaTravesia, lugarNombre: string, contexto?: string): void {
+    if (this.yapaPedidas.has(key)) return;
+    this.yapaPedidas.add(key);
+    this.travesia.redactarYapas([{
+      tipo: yapa.tipo,
+      lugar: lugarNombre,
+      mensaje: yapa.mensaje,
+      contexto,
+    }]).subscribe({
+      next: res => {
+        const mensaje = res.mensajes?.[0]?.mensaje;
+        if (mensaje && mensaje !== yapa.mensaje) {
+          this.yapaMensajes.update(m => ({ ...m, [key]: mensaje }));
+        }
+      },
+      error: () => {},
+    });
   }
 
   protected sumarYapa(diaIndex: number, yapa: YapaTravesia): void {

@@ -7,10 +7,20 @@ import transporteRouter from './routes/transporte.js';
 import hqRouter from './routes/hq.js';
 import { colejuyClient } from './colejuy.js';
 import { createUrbanoRouter } from './routes/urbano.js';
+import yapaLlmRouter from './routes/yapa-llm.js';
 
-export function createApp({ pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL || process.env.DATABASE_URL_TEST,
-}), urbanoClient = colejuyClient } = {}) {
+function crearPool() {
+  const connectionString = process.env.DATABASE_URL || process.env.DATABASE_URL_TEST;
+  const esSupabase = /supabase\.(co|com)/.test(connectionString || '');
+  return new pg.Pool({
+    connectionString,
+    max: 2,
+    idleTimeoutMillis: 10000,
+    ...(esSupabase ? { ssl: { rejectUnauthorized: false } } : {}),
+  });
+}
+
+export function createApp({ pool = crearPool(), urbanoClient = colejuyClient } = {}) {
   const app = express();
   app.use(express.json());
 
@@ -18,8 +28,12 @@ export function createApp({ pool = new pg.Pool({
     res.json({ status: 'ok' });
   });
 
+  const origenes = (process.env.CORS_ORIGIN || '*')
+    .split(',').map(o => o.trim()).filter(Boolean);
   app.use('/api', (req, res, next) => {
-    res.set('Access-Control-Allow-Origin', '*');
+    const origen = req.headers.origin;
+    const permitir = origenes.includes('*') || (origen && origenes.includes(origen));
+    res.set('Access-Control-Allow-Origin', permitir ? (origen || '*') : origenes[0]);
     res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.set('Access-Control-Allow-Headers', 'Content-Type');
     if (req.method === 'OPTIONS') return res.sendStatus(204);
@@ -31,6 +45,7 @@ export function createApp({ pool = new pg.Pool({
   app.use('/api/hq', hqRouter);
   app.use('/api/urbano', createUrbanoRouter(urbanoClient));
   app.use('/api', transporteRouter);
+  app.use('/api', yapaLlmRouter);
   app.use(transporteRouter);
   app.use((error, _req, res, _next) => {
     console.error(error);
