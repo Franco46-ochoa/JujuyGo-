@@ -1,0 +1,7 @@
+ frontend/src/app/lugar-detalle/lugar-detalle.css | 80 ++++++++++++++++++------
+ frontend/src/app/travesia/travesia-auth.css      | 43 +++++++------
+ frontend/src/app/travesia/travesia-motion.css    | 35 ++++++++---
+ frontend/src/app/travesia/travesia-plan.css      | 26 ++++++++
+ frontend/src/app/travesia/travesia.css           | 41 ++++++------
+ frontend/src/app/travesia/travesia.ts            |  2 +-
+ 6 files changed, 161 insertions(+), 66 deletions(-)

@@ -1,38 +1,43 @@
-.travesia-nav { gap: 20px; }
+.travesia-nav { gap: 24px; }
 .auth-controles { display: flex; align-items: center; gap: 12px; }
-.auth-sesion { display: flex; align-items: center; gap: 10px; color: var(--t60); font-size: 14px; }
-.auth-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-.auth-entrar, .auth-salir { min-height: 44px; padding: 8px 16px; border: 1px solid var(--t30); border-radius: 999px; background: transparent; color: var(--tinta); font: 600 14px var(--sans); cursor: pointer; touch-action: manipulation; }
-.auth-salir { padding-inline: 12px; border-color: transparent; color: var(--t60); text-decoration: underline; text-underline-offset: 4px; }
+.auth-sesion { display: flex; min-width: 0; align-items: center; flex-wrap: wrap; gap: 12px; color: var(--t60); font-size: 14px; }
+.auth-sesion > span { min-width: 0; overflow-wrap: anywhere; }
+.auth-avatar { width: 32px; height: 32px; flex: none; border-radius: 50%; object-fit: cover; }
+.auth-entrar, .auth-salir { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 8px 16px; border: 1px solid var(--verde); border-radius: 999px; background: var(--verde); color: #fff; font: 600 14px var(--sans); cursor: pointer; touch-action: manipulation; }
+.auth-salir { padding-inline: 12px; border-color: transparent; background: transparent; color: var(--t60); }
 .auth-entrar:focus-visible, .auth-salir:focus-visible, .travesia-guardada-acciones button:focus-visible { outline: 2px solid var(--oxido); outline-offset: 3px; }
 .auth-entrar:disabled { cursor: not-allowed; opacity: .65; }
-.auth-entrar:not(:disabled):hover { background: var(--arena); }
-.auth-salir:hover, .travesia-guardada-acciones button:hover { color: var(--oxido); }
-.auth-nota { color: var(--t60); font-size: 14px; }
 .auth-error { margin-top: 16px; }
 .mis-travesias { margin-top: 24px; padding: 20px 0 8px; border-bottom: 1px solid var(--t14); }
 .mis-travesias-cabecera { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-bottom: 8px; }
 .mis-travesias-cabecera h2 { font: 400 26px/1.2 var(--serif); text-wrap: balance; }
-.mis-travesias-cabecera > span, .mis-travesias-vacio { color: var(--t60); font-size: 14px; }
-.mis-travesias-vacio { padding: 12px 0 20px; }
-.travesia-guardada { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 14px 0; border-top: 1px solid var(--t14); }
-.travesia-guardada h3 { font: 500 18px/1.3 var(--serif); }
+.mis-travesias-cabecera > span { color: var(--t60); font-size: 14px; }
+.mis-travesias-vacio { padding: 16px 0 20px; border-top: 1px solid var(--t14); color: var(--tinta); font: 400 18px/1.5 var(--serif); }
+.travesia-guardada { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 16px 0; border-top: 1px solid var(--t14); }
+.travesia-guardada > div:first-child { min-width: 0; }
+.travesia-guardada h3 { font: 500 18px/1.3 var(--serif); overflow-wrap: anywhere; text-wrap: balance; }
 .travesia-guardada time { display: block; margin-top: 4px; color: var(--t60); font-size: 14px; }
-.travesia-guardada-acciones { display: flex; align-items: center; gap: 20px; }
-.travesia-guardada-acciones button { min-height: 44px; padding: 8px 4px; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+.travesia-guardada-acciones { display: flex; flex: none; align-items: center; gap: 12px; }
+.travesia-guardada-acciones button { display: inline-flex; min-width: 72px; min-height: 44px; align-items: center; justify-content: center; padding: 8px 16px; border: 1px solid var(--verde); border-radius: 999px; background: var(--verde); color: #fff; cursor: pointer; font: 600 14px var(--sans); touch-action: manipulation; }
+.travesia-guardada-acciones button:last-child { border-color: var(--oxido); background: transparent; color: var(--oxido); }
 .guardar-travesia { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
 .guardar-travesia .boton-principal:disabled { cursor: wait; opacity: .7; }
-.guardar-travesia .boton-principal:not(:disabled):hover { background: #233b32; }
 .guardado-mensaje { color: var(--verde); font-size: 14px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .auth-entrar:not(:disabled):hover { background: #233a31; }
+  .auth-salir:hover { color: var(--oxido); }
+  .travesia-guardada-acciones button:first-child:hover { background: #233a31; }
+  .travesia-guardada-acciones button:last-child:hover { background: rgba(181,73,42,.08); }
+}
 
 @media (max-width: 720px) {
   .travesia-nav { flex-wrap: wrap; gap: 8px 16px; }
   .travesia-nav .brand { margin-right: auto; }
   .volver-inicio { order: 2; }
   .auth-controles { order: 1; }
-  .auth-sesion { gap: 6px; font-size: 14px; }
-  .auth-sesion > span { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .auth-sesion { gap: 8px; }
+  .auth-sesion > span { max-width: min(220px, 100%); }
   .auth-entrar { padding-inline: 12px; }
-  .travesia-guardada { align-items: flex-start; }
-  .travesia-guardada-acciones { gap: 12px; }
+  .travesia-guardada { flex-direction: column; gap: 12px; }
 }

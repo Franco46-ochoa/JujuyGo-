@@ -1,0 +1,6 @@
+===RECIBO===
+hecho: Pulido estético de /lugares/:slug y /travesia: lugar-detalle.css (80 líneas), travesia.css, travesia-auth.css, travesia-motion.css, travesia.ts (2 líneas) y nuevo travesia-plan.css. Apunta a los hallazgos del audit: hit areas chicas ("Ver detalle →", "×"), meta-textos 11-13px, wizard y auth UI.
+archivos: frontend/src/app/lugar-detalle/lugar-detalle.css, frontend/src/app/travesia/travesia.css, frontend/src/app/travesia/travesia-auth.css, frontend/src/app/travesia/travesia-motion.css, frontend/src/app/travesia/travesia.ts, frontend/src/app/travesia/travesia-plan.css, recibos/25-estetica-detalle-travesia/recibo-agente.md
+chequeos: pendiente — `./slices verificar 25-estetica-detalle-travesia` la corre el coordinador. El worker (Copilot, dispatch ctx_661199baacc3) llegó a correr `npm test` y `npm run build` en su worktree pero el proceso murió antes del worker_done y del recibo; el coordinador lo reconstruyó desde el diff.
+gaps: El proceso murió en la recta final (tests/build en curso). No hay evidencia de kero-audit ni de que el build haya terminado verde. travesia.ts tiene un cambio de 2 líneas que puede ser clase/estilo — verificar que no rompa lógica. Si el juez marca NO CIERRA, relanzar.
+===FIN===

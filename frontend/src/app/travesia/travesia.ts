@@ -26,7 +26,7 @@ import { TravesiaGuardada, TravesiasGuardadasService } from './travesias-guardad
   imports: [DecimalPipe, NgTemplateOutlet, RouterLink],
   selector: 'app-travesia',
   templateUrl: './travesia.html',
-  styleUrl: './travesia.css',
+  styleUrls: ['./travesia.css', './travesia-plan.css'],
 })
 export class TravesiaPage {
   protected readonly auth = inject(AuthService);
