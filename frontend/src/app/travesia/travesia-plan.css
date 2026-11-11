@@ -1,0 +1,26 @@
+.tramo { position: relative; padding: 12px 0 12px 24px; border-top: 1px solid var(--t14); }
+.tramo-nodo { position: absolute; top: 20px; left: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--ocre); }
+.tramo > span:nth-child(2) { display: block; color: var(--verde); font: italic 16px/1.4 var(--serif); font-variant-numeric: tabular-nums; }
+.tramo small { display: block; margin-top: 4px; color: var(--t60); font-size: 14px; line-height: 1.5; }
+.tramo .proximo-servicio { color: var(--verde); }
+.dia-activo .tramo > span:nth-child(2), .dia-activo .tramo .proximo-servicio { color: #f4ede3; }
+.conflicto { margin: 16px 0 0 80px; padding: 16px 0 0; border-top: 1px solid var(--ocre); background: rgba(201, 168, 106, .12); }
+.conflicto strong { font: 500 17px/1.4 var(--serif); }
+.conflicto p { margin-top: 8px; color: inherit; font-size: 14px; line-height: 1.5; }
+.dia-vacio { max-width: 48ch; padding: 16px 0; color: var(--t60); font: italic 16px/1.5 var(--serif); }
+.yapa-card { margin-bottom: 16px; padding: 20px; border-top: 2px solid var(--oxido); background: var(--arena); color: var(--tinta); }
+.yapa-kicker { color: var(--oxido); font-size: 14px; font-weight: 600; }
+.yapa-mensaje { max-width: 58ch; margin-top: 8px; font: 400 20px/1.45 var(--serif); text-wrap: pretty; }
+.yapa-acciones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.boton-yapa-sumar, .boton-yapa-pasar { min-height: 44px; padding: 8px 16px; border: 1px solid var(--verde); border-radius: 999px; font: 600 14px var(--sans); cursor: pointer; touch-action: manipulation; }
+.boton-yapa-sumar { background: var(--verde); color: #fff; }
+.boton-yapa-pasar { background: transparent; color: var(--verde); }
+.agregar-lugar { display: flex; align-items: end; gap: 16px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--t14); }
+.agregar-lugar label { display: grid; flex: 1; gap: 8px; color: var(--t60); font-size: 14px; touch-action: manipulation; }
+.agregar-lugar select { width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid #887b70; border-radius: 3px; background: transparent; color: var(--tinta); font: 16px var(--sans); touch-action: manipulation; }
+.agregar-lugar select:focus-visible { outline: 2px solid var(--oxido); outline-offset: 3px; }
+
+@media (max-width: 720px) {
+  .agregar-lugar { align-items: stretch; flex-direction: column; }
+  .conflicto { margin-left: 0; }
+}

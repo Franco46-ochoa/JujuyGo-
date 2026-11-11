@@ -1,0 +1,5 @@
+CIERRA
+kero-audit NO se re-corrió en /lugares/plaza-belgrano-jujuy ni /travesia (ni a 390x844 ni 1440x900); no hay reporte en recibos/25-estetica-detalle-travesia/audit-despues/ — gap declarado por el coordinador y aceptado.
+El recibo del worker quedó incompleto: no incluye mediciones antes/después ni hallazgos de break-ui/estados del plan (break-ui era opcional; la revisión de estados quedó sin documentar).
+No se pudo verificar `npm run build` ni `git diff --check` directamente (proceso del worker murió), aunque `ng test` compiló el bundle completo sin errores y tests front (69) y back (56) pasaron en chequeos.log.
+Clases .estado-atencion, .tramo-regreso y .auth-nota del HTML no tienen estilo propio (quedan con el estilo base); menor, no bloquea.
