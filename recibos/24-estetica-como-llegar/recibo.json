@@ -1,0 +1,12 @@
+{
+  "slice": "24-estetica-como-llegar",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "d531718",
+  "verificado": "2026-11-11T18:13:39-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 3,
+  "juez": "devin: CIERRA",
+  "cerrado": true,
+  "motivo": ""
+}

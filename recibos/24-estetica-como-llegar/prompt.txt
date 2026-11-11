@@ -1,0 +1,120 @@
+Sos el ejecutor del slice 24-estetica-como-llegar de este repo. Estás parado en el worktree del
+slice: trabajá acá y solo acá.
+
+Leé AGENTS.md y seguí sus reglas. Implementá el SPEC que sigue, completo:
+el código, y los tests que exige. Corré los chequeos del proyecto antes de
+terminar y arreglá lo que rompas.
+
+No hagas git commit ni git push. No toques archivos fuera del alcance.
+
+Terminá tu respuesta con este bloque, honesto:
+
+===RECIBO===
+hecho: <qué quedó implementado>
+archivos: <lista>
+chequeos: <qué corriste y con qué resultado>
+gaps: <qué NO quedó o no pudiste verificar; "ninguno" solo si es verdad>
+===FIN===
+
+Guardá ese mismo bloque en recibos/24-estetica-como-llegar/recibo-agente.md antes de terminar.
+
+
+──────────── SPEC ────────────
+# Slice 24 — Pulido estético de "Cómo llegar"
+
+**Depende de:** master actual. Auditoría Fase 0 en
+`frontend/audit-fase0/report.json`. El slice 22 (tokens) puede mergear
+antes/después — no dependas de él; conflictos de tokens los resuelve el
+coordinador.
+
+**Alcance:** `frontend/src/app/como-llegar/` (ts/html/css/spec/types) y
+`frontend/src/app/yapa-mapa/` (componente de mapa compartido: labels,
+atribucción, marcadores, controles Leaflet). NO tocar home, lugar-detalle,
+travesia, backend, specs, docs. Si lugar-detalle usa yapa-mapa, tus cambios
+en yapa-mapa le afectan — está bien, pero no toques sus archivos.
+
+## Contexto — hallazgos del audit en `/como-llegar` y
+`/como-llegar/cerro-siete-colores`
+
+- `/como-llegar` pelado: casi limpio (5 borderline, 6 offScale). El trabajo
+  pesado está en la página CON resultados.
+- `/como-llegar/cerro-siete-colores`:
+  - **6 textos <14px**: labels de paradas del mapa ("Terminal de Ómnibus
+    SS.Jujuy", "Purmamarca Cruce", "Cerro de los Siete Colores" a 12px) +
+    atribución Leaflet.
+  - **13 borderline** (~4.6): `--t60` — dependencia del slice 22; medí y
+    reportá, no dupliques el fix.
+  - **3 títulos sin balance**: "Tomá el colectivo en Terminal de…", "Bajá en
+    Purmamarca Cruce", "Traslado de la parada al destino" — los pasos del
+    recorrido.
+  - **3 controles `touch-action: auto`** en móvil (labels del mapa).
+  - **11-12 valores de espaciado off-scale** (15×8, 9×7, 10×7, 7×6…).
+  - Selects de origen/destino son `<select>` nativos planos — `design.md`
+    pide controles nativos DISEÑADOS (estilo del proyecto, comportamiento
+    nativo intacto). Revisar appearance, chevron, paddings, focus.
+  - Las secciones nuevas de los slices 19-20 ("Colectivo urbano hacia la
+    salida RN9", "Con transbordo", pasos) nunca tuvieron pasada visual:
+    cards/filas/números itálicos deben hablar el mismo idioma editorial
+    (filas con regla fina, no tarjetas genéricas — ver mock-04 y home).
+- La polilínea RN9 y los marcadores del mapa: labels 12px → subir a ≥13-14px
+  si es legible (Leaflet tooltips/divIcon por CSS del componente); la
+  atribución Leaflet (12px) puede quedar como excepción documentada si
+  subirla rompe el mapa — decilo en el recibo con captura.
+
+## Skills OBLIGATORIAS (leer antes de diseñar)
+
+Sistema visual: `docs/design.md` (mock-04) — gana sobre genéricas. Cargar de
+`~/.agents/skills/`:
+
+- `badesign-skill` — juicio, hard limits.
+- `frontend-design` — dirección estética.
+- `impeccable` — polish.
+- `mobile-native` — táctil, selects que no zoomen (font-size ≥16px en
+  inputs en iOS), tap highlight.
+- `kero-audit` — `scripts/checks.js` es la vara; re-correr al final.
+- `pick-ui-library` — SOLO si considerás reemplazar un control nativo por
+  librería; preferí CSS sobre librería nueva.
+- `typebien` — solo si tocás copy (no reescribir).
+
+## Qué tiene que pasar
+
+1. Selects de origen/destino: estilo del proyecto (borde fino, radio 3px,
+   tipografía Archivo, chevron propio vía appearance o SVG de fondo) sin
+   perder comportamiento nativo de teclado/móvil. En móvil font-size ≥16px
+   para que iOS no auto-zoomee.
+2. Labels del mapa (paradas, marcador usuario): tamaño legible ≥13px,
+   contraste suficiente sobre el tile, `touch-action: manipulation` si son
+   clickeables.
+3. `text-wrap: balance` en títulos de pasos del recorrido y secciones.
+4. Espaciado al scale 4·n donde sea seguro; excepciones justificadas.
+5. Secciones urbano/transbordos (19-20): alinearlas al lenguaje editorial —
+   pasos como filas con regla fina o numeración itálica como el resto del
+   sitio; revisar jerarquía (qué es línea, qué es instrucción, qué es meta).
+6. Contraste: nada <4.5:1 medido en su fondo real (los `t60` → dependencia
+   slice 22; reportar, no duplicar).
+7. Estados: hover/focus/disabled/empty/error de TODOS los controles de la
+   página, medidos (el audit revisa states en 40 controles máx).
+8. **NO rediseñar**: misma estructura, mismos datos, mismo tono. Pulido.
+9. Verificar que el flujo GPS/"Usar mi ubicación" y las secciones urbanas
+   sigan funcionando (los tests existentes cubren lógica; no rompas
+   selectores ni estructura que usen).
+
+## Criterios
+
+- [ ] `cd frontend && npm test -- --watch=false` verde
+- [ ] `cd frontend && npm run build` OK
+- [ ] `git diff --check` limpio
+- [ ] kero-audit re-corrido en `/como-llegar` y `/como-llegar/cerro-siete-colores`
+      a 390x844 y 1440x900: sin hard faults; smallText de UI → 0 o
+      excepciones documentadas (atribuición Leaflet); unbalanced → 0;
+      noTouchAction → 0; reporte en `recibos/24-estetica-como-llegar/audit-despues/`.
+- [ ] Verificación funcional: la página con resultados sigue mostrando
+      relato RN9 + sección urbana + mapa (captura en el recibo).
+- [ ] Recibo: cambios por sección, mediciones antes/después, archivos,
+      gaps.
+
+## Fuera de alcance
+
+- Tokens globales (slice 22), home (23), lugar-detalle/travesia (25).
+- Lógica de ruteo, transporte.service, backend.
+- Copy (salvo largos de línea medidos).
