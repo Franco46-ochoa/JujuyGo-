@@ -1,0 +1,16 @@
+ frontend/package-lock.json                         | 132 +++++++++++++++++
+ frontend/package.json                              |   1 +
+ frontend/src/app/auth.service.spec.ts              |  93 ++++++++++++
+ frontend/src/app/auth.service.ts                   |  83 +++++++++++
+ frontend/src/app/supabase.client.ts                |  18 +++
+ frontend/src/app/travesia/travesia-auth.css        |  38 +++++
+ .../src/app/travesia/travesia.guardadas.spec.ts    | 125 +++++++++++++++++
+ frontend/src/app/travesia/travesia.guardadas.ts    |  97 +++++++++++++
+ frontend/src/app/travesia/travesia.html            |  54 +++++++
+ frontend/src/app/travesia/travesia.spec.ts         | 156 +++++++++++++++++++++
+ frontend/src/app/travesia/travesia.ts              | 113 ++++++++++++++-
+ .../app/travesia/travesias-guardadas.service.ts    |  50 +++++++
+ frontend/src/environments/environment.ts           |   2 +
+ frontend/src/styles.css                            |   1 +
+ supabase/migrations/001_travesias.sql              |  35 +++++
+ 15 files changed, 997 insertions(+), 1 deletion(-)

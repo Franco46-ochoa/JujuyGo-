@@ -2,7 +2,49 @@
   <header class="travesia-nav">
     <a class="brand" routerLink="/" aria-label="Yapa, inicio">Yapa<span></span></a>
     <a class="volver-inicio" routerLink="/">Volver a explorar <span aria-hidden="true">↗</span></a>
+    <div class="auth-controles">
+      @if (auth.inicializado()) {
+        @if (auth.sesion(); as usuario) {
+          <div class="auth-sesion">
+            @if (usuario.user_metadata?.['avatar_url']; as avatar) {
+              <img class="auth-avatar" [src]="avatar" alt="">
+            }
+            <span>{{ usuario.email }}</span>
+            <button class="auth-salir" type="button" (click)="auth.salir()">Salir</button>
+          </div>
+        } @else {
+          <button class="auth-entrar" type="button" (click)="entrarConGoogle()" [disabled]="!auth.configurado">Entrar con Google</button>
+          @if (!auth.configurado) { <span class="auth-nota">login no configurado</span> }
+        }
+      }
+    </div>
   </header>
+  @if (auth.error()) { <p class="form-error auth-error" role="alert">{{ auth.error() }}</p> }
+
+  @if (auth.sesion()) {
+    <section class="mis-travesias" aria-labelledby="mis-travesias-title">
+      <header class="mis-travesias-cabecera">
+        <h2 id="mis-travesias-title">Mis travesías</h2>
+        @if (cargandoTravesias()) { <span role="status">Cargando…</span> }
+      </header>
+      @if (errorTravesias()) { <p class="form-error" role="alert">{{ errorTravesias() }}</p> }
+      @if (!cargandoTravesias() && !travesias().length && !errorTravesias()) {
+        <p class="mis-travesias-vacio">Todavía no guardaste una travesía.</p>
+      }
+      @for (guardada of travesias(); track guardada.id) {
+        <article class="travesia-guardada">
+          <div>
+            <h3>{{ guardada.titulo }}</h3>
+            <time [attr.datetime]="guardada.updated_at">Actualizada {{ fechaGuardada(guardada.updated_at) }}</time>
+          </div>
+          <div class="travesia-guardada-acciones">
+            <button class="boton-secundario" type="button" (click)="cargarTravesia(guardada)">Cargar</button>
+            <button class="boton-secundario" type="button" (click)="borrarTravesia(guardada)">Borrar</button>
+          </div>
+        </article>
+      }
+    </section>
+  }
 
   @if (cargando()) {
     <p class="mensaje-carga status" role="status">Cargando lugares para tu viaje…</p>
@@ -142,6 +184,18 @@
         @if (plan()!.llegada === 'avion') {
           <p class="nota-acceso">La conexión desde el aeropuerto hasta la terminal no está incluida en los horarios RN9.</p>
         }
+        <div class="guardar-travesia">
+          @if (auth.sesion()) {
+            <button class="boton-principal" type="button" (click)="guardarTravesia()" [disabled]="guardandoTravesia() || validando()">
+              {{ guardandoTravesia() ? 'Guardando…' : 'Guardar travesía' }}
+            </button>
+          } @else {
+            <button class="boton-principal" type="button" (click)="entrarConGoogle()" [disabled]="!auth.configurado || validando()">
+              {{ auth.configurado ? 'Iniciá sesión para guardar' : 'login no configurado' }}
+            </button>
+          }
+          @if (mensajeGuardado()) { <p class="guardado-mensaje" role="status">{{ mensajeGuardado() }}</p> }
+        </div>
       </div>
 
       @if (validando()) {

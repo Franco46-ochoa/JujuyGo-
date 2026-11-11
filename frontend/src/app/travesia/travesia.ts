@@ -1,9 +1,11 @@
 import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../auth.service';
 import { CatalogoService } from '../catalogo.service';
 import { Lugar } from '../catalogo.types';
+import { deserializarPlan } from './travesia.guardadas';
 import { crearPlan } from './travesia.model';
 import {
   ConflictoTravesia,
@@ -18,6 +20,7 @@ import {
 } from './travesia.types';
 import { TravesiaService } from './travesia.service';
 import { generarYapas } from './travesia.yapas';
+import { TravesiaGuardada, TravesiasGuardadasService } from './travesias-guardadas.service';
 
 @Component({
   imports: [DecimalPipe, NgTemplateOutlet, RouterLink],
@@ -26,8 +29,10 @@ import { generarYapas } from './travesia.yapas';
   styleUrl: './travesia.css',
 })
 export class TravesiaPage {
+  protected readonly auth = inject(AuthService);
   private readonly catalogo = inject(CatalogoService);
   private readonly travesia = inject(TravesiaService);
+  private readonly travesiasGuardadas = inject(TravesiasGuardadasService);
 
   protected readonly lugares = signal<Lugar[]>([]);
   protected readonly contexto = signal<ContextoTravesia | null>(null);
@@ -51,9 +56,27 @@ export class TravesiaPage {
   protected readonly yapasMostradas = signal<Record<string, number>>({});
   protected readonly lugarPendientePorDia = signal<Record<number, string>>({});
   protected readonly errorTransporte = signal('');
+  protected readonly travesias = signal<TravesiaGuardada[]>([]);
+  protected readonly cargandoTravesias = signal(false);
+  protected readonly guardandoTravesia = signal(false);
+  protected readonly errorTravesias = signal('');
+  protected readonly mensajeGuardado = signal('');
   private validacionId = 0;
+  private cargaTravesiasId = 0;
 
   constructor() {
+    effect(() => {
+      const usuario = this.auth.sesion();
+      if (!this.auth.inicializado()) return;
+      if (!usuario) {
+        this.cargaTravesiasId++;
+        this.travesias.set([]);
+        this.cargandoTravesias.set(false);
+        return;
+      }
+      void this.cargarTravesias(usuario.id);
+    });
+
     this.catalogo.getLugares().subscribe({
       next: lugares => {
         this.lugares.set(lugares);
@@ -355,6 +378,74 @@ export class TravesiaPage {
     this.yapasMostradas.set({});
   }
 
+  protected async entrarConGoogle(): Promise<void> {
+    await this.auth.entrarConGoogle();
+  }
+
+  protected async guardarTravesia(): Promise<void> {
+    const plan = this.plan();
+    const usuario = this.auth.sesion();
+    if (!plan) return;
+    if (!usuario) {
+      if (this.auth.configurado) await this.auth.entrarConGoogle();
+      return;
+    }
+
+    this.guardandoTravesia.set(true);
+    this.errorTravesias.set('');
+    this.mensajeGuardado.set('');
+    try {
+      const lugaresDelPlan = [...new Set(plan.dias.flatMap(dia => dia.eventos.map(evento => evento.lugar)))];
+      await this.travesiasGuardadas.guardar(usuario.id, plan, lugaresDelPlan);
+      this.mensajeGuardado.set('Travesía guardada en tu cuenta.');
+      await this.cargarTravesias(usuario.id);
+    } catch (error) {
+      this.errorTravesias.set(this.mensajeError(error, 'No pudimos guardar la travesía.'));
+    } finally {
+      this.guardandoTravesia.set(false);
+    }
+  }
+
+  protected cargarTravesia(guardada: TravesiaGuardada): void {
+    const datos = deserializarPlan(guardada.datos);
+    if (!datos) {
+      this.errorTravesias.set('Esta travesía guardada no tiene un formato que podamos cargar.');
+      return;
+    }
+
+    this.errorTravesias.set('');
+    this.mensajeGuardado.set('');
+    this.llegada.set(datos.plan.llegada);
+    this.intereses.set([...datos.plan.intereses]);
+    this.lugaresElegidos.set([...datos.lugaresElegidos]);
+    this.fechaInicio.set(datos.plan.dias[0]?.fecha ?? '');
+    this.fechaFin.set(datos.plan.dias.at(-1)?.fecha ?? '');
+    this.errorFechaInicio.set('');
+    this.errorFechaFin.set('');
+    this.descartadas.set([]);
+    this.yapasMostradas.set({});
+    this.lugarPendientePorDia.set({});
+    this.paso.set(4);
+    this.plan.set(datos.plan);
+    this.validar(datos.plan);
+  }
+
+  protected async borrarTravesia(guardada: TravesiaGuardada): Promise<void> {
+    if (!window.confirm(`¿Borrar “${guardada.titulo}” de tus travesías?`)) return;
+    this.errorTravesias.set('');
+    try {
+      await this.travesiasGuardadas.borrar(guardada.id);
+      this.travesias.update(actuales => actuales.filter(item => item.id !== guardada.id));
+    } catch (error) {
+      this.errorTravesias.set(this.mensajeError(error, 'No pudimos borrar la travesía.'));
+    }
+  }
+
+  protected fechaGuardada(fecha: string): string {
+    return new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })
+      .format(new Date(fecha));
+  }
+
   protected conflictosDelDia(numeroDia: number): ConflictoTravesia[] {
     return this.validacion()?.conflictos.filter(conflicto => conflicto.dia === numeroDia) ?? [];
   }
@@ -433,5 +524,25 @@ export class TravesiaPage {
 
   private claveTramo(tramo: TramoTravesia): string {
     return `${tramo.origen}:${tramo.destino}:${tramo.hora_salida}`;
+  }
+
+  private async cargarTravesias(userId: string): Promise<void> {
+    const cargaId = ++this.cargaTravesiasId;
+    this.cargandoTravesias.set(true);
+    this.errorTravesias.set('');
+    try {
+      const travesias = await this.travesiasGuardadas.listar(userId);
+      if (cargaId === this.cargaTravesiasId) this.travesias.set(travesias);
+    } catch (error) {
+      if (cargaId === this.cargaTravesiasId) {
+        this.errorTravesias.set(this.mensajeError(error, 'No pudimos cargar tus travesías.'));
+      }
+    } finally {
+      if (cargaId === this.cargaTravesiasId) this.cargandoTravesias.set(false);
+    }
+  }
+
+  private mensajeError(error: unknown, fallback: string): string {
+    return error instanceof Error ? error.message : fallback;
   }
 }
