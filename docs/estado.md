@@ -175,3 +175,12 @@ git log --oneline -10        # qué mergeó
 ./slices estado              # estado de slices
 cat docs/estado.md           # este archivo
 ```
+
+## 2026-11-11 (noche) — tracción + LLM + deploy prep
+
+- **Waitlist + analytics en `pitch/index.html`**: form con consentimiento + honeypot, beacon `eventos` (page_view/cta_app/waitlist_signup) via Supabase REST anon; excluye localhost. Requiere `supabase/migrations/002_waitlist_eventos.sql` corrida en dashboard.
+- **Capa LLM de yapas**: `backend/src/llm.js` (Gemini AI Studio, timeout 3s, cache, nunca lanza) + `POST /api/yapa/redactar` (max 6 yapas). Frontend las usa solo si vuelven; si no, texto de reglas. `GEMINI_API_KEY` solo en backend/Vercel env. Verificado: sin key devuelve `fuente:"reglas"`.
+- **Deploy prep ya commiteado** (`c7875bd`): environment.prod.ts, vercel.json ambos, backend serverless catch-all, pool max 2 + ssl Supabase + CORS_ORIGIN.
+- **Pendiente usuario (dashboard)**: importar repo en Vercel (backend primero → URL → environment.prod.ts → frontend), correr migraciones 001-004 backend + 001-002 supabase en SQL Editor, DATABASE_URL pooler :6543, CORS_ORIGIN, Site URL/redirects Supabase, Google OAuth provider, GEMINI_API_KEY opcional.
+- **Nota**: el commit f5d1075 barrió artefactos de audit (borró audit-salida/, commiteó frontend/audit-fase0/*.png) — limpieza parcial de higiene; pitch/ PNGs grandes siguen commiteados, pendiente de limpiar.
+- Tests: backend 63/63 OK, frontend build OK (warnings de budget).
