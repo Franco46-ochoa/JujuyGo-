@@ -1,0 +1,412 @@
+{
+  "base": "http://localhost:4399",
+  "minText": 14,
+  "report": [
+    {
+      "route": "/",
+      "viewport": "1440x900",
+      "screenshot": "..\\pitch\\audit\\home-1440.png",
+      "hard": [
+        "10 low contrast",
+        "2 low state contrast"
+      ],
+      "lowContrast": [
+        {
+          "text": "Yapa",
+          "px": 17,
+          "ratio": 2.45,
+          "min": 4.5
+        },
+        {
+          "text": "Cómo funciona",
+          "px": 13,
+          "ratio": 2.2,
+          "min": 4.5
+        },
+        {
+          "text": "Demo",
+          "px": 13,
+          "ratio": 2.2,
+          "min": 4.5
+        },
+        {
+          "text": "Pre-hackathon · Tren Solar de la",
+          "px": 12,
+          "ratio": 1.72,
+          "min": 4.5
+        },
+        {
+          "text": "Un itinerario querespeta el relo",
+          "px": 103.68,
+          "ratio": 1,
+          "min": 3
+        },
+        {
+          "text": "respeta el reloj",
+          "px": 103.68,
+          "ratio": 1.72,
+          "min": 3
+        },
+        {
+          "text": "Yapa cruza la Quebrada sin auto:",
+          "px": 18,
+          "ratio": 1,
+          "min": 4.5
+        },
+        {
+          "text": "Cómo funciona",
+          "px": 15,
+          "ratio": 1,
+          "min": 4.5
+        },
+        {
+          "text": "24.19°S · 65.30°O — San Salvador",
+          "px": 11,
+          "ratio": 1,
+          "min": 4.5
+        },
+        {
+          "text": "Turismo sin auto",
+          "px": 11,
+          "ratio": 1,
+          "min": 4.5
+        }
+      ],
+      "borderline": [],
+      "smallText": [
+        {
+          "text": "Cómo funciona",
+          "px": 13
+        },
+        {
+          "text": "Demo",
+          "px": 13
+        },
+        {
+          "text": "GitHub ↗",
+          "px": 13
+        },
+        {
+          "text": "Pre-hackathon · Tren Solar de la",
+          "px": 12
+        },
+        {
+          "text": "24.19°S · 65.30°O — San Salvador",
+          "px": 11
+        },
+        {
+          "text": "Turismo sin auto",
+          "px": 11
+        },
+        {
+          "text": "JujuyGo — turismo sin auto",
+          "px": 12
+        },
+        {
+          "text": "24.19°S · 65.30°O",
+          "px": 12
+        },
+        {
+          "text": "Pre-hackathon Tren Solar",
+          "px": 12
+        }
+      ],
+      "overImage": 0,
+      "texts": 15,
+      "smallTargets": [
+        {
+          "text": "Cómo funciona",
+          "w": 88,
+          "h": 21
+        },
+        {
+          "text": "Demo",
+          "w": 35,
+          "h": 21
+        }
+      ],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 0,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 1
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 26,
+            "uses": 5
+          },
+          {
+            "value": 13,
+            "uses": 4
+          },
+          {
+            "value": 10,
+            "uses": 4
+          },
+          {
+            "value": 110,
+            "uses": 4
+          },
+          {
+            "value": 18,
+            "uses": 1
+          },
+          {
+            "value": 22,
+            "uses": 1
+          },
+          {
+            "value": 34,
+            "uses": 1
+          },
+          {
+            "value": 252.5,
+            "uses": 1
+          }
+        ],
+        "distinct": 19,
+        "total": 85,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [],
+        "blocks": 1,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [
+          {
+            "text": "Abrir la app →",
+            "state": "hover",
+            "part": "text",
+            "ratio": 1.01,
+            "min": 4.5
+          },
+          {
+            "text": "Abrir la app →",
+            "state": "focus",
+            "part": "text",
+            "ratio": 1,
+            "min": 4.5
+          }
+        ],
+        "measured": 4,
+        "controls": 2
+      },
+      "focus": {
+        "walked": 7,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/",
+      "viewport": "390x844",
+      "screenshot": "..\\pitch\\audit\\home-390.png",
+      "hard": [
+        "8 low contrast",
+        "2 low state contrast"
+      ],
+      "lowContrast": [
+        {
+          "text": "Yapa",
+          "px": 17,
+          "ratio": 2.45,
+          "min": 4.5
+        },
+        {
+          "text": "Pre-hackathon · Tren Solar de la",
+          "px": 12,
+          "ratio": 1.72,
+          "min": 4.5
+        },
+        {
+          "text": "Un itinerario querespeta el relo",
+          "px": 44,
+          "ratio": 1,
+          "min": 3
+        },
+        {
+          "text": "respeta el reloj",
+          "px": 44,
+          "ratio": 1.72,
+          "min": 3
+        },
+        {
+          "text": "Yapa cruza la Quebrada sin auto:",
+          "px": 15,
+          "ratio": 1,
+          "min": 4.5
+        },
+        {
+          "text": "Cómo funciona",
+          "px": 15,
+          "ratio": 1,
+          "min": 4.5
+        },
+        {
+          "text": "24.19°S · 65.30°O — San Salvador",
+          "px": 11,
+          "ratio": 1,
+          "min": 4.5
+        },
+        {
+          "text": "Turismo sin auto",
+          "px": 11,
+          "ratio": 1,
+          "min": 4.5
+        }
+      ],
+      "borderline": [],
+      "smallText": [
+        {
+          "text": "GitHub ↗",
+          "px": 13
+        },
+        {
+          "text": "Pre-hackathon · Tren Solar de la",
+          "px": 12
+        },
+        {
+          "text": "24.19°S · 65.30°O — San Salvador",
+          "px": 11
+        },
+        {
+          "text": "Turismo sin auto",
+          "px": 11
+        },
+        {
+          "text": "JujuyGo — turismo sin auto",
+          "px": 12
+        },
+        {
+          "text": "24.19°S · 65.30°O",
+          "px": 12
+        },
+        {
+          "text": "Pre-hackathon Tren Solar",
+          "px": 12
+        }
+      ],
+      "overImage": 0,
+      "texts": 13,
+      "smallTargets": [
+        {
+          "text": "GitHub ↗",
+          "w": 86,
+          "h": 37
+        }
+      ],
+      "noTouchAction": [
+        "GitHub ↗",
+        "Ver la demo ↓",
+        "Cómo funciona"
+      ],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 0,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 1
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 19.5,
+            "uses": 14
+          },
+          {
+            "value": 26,
+            "uses": 5
+          },
+          {
+            "value": 13,
+            "uses": 4
+          },
+          {
+            "value": 10,
+            "uses": 4
+          },
+          {
+            "value": 110,
+            "uses": 4
+          },
+          {
+            "value": 18,
+            "uses": 1
+          },
+          {
+            "value": 22,
+            "uses": 1
+          },
+          {
+            "value": 34,
+            "uses": 1
+          }
+        ],
+        "distinct": 19,
+        "total": 72,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [],
+        "blocks": 1,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [
+          {
+            "text": "Abrir la app →",
+            "state": "hover",
+            "part": "text",
+            "ratio": 1.01,
+            "min": 4.5
+          },
+          {
+            "text": "Abrir la app →",
+            "state": "focus",
+            "part": "text",
+            "ratio": 1,
+            "min": 4.5
+          }
+        ],
+        "measured": 4,
+        "controls": 2
+      },
+      "focus": {
+        "walked": 5,
+        "missing": []
+      },
+      "moving": 0
+    }
+  ],
+  "errors": []
+}

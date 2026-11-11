@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yapa — Un itinerario que respeta el reloj del colectivo</title>
+<meta name="description" content="Yapa (JujuyGo): turismo en la Quebrada sin auto. Itinerarios armados contra horarios reales de colectivos, mapas que siguen las calles y travesías guardables. Hecho para la pre-hackathon del Tren Solar.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340..620;1,9..144,340..620&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta:#241610; --papel:#F4EDE3; --arena:#EDE2D0;
+  --oxido:#B5492A; --ocre:#D2B477; --verde:#2E4A3E;
+  --t60:rgba(36,22,16,.66); --t30:rgba(36,22,16,.32); --t14:rgba(36,22,16,.14);
+  --serif:"Fraunces",Georgia,serif; --sans:"Archivo",system-ui,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--papel)}
+body{margin:0;background:var(--papel);color:var(--tinta);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+::selection{background:var(--oxido);color:#fff}
+img{display:block;max-width:100%}
+a{color:inherit}
+.wrap{max-width:1280px;margin:0 auto;padding:0 5%}
+.kicker{font:500 13px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--oxido)}
+.mono-meta{font-variant-numeric:tabular-nums}
+
+/* grano global */
+.grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── nav ── */
+.nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:50;
+  display:flex;align-items:center;gap:20px;padding:8px 8px 8px 20px;
+  border:1px solid rgba(255,255,255,.28);border-radius:999px;
+  background:rgba(20,12,8,.38);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  color:var(--papel);font-size:14px}
+.nav .mark{font:600 18px var(--serif);letter-spacing:-.01em}
+.nav a{text-decoration:none;color:rgba(244,237,227,.9);display:inline-flex;align-items:center;min-height:36px}
+.nav a:hover{color:#fff}
+.nav .gh{display:inline-flex;align-items:center;min-height:40px;padding:8px 18px;border-radius:999px;background:var(--papel);color:var(--tinta);font-weight:500}
+.nav .gh:hover{background:#fff;color:var(--tinta)}
+
+/* ── hero ── */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;color:var(--papel);overflow:hidden}
+.hero-media{position:absolute;inset:-6%;background:url(img/tren.jpg) center/cover no-repeat;animation:kenburns 26s var(--ease) infinite alternate}
+@keyframes kenburns{from{transform:scale(1.02) translateY(0)}to{transform:scale(1.12) translateY(-1.5%)}}
+.hero-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,12,8,.42) 0%,rgba(20,12,8,.05) 34%,rgba(20,12,8,.55) 72%,rgba(20,12,8,.9) 100%)}
+.hero-inner{position:relative;z-index:2;padding:120px 0 48px}
+.hero h1{margin:18px 0 0;font:340 clamp(44px,7.2vw,104px)/.98 var(--serif);letter-spacing:-.025em;max-width:15ch;text-wrap:balance}
+.hero h1 em{font-style:italic;color:var(--ocre)}
+.hero-sub{max-width:46ch;margin:20px 0 0;color:rgba(244,237,227,.85);font-size:clamp(15px,1.6vw,18px);line-height:1.55}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:12px 24px;border-radius:999px;font:500 15px var(--sans);text-decoration:none;transition:transform .35s var(--ease),background .25s}
+.btn-solid{background:var(--papel);color:var(--tinta)}
+.btn-solid:hover{transform:translateY(-2px);background:#fff}
+.btn-ghost{border:1px solid rgba(244,237,227,.4);color:var(--papel)}
+.btn-ghost:hover{border-color:var(--papel);background:rgba(244,237,227,.1)}
+.final .btn-ghost{border-color:var(--t30);color:var(--tinta)}
+.final .btn-ghost:hover{border-color:var(--tinta);background:rgba(36,22,16,.06)}
+.hero-foot{position:relative;z-index:2;display:flex;justify-content:space-between;padding:0 5% 28px;font:500 12px var(--sans);letter-spacing:.18em;text-transform:uppercase;color:rgba(244,237,227,.75)}
+
+/* entrada escalonada */
+.rise{opacity:0;transform:translateY(24px);animation:rise .9s var(--ease) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.d1{animation-delay:.15s}.d2{animation-delay:.3s}.d3{animation-delay:.45s}.d4{animation-delay:.6s}
+
+/* ── reveals ── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.on{opacity:1;transform:none}
+
+/* ── secciones ── */
+section{padding:112px 0}
+.sec-head{display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:end;margin-bottom:64px}
+.sec-head h2{margin:16px 0 0;font:400 clamp(32px,4.2vw,56px)/1.05 var(--serif);letter-spacing:-.02em;text-wrap:balance}
+.sec-head p{margin:0;color:var(--t60);max-width:42ch}
+
+/* problema: declaración editorial */
+.problema blockquote{margin:0;font:340 clamp(30px,4.6vw,58px)/1.15 var(--serif);letter-spacing:-.02em;max-width:22ch;text-wrap:balance}
+.problema blockquote em{color:var(--oxido);font-style:italic}
+.problema .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:72px;padding-top:40px;border-top:1px solid var(--t14)}
+.problema .cols h3{margin:0 0 10px;font:500 13px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--t60)}
+.problema .cols p{margin:0;font-size:15px;line-height:1.6;color:var(--t60);max-width:34ch}
+
+/* solución: 4 momentos */
+.momentos{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--t14)}
+.momento{padding:36px 28px 0 0;border-right:1px solid var(--t14)}
+.momento:last-child{border-right:0}
+.momento .num{font:340 15px var(--serif);color:var(--oxido);font-style:italic}
+.momento h3{margin:14px 0 8px;font:500 22px var(--serif)}
+.momento p{margin:0;font-size:14px;line-height:1.6;color:var(--t60)}
+
+/* ruta piloto */
+.ruta{position:relative;border-radius:4px;overflow:hidden;min-height:70svh;display:flex;align-items:flex-end;color:var(--papel)}
+.ruta img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ruta .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,12,8,.25),rgba(20,12,8,.82))}
+.ruta .inner{position:relative;z-index:2;padding:64px 5%}
+.ruta h2{margin:14px 0 0;font:340 clamp(30px,4vw,52px)/1.05 var(--serif)}
+.ruta .stops{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;list-style:none;padding:0}
+.ruta .stops li{padding:10px 18px;border:1px solid rgba(244,237,227,.35);border-radius:999px;font-size:13px;letter-spacing:.06em;background:rgba(20,12,8,.35);backdrop-filter:blur(6px)}
+.ruta .stops li.terminal{border-color:var(--ocre);color:var(--ocre)}
+.ruta .note{margin-top:22px;font-size:13px;color:rgba(244,237,227,.65);max-width:52ch}
+
+/* datos */
+.datos{background:var(--verde);color:var(--papel)}
+.datos .sec-head h2{color:var(--papel)}
+.datos .sec-head p{color:rgba(244,237,227,.6)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(244,237,227,.18)}
+.stat{background:var(--verde);padding:40px 28px}
+.stat b{display:block;font:340 clamp(44px,5vw,72px)/1 var(--serif);color:var(--ocre);font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-top:10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,237,227,.65)}
+
+/* demo */
+.shots{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+.shot{position:relative;border-radius:4px;overflow:hidden;background:var(--arena);aspect-ratio:16/10}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .8s var(--ease)}
+.shot:hover img{transform:scale(1.03)}
+.shot .cap{position:absolute;left:14px;bottom:12px;z-index:2;padding:6px 12px;border-radius:999px;background:rgba(20,12,8,.72);color:var(--papel);font:500 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(4px)}
+.shot.a{grid-column:span 7}.shot.b{grid-column:span 5}
+.shot.c{grid-column:span 5}.shot.d{grid-column:span 4}.shot.e{grid-column:span 3}
+
+/* cta final */
+.final{text-align:center;padding:144px 0}
+.final h2{margin:0 auto;max-width:18ch;font:340 clamp(36px,5vw,68px)/1.05 var(--serif);letter-spacing:-.02em;text-wrap:balance}
+.final p{margin:20px auto 0;max-width:48ch;color:var(--t60)}
+
+/* footer */
+footer{border-top:1px solid var(--t14);padding:64px 0 40px;overflow:hidden}
+.foot-word{font:340 clamp(80px,16vw,220px)/.9 var(--serif);letter-spacing:-.03em;color:var(--tinta);white-space:nowrap}
+.foot-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--t60)}
+
+a,button{touch-action:manipulation}
+
+@media (max-width:900px){
+  .sec-head{grid-template-columns:1fr;gap:20px}
+  .problema .cols{grid-template-columns:1fr;gap:28px}
+  .momentos{grid-template-columns:1fr 1fr}
+  .momento{border-bottom:1px solid var(--t14);padding-bottom:28px}
+  .stats{grid-template-columns:1fr 1fr}
+  .shots .shot{grid-column:span 12 !important}
+  .nav .lbl{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="nav rise d1" aria-label="Principal">
+  <span class="mark">Yapa</span>
+  <a class="lbl" href="#como">Cómo funciona</a>
+  <a class="lbl" href="#demo">Demo</a>
+  <a class="gh" href="https://github.com/Franco46-ochoa/JujuyGo-" rel="noopener">GitHub ↗</a>
+</nav>
+
+<header class="hero">
+  <div class="hero-media" aria-hidden="true"></div>
+  <div class="hero-veil" aria-hidden="true"></div>
+  <div class="hero-inner wrap">
+    <p class="kicker rise d1" style="color:var(--ocre)">Pre-hackathon · Tren Solar de la Quebrada</p>
+    <h1 class="rise d2">Un itinerario que<br><em>respeta el reloj</em><br>del colectivo.</h1>
+    <p class="hero-sub rise d3">Yapa cruza la Quebrada sin auto: zonas, lugares e imprescindibles con cómo llegar real, y una travesía armada día por día que cierra contra los horarios verdaderos de los bondis.</p>
+    <div class="hero-ctas rise d4">
+      <a class="btn btn-solid" href="#demo">Ver la demo ↓</a>
+      <a class="btn btn-ghost" href="#como">Cómo funciona</a>
+    </div>
+  </div>
+  <div class="hero-foot mono-meta">
+    <span>24.19°S · 65.30°O — San Salvador de Jujuy</span>
+    <span>Turismo sin auto</span>
+  </div>
+</header>
+
+<section class="problema wrap">
+  <p class="kicker reveal">El problema</p>
+  <blockquote class="reveal" style="margin-top:20px">La Quebrada se recorre en colectivo.<br><em>Planificarla, todavía no.</em></blockquote>
+  <div class="cols">
+    <div class="reveal"><h3>Los horarios viven en papel</h3><p>Cada empresa pega su cartel en la terminal. Nadie sabe a qué hora sale el próximo bondi a Humahuaca sin preguntarle a alguien.</p></div>
+    <div class="reveal"><h3>Las apps asumen auto</h3><p>Google Maps te lleva al mirador… si tenés nafta. El turista sin auto queda afuera de la mejor parte del viaje.</p></div>
+    <div class="reveal"><h3>El plan se desarma en la terminal</h3><p>Llegás, esperás, te subís al que pasa — y el día que armaste en la cabeza se evapora.</p></div>
+  </div>
+</section>
+
+<section class="wrap" id="como" style="padding-top:0">
+  <div class="sec-head">
+    <div class="reveal"><p class="kicker">La respuesta</p><h2>Yapa: soñar, armar,<br>viajar, acordarse.</h2></div>
+    <p class="reveal">No es otra guía de lugares. Es un instrumento de movimiento: cruza el catálogo editorial con los horarios reales del transporte público de Jujuy — interurbano y urbano — y te devuelve un plan que cierra.</p>
+  </div>
+  <div class="momentos">
+    <div class="momento reveal"><span class="num">01</span><h3>Soñar</h3><p>Modo revista, sin login: zonas, imperdibles, dónde dormir, guías. Cada lugar responde qué es y cómo se llega.</p></div>
+    <div class="momento reveal"><span class="num">02</span><h3>Armar</h3><p>Tres preguntas — fechas, llegada, intereses — y un plan día por día validado contra horarios reales. Editás y se re-valida en vivo.</p></div>
+    <div class="momento reveal"><span class="num">03</span><h3>Viajar</h3><p>La tarjeta grande: lo que toca ahora. Alerta antes de bajar, plan B si perdiste el bondi.</p></div>
+    <div class="momento reveal"><span class="num">04</span><h3>Acordarse</h3><p>Guardás tu travesía con Google, la compartís, y volvés cuando quieras. La yapa siempre está.</p></div>
+  </div>
+</section>
+
+<section class="ruta">
+  <img class="bg" src="img/tilcara.jpg" alt="Paisaje de la Quebrada de Humahuaca" loading="lazy">
+  <div class="veil" aria-hidden="true"></div>
+  <div class="inner wrap">
+    <p class="kicker reveal" style="color:var(--ocre)">La ruta piloto</p>
+    <h2 class="reveal">Terminal de San Salvador →<br>Maimará → Tilcara → Humahuaca</h2>
+    <ul class="stops reveal">
+      <li class="terminal">Terminal de Ómnibus</li>
+      <li>Maimará</li>
+      <li>Tilcara</li>
+      <li>Humahuaca</li>
+    </ul>
+    <p class="note reveal">Sobre la RN9, con los horarios reales de las empresas que operan la quebrada — no estimaciones. Si el plan no cierra con el reloj del colectivo, Yapa te lo dice antes de que salgas de tu hotel.</p>
+  </div>
+</section>
+
+<section class="datos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="reveal"><p class="kicker" style="color:var(--ocre)">Debajo del capó</p><h2>Datos reales,<br>no inventados.</h2></div>
+      <p class="reveal">Cada número es verificable: horarios importados de la fuente pública autorizada, recorridos urbanos en vivo, geometría de calles calculada con OSRM.</p>
+    </div>
+    <div class="stats">
+      <div class="stat reveal"><b>896</b><span>horarios interurbanos</span></div>
+      <div class="stat reveal"><b>18</b><span>ciudades cubiertas</span></div>
+      <div class="stat reveal"><b>10</b><span>empresas de ómnibus</span></div>
+      <div class="stat reveal"><b>54</b><span>líneas urbanas en vivo</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="demo">
+  <div class="sec-head">
+    <div class="reveal"><p class="kicker">La demo</p><h2>Así se ve<br>mientras viajás.</h2></div>
+    <p class="reveal">Capturas reales de la app corriendo: el home editorial, cómo llegar con mapa que sigue las calles, el detalle de un lugar y la travesía armada.</p>
+  </div>
+  <div class="shots">
+    <figure class="shot a reveal"><img src="img/home-1440.png" alt="Home de Yapa con el hero del Tren Solar" loading="lazy"><figcaption class="cap">01 · Home</figcaption></figure>
+    <figure class="shot b reveal"><img src="img/como-llegar-1440.png" alt="Cómo llegar con horarios y mapa" loading="lazy"><figcaption class="cap">02 · Cómo llegar</figcaption></figure>
+    <figure class="shot c reveal"><img src="img/como-llegar-cerro-siete-colores-1440.png" alt="Cómo llegar al Cerro de los Siete Colores" loading="lazy"><figcaption class="cap">03 · Con mapa real</figcaption></figure>
+    <figure class="shot d reveal"><img src="img/lugares-plaza-belgrano-jujuy-1440.png" alt="Detalle de un lugar" loading="lazy"><figcaption class="cap">04 · Detalle</figcaption></figure>
+    <figure class="shot e reveal"><img src="img/travesia-1440.png" alt="Travesía armada" loading="lazy"><figcaption class="cap">05 · Tu plan</figcaption></figure>
+  </div>
+</section>
+
+<section class="final wrap">
+  <p class="kicker reveal">Yapa · JujuyGo</p>
+  <h2 class="reveal">La montaña no espera.<br>El colectivo tampoco.</h2>
+  <p class="reveal">Open source, sin reservas, sin comisiones. Hecho con los que conocen la quebrada y los que programan para ella.</p>
+  <div class="hero-ctas reveal" style="justify-content:center">
+    <a class="btn btn-solid" href="https://github.com/Franco46-ochoa/JujuyGo-" rel="noopener">Ver el código ↗</a>
+    <a class="btn btn-ghost" href="http://localhost:4200" rel="noopener">Abrir la app →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-word" aria-hidden="true">YAPA</div>
+    <div class="foot-row mono-meta">
+      <span>JujuyGo — turismo sin auto</span>
+      <span>24.19°S · 65.30°O</span>
+      <span>Pre-hackathon Tren Solar</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// reveals al hacer scroll
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

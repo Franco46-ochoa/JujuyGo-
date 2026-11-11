@@ -1,0 +1,269 @@
+{
+  "base": "http://localhost:4399",
+  "minText": 12,
+  "report": [
+    {
+      "route": "/",
+      "viewport": "1440x900",
+      "screenshot": "..\\pitch\\audit3\\home-1440.png",
+      "hard": [
+        "10 low contrast"
+      ],
+      "lowContrast": [
+        {
+          "text": "Yapa",
+          "px": 18,
+          "ratio": 2.45,
+          "min": 4.5
+        },
+        {
+          "text": "Cómo funciona",
+          "px": 14,
+          "ratio": 2.28,
+          "min": 4.5
+        },
+        {
+          "text": "Demo",
+          "px": 14,
+          "ratio": 2.28,
+          "min": 4.5
+        },
+        {
+          "text": "Pre-hackathon · Tren Solar de la",
+          "px": 13,
+          "ratio": 1.72,
+          "min": 4.5
+        },
+        {
+          "text": "Un itinerario querespeta el relo",
+          "px": 103.68,
+          "ratio": 1,
+          "min": 3
+        },
+        {
+          "text": "respeta el reloj",
+          "px": 103.68,
+          "ratio": 1.72,
+          "min": 3
+        },
+        {
+          "text": "Yapa cruza la Quebrada sin auto:",
+          "px": 18,
+          "ratio": 1.01,
+          "min": 4.5
+        },
+        {
+          "text": "Cómo funciona",
+          "px": 15,
+          "ratio": 1,
+          "min": 4.5
+        },
+        {
+          "text": "24.19°S · 65.30°O — San Salvador",
+          "px": 12,
+          "ratio": 1.01,
+          "min": 4.5
+        },
+        {
+          "text": "Turismo sin auto",
+          "px": 12,
+          "ratio": 1.01,
+          "min": 4.5
+        }
+      ],
+      "borderline": [],
+      "smallText": [],
+      "overImage": 0,
+      "texts": 15,
+      "smallTargets": [],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 0,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 1
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 18,
+            "uses": 3
+          },
+          {
+            "value": 13,
+            "uses": 2
+          },
+          {
+            "value": 252.5,
+            "uses": 1
+          }
+        ],
+        "distinct": 17,
+        "total": 85,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [],
+        "blocks": 1,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 0,
+        "controls": 0
+      },
+      "focus": {
+        "walked": 7,
+        "missing": []
+      },
+      "moving": 0
+    },
+    {
+      "route": "/",
+      "viewport": "390x844",
+      "screenshot": "..\\pitch\\audit3\\home-390.png",
+      "hard": [
+        "8 low contrast"
+      ],
+      "lowContrast": [
+        {
+          "text": "Yapa",
+          "px": 18,
+          "ratio": 2.45,
+          "min": 4.5
+        },
+        {
+          "text": "Pre-hackathon · Tren Solar de la",
+          "px": 13,
+          "ratio": 1.72,
+          "min": 4.5
+        },
+        {
+          "text": "Un itinerario querespeta el relo",
+          "px": 44,
+          "ratio": 1,
+          "min": 3
+        },
+        {
+          "text": "respeta el reloj",
+          "px": 44,
+          "ratio": 1.72,
+          "min": 3
+        },
+        {
+          "text": "Yapa cruza la Quebrada sin auto:",
+          "px": 15,
+          "ratio": 1.01,
+          "min": 4.5
+        },
+        {
+          "text": "Cómo funciona",
+          "px": 15,
+          "ratio": 1,
+          "min": 4.5
+        },
+        {
+          "text": "24.19°S · 65.30°O — San Salvador",
+          "px": 12,
+          "ratio": 1.01,
+          "min": 4.5
+        },
+        {
+          "text": "Turismo sin auto",
+          "px": 12,
+          "ratio": 1.01,
+          "min": 4.5
+        }
+      ],
+      "borderline": [],
+      "smallText": [],
+      "overImage": 0,
+      "texts": 13,
+      "smallTargets": [
+        {
+          "text": "GitHub ↗",
+          "w": 94,
+          "h": 38
+        },
+        {
+          "text": "Ver la demo ↓",
+          "w": 138,
+          "h": 42
+        },
+        {
+          "text": "Cómo funciona",
+          "w": 153,
+          "h": 42
+        }
+      ],
+      "noTouchAction": [],
+      "offScale": [],
+      "unbalanced": [],
+      "overflowing": [],
+      "zoomLocked": false,
+      "scrollX": false,
+      "controlContrast": {
+        "low": [],
+        "measured": 0,
+        "textOnly": 0,
+        "native": 0,
+        "overImage": 0
+      },
+      "nestedRadii": {
+        "off": [],
+        "pairs": 1
+      },
+      "spacingScale": {
+        "off": [
+          {
+            "value": 19.5,
+            "uses": 14
+          },
+          {
+            "value": 18,
+            "uses": 3
+          },
+          {
+            "value": 13,
+            "uses": 2
+          }
+        ],
+        "distinct": 16,
+        "total": 72,
+        "scale": "multiples of 4"
+      },
+      "lineLength": {
+        "long": [],
+        "short": [],
+        "blocks": 1,
+        "min": 45,
+        "max": 80
+      },
+      "primaryActions": [],
+      "stateContrast": {
+        "low": [],
+        "measured": 4,
+        "controls": 2
+      },
+      "focus": {
+        "walked": 5,
+        "missing": []
+      },
+      "moving": 0
+    }
+  ],
+  "errors": []
+}
