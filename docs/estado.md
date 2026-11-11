@@ -4,7 +4,20 @@
 
 ## Master
 
-`2ea5e50` — pusheado a `origin/master`. `./slices estado` muestra los 14 slices en `mergeado`.
+`cacec0c` — pusheado a `origin/master`. `./slices estado` muestra los 15 slices en `mergeado`.
+
+## Slice 21 — Auth Supabase + guardar travesías (mergeado)
+
+- `@supabase/supabase-js` en frontend; `auth.service.ts` (OAuth Google, sesión
+  por signals, degradación graceful sin env vars); `supabase.client.ts`.
+- `supabase/migrations/001_travesias.sql`: tabla `travesias` + RLS
+  (`auth.uid() = user_id` en las 4 operaciones). **Pendiente del usuario:**
+  pegar el SQL en el SQL Editor del dashboard y configurar Google OAuth
+  (provider + Site URL `http://localhost:4200` + redirect `/**`).
+- `/travesia`: "Entrar con Google", "Guardar travesía", "Mis travesías"
+  (cargar/borrar). `PlanTravesia` se serializa a `datos jsonb`.
+- Credenciales ya en `backend/.env` (SUPABASE_URL + SUPABASE_ANON_KEY
+  publishable) y en `frontend/src/environments/environment.ts`.
 
 ## Qué hay nuevo en master (esta sesión)
 
@@ -59,7 +72,7 @@
    cuando el feed de colejuy no esté stale.
 2. **Conectar `/api/hq` al frontend** para la ruta piloto Terminal→Maimará→Tilcara→
    Humahuaca (el dataset no tiene coordenadas de ciudades; geocodificar las 18 una vez).
-3. **AUTH Google (Supabase)** + SAV: sin `SUPABASE_URL`/`SUPABASE_ANON_KEY` en `.env`.
+3. ~~AUTH Google (Supabase)~~ — código mergeado (slice 21); falta config del dashboard: provider Google OAuth, Site URL, y correr `supabase/migrations/001_travesias.sql`.
 4. **Curaduría editorial de fotos**: Puna comparte `puna.jpg` (3 lugares), varios NULL
    usan foto de otro destino de su zona (permitido pero provisional).
 5. `/como-llegar` multi-servicio (hoy muestra solo la primera opción por destino).
