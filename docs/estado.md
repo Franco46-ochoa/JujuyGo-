@@ -2,29 +2,33 @@
 
 > Actualizar al cierre de cada ola de slices. Última actualización: 2026-11-11 (cierre de sesión — retomar abajo).
 
-## ⚠️ RETOMAR ACÁ — sesión dormida con 4 slices estéticos EN VUELO
+## ⚠️ RETOMAR — pasada estética 22-25 (actualizado 2026-11-11 mediodía)
 
-Al guardar, los 4 workers de la pasada estética estaban corriendo en Orca
-(run `run_3ce49a5f5e5f`). **Puede que hayan quedado frenados en prompts de
-aprobación de Copilot** — al volver: `orca orchestration check --run
-run_3ce49a5f5e5f`, aprobar con `orca terminal send --terminal <handle>
---enter` (y `--text $'\x1b[B'` antes para "don't ask again"/"remember path").
+**Estado real al momento de esta edición:**
 
-| Slice | Dispatch | Terminal | Agente | Estado al dormir |
-|---|---|---|---|---|
-| 22-estetica-tokens | ctx_54d67f5226c3 | term_8342d777-b4b7-4160-9b3e-8ddae58ede81 | Copilot | chequeos finales |
-| 23-estetica-home | ctx_242673c730f7 | term_726076ac-be7f-499e-b727-8f2f80ab09c8 | Copilot | analizando baseline + mock |
-| 24-estetica-como-llegar | ctx_4359e8362a6c | term_a54c3529-dba9-44ee-ad4f-814b010b1067 | Antigravity gemini-3.8-flash-high | corriendo tests |
-| 25-estetica-detalle-travesia | ctx_43db3d15925f | term_3aaa05f8-01ac-4762-a652-e63c5778988f | Copilot | leyendo archivos |
+- **22-estetica-tokens: MERGEADO** (`d9e2b84`). Worker murió sin recibo;
+  coordinador verificó checks + juez subagente CIERRA.
+- **23-estetica-home: MERGEADO** (`bc9f3aa`). Ídem.
+- **24-estetica-como-llegar**: worker Gemini murió por cuota → relanzado con
+  Copilot → murió otra vez a mitad de verificación PERO dejó diff sustancial
+  (como-llegar.css/html + yapa-mapa.css, 141+/66-). `verificar` corre checks
+  verdes; juez subagente en curso. Recibo reconstruido por coordinador.
+- **25-estetica-detalle-travesia**: worker Copilot murió en recta final
+  (tests/build en curso). Diff: lugar-detalle.css + travesia*.css/ts +
+  travesia-plan.css nuevo (135+/66-). `verificar` en curso; falta juez.
 
-**Al retomar, por cada worker_done:** `./slices verificar <id>` → subagente
-juez escribe `juez.txt` (CIERRA/NO CIERRA) → `verificar` otra vez →
-`./slices mergear <id>` → `git push`. Los 4 tocan archivos disjoint
-(styles.css global solo en 22; home/, como-llegar/+yapa-mapa/, lugar-detalle/
-+travesia/ separados) — mergear en orden 22→23→24→25.
+**Si los jueces dan NO CIERRA**: relanzar con `./slices lanzar <id>` (Copilot;
+Gemini cuota agotada ~57h desde el 11/11).
 
-**Audit Fase 0 commiteado** en `frontend/audit-fase0/report.json` — cada
-SPEC exige re-correr kero-audit y guardar el "después" en su recibo.
+**Landing de pitch LISTA**: `pitch/index.html` (pusheada `a4bc03b`) — hero
+cinematográfico con tren.jpg + secciones problema/solución/ruta/datos/demo
+(screenshots reales)/CTA. Metodología motionsites aplicada: tokens de
+design.md, kero-audit limpio (los "low contrast" restantes son falsos
+positivos del audit sobre texto-en-foto). Servir con `python -m http.server`
+desde `pitch/` o abrir el archivo directo.
+
+**Pendiente hackathon**: guion de demo 3-5 min + pitch hablado (ver PLAN
+MotionSites abajo). Confirmar formato exacto con el organizador.
 
 **Pendientes del usuario (no dependen de mí):**
 - Supabase dashboard: correr `supabase/migrations/001_travesias.sql` en SQL
