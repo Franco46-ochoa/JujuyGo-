@@ -1,0 +1,51 @@
+# Slice 31 — Limpieza de código muerto y refactors menores
+
+**Depende de:** master actual, idealmente último (post-30). Archivos:
+`frontend/src/app/catalogo.service.ts`, `urbano.service.ts`,
+`como-llegar/como-llegar.ts`, `como-llegar/como-llegar.html`,
+`travesia/travesia.ts`, `home/home.ts` — solo lo listado.
+
+**Alcance:** SOLO eliminación de código muerto verificado y extracción
+de funciones puras. NO cambiar comportamiento, NO aplicar
+`takeUntilDestroyed` indiscriminadamente, NO refactorizar por gusto.
+
+## Tareas (todas verificadas en auditoría — confirmar antes de tocar)
+
+1. **Código muerto confirmado** (verificar con grep que no haya usos
+   ni referencias dinámicas antes de borrar):
+   - `CatalogoService.getZona()` (catalogo.service.ts:27-29)
+   - `UrbanoService.getParadasCercanas()` (urbano.service.ts:40-49)
+   - `como-llegar.ts` `horaFuente()` wrapper trivial (~602-604)
+2. **Extraer funciones puras** de `como-llegar.ts` (614 líneas) al
+   módulo existente `urbano-ruteo.ts` o uno nuevo `urbano-utils.ts`:
+   `distanciaMetros`, `buscarLineasCandidatas`, `paradasCercanas`,
+   `nombreLinea` (líneas ~62-158) — no usan `this`, son testeables.
+   Mantener comportamiento idéntico.
+3. **Suscripciones**: `travesia.ts:82-95` y `home.ts:52-65,71-95,
+   101-111` usan `.subscribe()` sin cleanup. **NO aplicar
+   takeUntilDestroyed a ciegas**: identificar cuáles observables
+   pueden emitir después del destroy (paramMap, effects largos) y
+   agregar cleanup SOLO a esas; las HTTP one-shot que completan no
+   lo necesitan — documentar la decisión por suscripción.
+4. **`window.confirm` nativo** en `travesia.ts:465`: si el slice 27
+   no lo cubrió, evaluar reemplazo por un confirm inline mínimo
+   consistente con el diseño — solo si es simple; si complica,
+   documentar como pendiente.
+
+## Criterios
+
+- [ ] `npm test -- --watch=false` verde
+- [ ] `npm run build` OK
+- [ ] `git diff --check` limpio
+- [ ] Grep por cada símbolo borrado: 0 referencias restantes
+      (incluyendo strings dinámicos).
+- [ ] Tests existentes siguen pasando; si se extrajeron funciones
+      puras, considerar test unitario mínimo para ellas (opcional,
+      solo si el proyecto ya tiene patrón de tests para eso).
+- [ ] Recibo con: qué se borró + evidencia de 0 usos, qué se extrajo,
+      decisión por suscripción, qué quedó pendiente.
+
+## Fuera de alcance
+
+- Cambios de comportamiento, nuevos features, refactors grandes.
+- Backend, Supabase, pitch/.
