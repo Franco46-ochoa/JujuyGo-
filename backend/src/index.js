@@ -27,6 +27,9 @@ export function createApp({ pool = crearPool(), urbanoClient = colejuyClient } =
   app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
   });
+  app.get('/api/health', (_req, res) => {
+    res.json({ status: 'ok' });
+  });
 
   const origenes = (process.env.CORS_ORIGIN || '*')
     .split(',').map(o => o.trim()).filter(Boolean);

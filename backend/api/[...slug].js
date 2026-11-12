@@ -7,9 +7,5 @@ export const config = {
 };
 
 export default function handler(req, res) {
-  if (req.url === '/api/health') {
-    res.status(200).json({ status: 'ok' });
-    return;
-  }
   return app(req, res);
 }
