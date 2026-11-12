@@ -4,6 +4,9 @@
 duplicado frágil entre home y travesía.
 
 **Alcance:** `frontend/src/styles.css`,
+`frontend/angular.json` (solo presupuesto `anyComponentStyle`, ajuste
+mínimo aprobado por el coordinador el 12-nov: home.css scoped supera
+10 kB),
 `frontend/src/app/home/home.css`, `frontend/src/app/travesia/*.css`,
 `frontend/src/app/lugar-detalle/lugar-detalle.css`,
 `frontend/src/app/como-llegar/como-llegar.css`,
