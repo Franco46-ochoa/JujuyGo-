@@ -36,10 +36,10 @@
 
 @media (hover: hover) and (pointer: fine) {
   .travesia-shell .opcion:hover { background: rgba(36,22,16,.035); }
-  .travesia-shell .boton-principal:hover { background: #3a5b4c; transform: translateY(-1px); }
+  .travesia-shell .boton-principal:hover { background: var(--verde-hover-accion); transform: translateY(-1px); }
   .travesia-shell .boton-secundario:hover, .travesia-shell .volver-wizard:hover { color: var(--oxido); }
   .travesia-shell .borrar-evento:hover { color: var(--ocre); }
-  .travesia-shell .boton-yapa-sumar:hover { background: #233a31; }
+  .travesia-shell .boton-yapa-sumar:hover { background: var(--verde-hover); }
   .travesia-shell .boton-yapa-pasar:hover { background: rgba(46,74,62,.08); }
 }
 

@@ -1,6 +1,6 @@
 :host { display: block; min-height: 100vh; }
 
-.detail-page { --t60: #6f5f54; min-height: 100vh; }
+.detail-page { min-height: 100vh; }
 .detail-nav { position: absolute; z-index: 2; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 20px clamp(20px, 5vw, 72px); color: #fff; background: rgba(36,22,16,.72); }
 .detail-nav a:focus-visible { outline-color: #fff; }
 .detail-brand { display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 0; color: inherit; font: 600 24px var(--serif); text-decoration: none; }
@@ -100,7 +100,7 @@
 :host ::ng-deep .detail-map-section .yapa-popup-link { min-height: 44px; padding: 8px 4px; }
 
 @media (hover: hover) and (pointer: fine) {
-  .detail-directions:hover { background: #233a31; transform: translateY(-2px); }
+  .detail-directions:hover { background: var(--verde-hover); transform: translateY(-2px); }
 }
 
 @media (pointer: coarse) {

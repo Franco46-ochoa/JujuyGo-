@@ -25,9 +25,9 @@
 .guardado-mensaje { color: var(--verde); font-size: 14px; }
 
 @media (hover: hover) and (pointer: fine) {
-  .auth-entrar:not(:disabled):hover { background: #233a31; }
+  .auth-entrar:not(:disabled):hover { background: var(--verde-hover); }
   .auth-salir:hover { color: var(--oxido); }
-  .travesia-guardada-acciones button:first-child:hover { background: #233a31; }
+  .travesia-guardada-acciones button:first-child:hover { background: var(--verde-hover); }
   .travesia-guardada-acciones button:last-child:hover { background: rgba(181,73,42,.08); }
 }
 

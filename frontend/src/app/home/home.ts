@@ -14,6 +14,7 @@ import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
   imports: [DecimalPipe, RouterLink, YapaMapaComponent],
   selector: 'app-home',
   templateUrl: './home.html',
+  styleUrl: './home.css',
   host: {
     '(window:scroll)': 'onScroll()',
     '(document:keydown.escape)': 'cerrarZona()',

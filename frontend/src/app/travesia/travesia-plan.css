@@ -1,26 +1,53 @@
-.tramo { position: relative; padding: 12px 0 12px 24px; border-top: 1px solid var(--t14); }
-.tramo-nodo { position: absolute; top: 20px; left: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--ocre); }
+.tramo { position: relative; display: flex; flex-direction: column; gap: 6px; margin: 0 0 0 20px; padding: 16px 0 16px 36px; border-left: 1px solid rgba(244, 237, 227, .25); color: rgba(244, 237, 227, .92); font-size: 14px; font-variant-numeric: tabular-nums; }
+.tramo-nodo { position: absolute; top: 21px; left: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--ocre); }
 .tramo > span:nth-child(2) { display: block; color: var(--verde); font: italic 16px/1.4 var(--serif); font-variant-numeric: tabular-nums; }
-.tramo small { display: block; margin-top: 4px; color: var(--t60); font-size: 14px; line-height: 1.5; }
+.tramo small { display: block; margin-top: 4px; color: rgba(244, 237, 227, .66); font-size: 14px; line-height: 1.45; }
 .tramo .proximo-servicio { color: var(--verde); }
-.dia-activo .tramo > span:nth-child(2), .dia-activo .tramo .proximo-servicio { color: #f4ede3; }
+.dia-activo .tramo > span:nth-child(2), .dia-activo .tramo .proximo-servicio { color: var(--papel); }
+.dia:not(.dia-activo) .tramo { color: var(--verde); border-color: var(--t30); }
+.dia:not(.dia-activo) .tramo small { color: var(--t60); }
 .conflicto { margin: 16px 0 0 80px; padding: 16px 0 0; border-top: 1px solid var(--ocre); background: rgba(201, 168, 106, .12); }
 .conflicto strong { font: 500 17px/1.4 var(--serif); }
 .conflicto p { margin-top: 8px; color: inherit; font-size: 14px; line-height: 1.5; }
 .dia-vacio { max-width: 48ch; padding: 16px 0; color: var(--t60); font: italic 16px/1.5 var(--serif); }
-.yapa-card { margin-bottom: 16px; padding: 20px; border-top: 2px solid var(--oxido); background: var(--arena); color: var(--tinta); }
-.yapa-kicker { color: var(--oxido); font-size: 14px; font-weight: 600; }
-.yapa-mensaje { max-width: 58ch; margin-top: 8px; font: 400 20px/1.45 var(--serif); text-wrap: pretty; }
-.yapa-acciones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
-.boton-yapa-sumar, .boton-yapa-pasar { min-height: 44px; padding: 8px 16px; border: 1px solid var(--verde); border-radius: 999px; font: 600 14px var(--sans); cursor: pointer; touch-action: manipulation; }
-.boton-yapa-sumar { background: var(--verde); color: #fff; }
-.boton-yapa-pasar { background: transparent; color: var(--verde); }
+.yapa-card { margin: 0 0 24px; padding: 20px 22px; border: 1px solid rgba(201, 168, 106, .55); background: rgba(201, 168, 106, .13); color: inherit; }
+.yapa-kicker { color: var(--ocre); font-size: 14px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+.yapa-mensaje { max-width: 580px; margin-top: 10px; font: 400 21px/1.35 var(--serif); text-wrap: pretty; }
+.yapa-acciones { display: flex; gap: 20px; margin-top: 16px; }
+.yapa-acciones button { min-height: 44px; padding: 8px 18px; border: 1px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font: 600 14px var(--sans); cursor: pointer; touch-action: manipulation; }
+.boton-yapa-sumar { border-color: var(--verde); background: var(--verde); color: #fff; }
+.boton-yapa-pasar { border: 0; background: transparent; color: inherit; text-decoration: underline; text-underline-offset: 4px; }
 .agregar-lugar { display: flex; align-items: end; gap: 16px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--t14); }
-.agregar-lugar label { display: grid; flex: 1; gap: 8px; color: var(--t60); font-size: 14px; touch-action: manipulation; }
-.agregar-lugar select { width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid #887b70; border-radius: 3px; background: transparent; color: var(--tinta); font: 16px var(--sans); touch-action: manipulation; }
+.agregar-lugar label { display: grid; flex: 1; gap: 8px; width: min(100%, 380px); color: var(--t60); font-size: 14px; touch-action: manipulation; }
+.agregar-lugar select { width: 100%; min-height: 46px; padding: 8px 12px; border: 1px solid var(--t30); border-radius: 3px; background: transparent; color: var(--tinta); font: 14px var(--sans); touch-action: manipulation; }
 .agregar-lugar select:focus-visible { outline: 2px solid var(--oxido); outline-offset: 3px; }
+.agregar-lugar option { color: var(--tinta); }
+.agregar-lugar button:disabled, .boton-principal:disabled { cursor: not-allowed; opacity: .5; }
+.boton-sugerir { text-decoration: underline; text-underline-offset: 4px; }
+.acciones-lugares { display: flex; align-items: center; gap: 20px; }
+.lugares-por-zona { display: grid; gap: 32px; margin-top: 36px; }
+.seleccion-zona h3 { margin-bottom: 12px; color: var(--verde); font: 500 24px var(--serif); }
+.seleccion-lugares { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.lugar-eleccion { display: grid; grid-template-columns: 90px minmax(0, 1fr) 32px; align-items: center; gap: 14px; min-height: 102px; padding: 8px; border: 1px solid var(--t30); border-radius: 4px; background: transparent; color: var(--tinta); text-align: left; cursor: pointer; touch-action: manipulation; }
+.lugar-eleccion:hover, .lugar-elegido { border-color: var(--verde); background: rgba(57, 91, 67, .07); }
+.lugar-eleccion:focus-visible, .yapa-acciones button:focus-visible, .agregar-lugar button:focus-visible { outline: 2px solid var(--oxido); outline-offset: 3px; }
+.lugar-eleccion img { width: 90px; height: 82px; border-radius: 2px; object-fit: cover; }
+.lugar-eleccion-texto { display: grid; gap: 4px; min-width: 0; }
+.lugar-eleccion-texto strong { font: 500 17px/1.2 var(--serif); }
+.lugar-eleccion-texto span, .lugar-eleccion-texto small { color: var(--t60); font-size: 14px; line-height: 1.35; }
+.lugar-check { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid var(--t30); border-radius: 50%; color: var(--verde); font-size: 18px; }
+.lugar-elegido .lugar-check { border-color: var(--verde); background: var(--verde); color: #fff; }
+.seleccion-contador { margin-top: 20px; color: var(--t60); font-size: 14px; }
 
 @media (max-width: 720px) {
+  .seleccion-lugares { grid-template-columns: 1fr; }
+  .lugar-eleccion { grid-template-columns: 76px minmax(0, 1fr) 28px; }
+  .lugar-eleccion img { width: 76px; height: 76px; }
+  .acciones-lugares { flex: 1; align-items: stretch; flex-direction: column-reverse; gap: 8px; }
+  .acciones-lugares .boton-principal { justify-content: center; padding-inline: 16px; }
+  .boton-sugerir { min-height: 44px; }
   .agregar-lugar { align-items: stretch; flex-direction: column; }
+  .agregar-lugar label { width: 100%; }
+  .tramo { margin-left: 12px; padding-left: 26px; }
   .conflicto { margin-left: 0; }
 }

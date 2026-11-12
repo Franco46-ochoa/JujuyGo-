@@ -1,0 +1,12 @@
+{
+  "slice": "26-diseno-tokens-v2",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "ad236ed",
+  "verificado": "2026-11-12T20:47:46-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 13,
+  "juez": "devin: CIERRA",
+  "cerrado": true,
+  "motivo": ""
+}

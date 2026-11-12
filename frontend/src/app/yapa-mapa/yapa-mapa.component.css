@@ -7,8 +7,8 @@
   position: relative;
   width: 100%;
   border-radius: 4px;
-  border: 1px solid var(--t14, rgba(36, 22, 16, 0.14));
-  background: var(--papel, #F4EDE3);
+  border: 1px solid var(--t14);
+  background: var(--papel);
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(36, 22, 16, 0.05);
 }
@@ -21,7 +21,7 @@
 .yapa-mapa-canvas {
   width: 100%;
   height: 100%;
-  background: var(--papel, #F4EDE3);
+  background: var(--papel);
 }
 
 /* Filtro cálido sobre tiles (raster OSM estándar) */
@@ -31,7 +31,7 @@
 
 /* Controles de zoom con contraste y tamaño táctil de 44px */
 :host ::ng-deep .leaflet-bar {
-  border: 1px solid var(--t14, rgba(36, 22, 16, 0.14)) !important;
+  border: 1px solid var(--t14) !important;
   border-radius: 4px !important;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(36, 22, 16, 0.10) !important;
@@ -43,9 +43,9 @@
   line-height: 44px !important;
   font-size: 19px !important;
   font-family: var(--sans, "Archivo", sans-serif) !important;
-  color: var(--tinta, #241610) !important;
-  background-color: var(--papel, #F4EDE3) !important;
-  border-bottom: 1px solid var(--t14, rgba(36, 22, 16, 0.14)) !important;
+  color: var(--tinta) !important;
+  background-color: var(--papel) !important;
+  border-bottom: 1px solid var(--t14) !important;
   transition: background-color 0.2s, color 0.2s;
   display: flex !important;
   align-items: center;
@@ -54,9 +54,9 @@
 }
 
 :host ::ng-deep .leaflet-bar a:focus-visible {
-  background-color: var(--arena, #EDE2D0) !important;
-  color: var(--oxido, #B5492A) !important;
-  outline: 2px solid var(--oxido, #B5492A);
+  background-color: var(--arena) !important;
+  color: var(--oxido) !important;
+  outline: 2px solid var(--oxido);
   outline-offset: -2px;
 }
 
@@ -65,12 +65,12 @@
   :host ::ng-deep .yapa-cluster-pin:hover,
   :host ::ng-deep .yapa-marker-pin:hover,
   :host ::ng-deep .yapa-popup-link:hover {
-    background-color: var(--arena, #EDE2D0);
-    color: var(--oxido, #B5492A);
+    background-color: var(--arena);
+    color: var(--oxido);
   }
 
   :host ::ng-deep .yapa-marker-pin:hover {
-    border-color: var(--oxido, #B5492A);
+    border-color: var(--oxido);
   }
 
   :host ::ng-deep .yapa-popup-link:hover {
@@ -79,7 +79,7 @@
 }
 
 :host ::ng-deep .leaflet-marker-icon:focus-visible {
-  outline: 2px solid var(--oxido, #B5492A);
+  outline: 2px solid var(--oxido);
   outline-offset: 2px;
 }
 
@@ -102,10 +102,10 @@
   max-width: 152px;
   padding: 7px 12px;
   overflow: hidden;
-  border: 1px solid var(--tinta, #241610);
+  border: 1px solid var(--tinta);
   border-radius: 999px;
-  background: var(--papel, #F4EDE3);
-  color: var(--tinta, #241610);
+  background: var(--papel);
+  color: var(--tinta);
   box-shadow: 0 2px 8px rgba(36, 22, 16, 0.18);
   font: 600 14px/1.2 var(--sans, "Archivo", sans-serif);
   text-overflow: ellipsis;
@@ -115,14 +115,14 @@
 
 :host ::ng-deep .yapa-route-origin,
 :host ::ng-deep .yapa-route-destination {
-  border-color: var(--oxido, #B5492A);
-  background: var(--oxido, #B5492A);
+  border-color: var(--oxido);
+  background: var(--oxido);
   color: #fff;
 }
 
 :host ::ng-deep .yapa-route-crossing {
-  border-color: var(--verde, #2E4A3E);
-  background: var(--verde, #2E4A3E);
+  border-color: var(--verde);
+  background: var(--verde);
   color: #fff;
 }
 
@@ -133,9 +133,9 @@
   gap: 7px;
   min-height: 44px;
   padding: 6px 16px;
-  background: var(--papel, #F4EDE3);
-  color: var(--tinta, #241610);
-  border: 1.5px solid var(--oxido, #B5492A);
+  background: var(--papel);
+  color: var(--tinta);
+  border: 1.5px solid var(--oxido);
   border-radius: 999px;
   font: 600 14px/1.2 var(--sans, "Archivo", sans-serif);
   font-variant-numeric: tabular-nums;
@@ -148,7 +148,7 @@
 }
 
 :host ::ng-deep .yapa-cluster-pin:focus {
-  outline: 2px solid var(--oxido, #B5492A);
+  outline: 2px solid var(--oxido);
   outline-offset: 2px;
 }
 
@@ -156,7 +156,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--oxido, #B5492A);
+  background: var(--oxido);
   flex-shrink: 0;
 }
 
@@ -167,9 +167,9 @@
   gap: 6px;
   min-height: 44px;
   padding: 6px 14px;
-  background: var(--papel, #F4EDE3);
-  color: var(--tinta, #241610);
-  border: 1.5px solid var(--tinta, #241610);
+  background: var(--papel);
+  color: var(--tinta);
+  border: 1.5px solid var(--tinta);
   border-radius: 999px;
   font: 500 14px/1.2 var(--sans, "Archivo", sans-serif);
   box-shadow: 0 2px 6px rgba(36, 22, 16, 0.12);
@@ -184,15 +184,15 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--ocre, #C9A86A);
+  background: var(--ocre);
   flex-shrink: 0;
 }
 
 /* Pin activo */
 :host ::ng-deep .yapa-pin-active {
-  background: var(--oxido, #B5492A) !important;
+  background: var(--oxido) !important;
   color: #fff !important;
-  border-color: var(--oxido, #B5492A) !important;
+  border-color: var(--oxido) !important;
   transform: scale(1.10) !important;
   z-index: 1000 !important;
   box-shadow: 0 4px 14px rgba(181, 73, 42, 0.40) !important;
@@ -204,21 +204,21 @@
 
 /* Popups */
 :host ::ng-deep .leaflet-popup-content-wrapper {
-  background: var(--papel, #F4EDE3) !important;
-  color: var(--tinta, #241610) !important;
-  border: 1px solid var(--t14, rgba(36, 22, 16, 0.14)) !important;
+  background: var(--papel) !important;
+  color: var(--tinta) !important;
+  border: 1px solid var(--t14) !important;
   border-radius: 4px !important;
   box-shadow: 0 6px 20px rgba(36, 22, 16, 0.18) !important;
   padding: 8px 12px !important;
 }
 
 :host ::ng-deep .leaflet-popup-tip {
-  background: var(--papel, #F4EDE3) !important;
-  border: 1px solid var(--t14, rgba(36, 22, 16, 0.14)) !important;
+  background: var(--papel) !important;
+  border: 1px solid var(--t14) !important;
 }
 
 :host ::ng-deep .leaflet-popup-close-button {
-  color: var(--t60, rgba(36, 22, 16, 0.62)) !important;
+  color: var(--t60) !important;
   width: 44px !important;
   height: 44px !important;
   padding: 12px !important;
@@ -226,7 +226,7 @@
 }
 
 :host ::ng-deep .leaflet-popup-close-button:focus-visible {
-  outline: 2px solid var(--oxido, #B5492A);
+  outline: 2px solid var(--oxido);
   outline-offset: -2px;
 }
 
@@ -240,27 +240,27 @@
   font-size: 14px;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--oxido, #B5492A);
+  color: var(--oxido);
   font-weight: 600;
 }
 
 :host ::ng-deep .yapa-popup-title {
   font: 500 18px/1.15 var(--serif, "Fraunces", serif);
-  color: var(--tinta, #241610);
+  color: var(--tinta);
   margin: 3px 0 4px;
 }
 
 :host ::ng-deep .yapa-popup-alt {
   display: block;
   font-size: 14px;
-  color: var(--verde, #2E4A3E);
+  color: var(--verde);
   font-variant-numeric: tabular-nums;
   margin-bottom: 6px;
 }
 
 :host ::ng-deep .yapa-popup-desc {
   font-size: 14px;
-  color: var(--t60, rgba(36, 22, 16, 0.62));
+  color: var(--t60);
   line-height: 1.45;
   margin-bottom: 10px;
   font-weight: 300;
@@ -270,7 +270,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: var(--oxido, #B5492A);
+  color: var(--oxido);
   min-height: 44px;
   font-size: 14px;
   font-weight: 600;
@@ -295,7 +295,7 @@
 }
 
 :host ::ng-deep .leaflet-control-attribution {
-  color: var(--tinta, #241610) !important;
+  color: var(--tinta) !important;
   font: 14px/1.4 var(--sans, "Archivo", sans-serif) !important;
   background: rgba(244, 237, 227, 0.94) !important;
 }
@@ -304,6 +304,6 @@
 :host ::ng-deep .leaflet-control-attribution a {
   padding: 14px 4px;
   margin: -14px -4px;
-  color: var(--verde, #2E4A3E) !important;
+  color: var(--verde) !important;
   touch-action: manipulation;
 }

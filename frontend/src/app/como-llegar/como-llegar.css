@@ -4,10 +4,8 @@
 .como-llegar-nav { display: flex; align-items: center; justify-content: space-between; min-height: 80px; border-bottom: 1px solid var(--t14); }
 .como-llegar-brand { display: inline-flex; align-items: baseline; gap: 4px; padding: 12px 0; color: var(--tinta); font: 600 24px var(--serif); text-decoration: none; }
 .como-llegar-brand span { width: 8px; height: 8px; border-radius: 50%; background: var(--oxido); }
-.volver-inicio { display: inline-flex; align-items: center; min-height: 44px; color: var(--t60); font-size: 14px; text-decoration: none; touch-action: manipulation; }
 
 .como-llegar-intro { max-width: 820px; padding: 68px 0 40px; }
-.kicker { color: var(--oxido); font-size: 14px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
 .como-llegar-intro h1 { margin-top: 16px; font: 400 clamp(44px, 7vw, 78px)/1.04 var(--serif); letter-spacing: -.03em; text-wrap: balance; }
 .como-llegar-intro h1 em { color: var(--oxido); font-weight: 400; }
 .como-llegar-intro > p:last-child { max-width: 540px; margin-top: 20px; color: var(--t60); font-size: 16px; line-height: 1.65; }
@@ -104,7 +102,7 @@
   .volver-inicio:hover { color: var(--oxido); }
   .campo-recorrido select:hover:not(:disabled) { border-color: var(--verde); }
   .boton-ubicacion:hover:not(:disabled) { background: var(--verde); color: var(--papel); }
-  .boton-recorrido:hover:not(:disabled) { background: #233a31; transform: translateY(-2px); }
+  .boton-recorrido:hover:not(:disabled) { background: var(--verde-hover); transform: translateY(-2px); }
   .boton-reintentar:hover { color: var(--verde); }
 }
 
