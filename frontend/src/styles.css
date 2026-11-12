@@ -1,7 +1,4 @@
 @import 'leaflet/dist/leaflet.css';
-@import './app/home/home.css';
-@import './app/travesia/travesia-motion.css';
-@import './app/travesia/travesia-auth.css';
 
 :root {
   --tinta: #241610;
@@ -10,6 +7,8 @@
   --oxido: #B5492A;
   --ocre: #D2B477;
   --verde: #2E4A3E;
+  --verde-hover: #233a31;
+  --verde-hover-accion: #3a5b4c;
   --t60: rgba(36, 22, 16, 0.66);
   --t30: rgba(36, 22, 16, 0.32);
   --t14: rgba(36, 22, 16, 0.14);
@@ -49,6 +48,35 @@ p { text-wrap: pretty; }
 ::selection { background: var(--oxido); color: #fff; }
 
 .serif { font-family: var(--serif); }
+
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 8px 0;
+  color: inherit;
+  font: 600 24px var(--serif);
+  text-decoration: none;
+}
+
+.brand span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ocre);
+}
+
+.kicker {
+  color: var(--oxido);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.status { padding: 28px; border-top: 1px solid var(--t14); color: var(--t60); }
+.volver-inicio { display: inline-flex; align-items: center; min-height: 44px; color: var(--t60); font-size: 14px; text-decoration: none; touch-action: manipulation; }
+.solo-lector { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
 textarea:focus-visible, [role="button"]:focus-visible, [role="tab"]:focus-visible,

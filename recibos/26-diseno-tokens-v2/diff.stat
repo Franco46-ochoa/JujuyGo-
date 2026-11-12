@@ -1,0 +1,14 @@
+ frontend/angular.json                              |  4 +-
+ frontend/src/app/como-llegar/como-llegar.css       |  4 +-
+ frontend/src/app/home/home.css                     | 60 +-------------
+ frontend/src/app/home/home.ts                      |  1 +
+ frontend/src/app/lugar-detalle/lugar-detalle.css   |  4 +-
+ frontend/src/app/travesia/travesia-auth.css        |  4 +-
+ frontend/src/app/travesia/travesia-motion.css      |  4 +-
+ frontend/src/app/travesia/travesia-plan.css        | 53 ++++++++++---
+ frontend/src/app/travesia/travesia.css             |  9 +--
+ frontend/src/app/travesia/travesia.spec.ts         |  5 ++
+ frontend/src/app/travesia/travesia.ts              |  2 +-
+ frontend/src/app/yapa-mapa/yapa-mapa.component.css | 92 +++++++++++-----------
+ frontend/src/styles.css                            | 34 +++++++-
+ 13 files changed, 140 insertions(+), 136 deletions(-)

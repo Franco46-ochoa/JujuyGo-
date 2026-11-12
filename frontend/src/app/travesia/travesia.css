@@ -2,11 +2,9 @@
 
 .travesia-shell { max-width: 1280px; margin: 0 auto; padding: 0 5% 88px; }
 .travesia-nav { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; border-bottom: 1px solid var(--t14); }
-.volver-inicio { display: inline-flex; align-items: center; min-height: 44px; color: var(--t60); font-size: 14px; text-decoration: none; touch-action: manipulation; }
 
 .wizard { max-width: 850px; margin: 0 auto; padding: 72px 0 20px; }
 .wizard-intro { max-width: 660px; }
-.kicker { color: var(--oxido); font-size: 14px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
 .wizard-intro h1, .plan-heading h1 { margin-top: 16px; font: 400 clamp(44px, 7vw, 76px)/1 var(--serif); letter-spacing: -.03em; text-wrap: balance; }
 .wizard-intro h1 em, .pregunta h2 em, .plan-heading h1 em { color: var(--oxido); font-weight: 400; }
 .wizard-intro > p:last-child { max-width: 510px; margin-top: 20px; color: var(--t60); font-size: 16px; line-height: 1.65; }
@@ -55,9 +53,9 @@
 .estado-ok { border-top-color: var(--verde); }
 .dias { border-top: 1px solid var(--t14); }
 .dia { display: grid; grid-template-columns: minmax(180px, .7fr) 1.5fr; gap: 40px; padding: 36px 0 48px; border-bottom: 1px solid var(--t14); }
-.dia-activo { margin-inline: -24px; padding-inline: 24px; background: var(--verde); color: #f4ede3; }
-.dia-activo .dia-numero, .dia-activo .dia-estado, .dia-activo .evento-hora { color: #f4ede3; }
-.dia-activo .dia-cabecera h2, .dia-activo .evento-detalle a { color: #f4ede3; }
+.dia-activo { margin-inline: -24px; padding-inline: 24px; background: var(--verde); color: var(--papel); }
+.dia-activo .dia-numero, .dia-activo .dia-estado, .dia-activo .evento-hora { color: var(--papel); }
+.dia-activo .dia-cabecera h2, .dia-activo .evento-detalle a { color: var(--papel); }
 .dia-activo .evento-detalle p, .dia-activo .dia-vacio, .dia-activo .tramo small { color: rgba(244, 237, 227, .86); }
 .dia-activo .evento { border-color: rgba(244, 237, 227, .2); }
 .dia-numero { color: var(--oxido); font: italic 18px var(--serif); }
@@ -72,7 +70,6 @@
 .mover-evento select { max-width: 180px; min-height: 44px; padding: 8px 24px 8px 8px; border: 1px solid currentColor; border-radius: 3px; background: transparent; color: inherit; font: 16px var(--sans); touch-action: manipulation; }
 .mover-evento option { color: var(--tinta); }
 .borrar-evento { min-width: 44px; min-height: 44px; padding: 8px 4px; border: 0; background: transparent; color: rgba(244, 237, 227, .72); font: 14px var(--sans); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; touch-action: manipulation; }
-.solo-lector { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 .dia:not(.dia-activo) .evento-hora { color: var(--verde); }
 .dia:not(.dia-activo) .dia-estado { color: var(--t60); }
 .dia:not(.dia-activo) .borrar-evento { color: var(--t60); }

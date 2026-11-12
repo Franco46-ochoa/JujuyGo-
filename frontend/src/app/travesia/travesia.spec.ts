@@ -64,6 +64,7 @@ describe('TravesiaPage', () => {
           useValue: {
             validar: validate,
             getContexto: () => of({ paradas: [], horarios: [] }),
+            redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({
               origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
               destino: { slug: 'tilcara', nombre: 'Tilcara' },
@@ -141,6 +142,7 @@ describe('TravesiaPage', () => {
               conflictos: [],
             }),
             getContexto: () => of({ paradas: [], horarios: [] }),
+            redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({
               origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
               destino: { slug: 'tilcara', nombre: 'Tilcara' },
@@ -198,6 +200,7 @@ describe('TravesiaPage', () => {
           useValue: {
             validar: vi.fn(),
             getContexto: () => of({ paradas: [], horarios: [] }),
+            redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({
               origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
               destino: { slug: 'tilcara', nombre: 'Tilcara' },
@@ -252,6 +255,7 @@ describe('TravesiaPage', () => {
           useValue: {
             validar: (plan: PlanTravesia) => of({ plan, validado: true, tramos: [], conflictos: [] }),
             getContexto: () => of({ paradas: [], horarios: [] }),
+            redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({ origen: {}, destino: {}, direccion: 'ida', servicios: [] }),
           },
         },
@@ -342,6 +346,7 @@ describe('TravesiaPage', () => {
           useValue: {
             validar,
             getContexto: () => of({ paradas: [], horarios: [] }),
+            redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({ origen: {}, destino: {}, direccion: 'ida', servicios: [] }),
           },
         },
