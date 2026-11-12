@@ -184,3 +184,13 @@ cat docs/estado.md           # este archivo
 - **Pendiente usuario (dashboard)**: importar repo en Vercel (backend primero → URL → environment.prod.ts → frontend), correr migraciones 001-004 backend + 001-002 supabase en SQL Editor, DATABASE_URL pooler :6543, CORS_ORIGIN, Site URL/redirects Supabase, Google OAuth provider, GEMINI_API_KEY opcional.
 - **Nota**: el commit f5d1075 barrió artefactos de audit (borró audit-salida/, commiteó frontend/audit-fase0/*.png) — limpieza parcial de higiene; pitch/ PNGs grandes siguen commiteados, pendiente de limpiar.
 - Tests: backend 63/63 OK, frontend build OK (warnings de budget).
+
+## 2026-11-12 — DEPLOY PRODUCCION COMPLETO
+
+- **Backend**: https://jujuy-go.vercel.app — Express serverless en Vercel (proyecto `jujuy-go`, root `backend/`). Catch-all real via `api/index.js` + rewrite `/api/:path*` (los brackets `[...slug]` NO funcionan en api/ plano, son feature de Next.js). `/api/health` ok, `/api/lugares` y `/api/travesia/contexto` devuelven datos reales.
+- **Frontend**: https://jujuygo-web.vercel.app — Angular prod, apiUrl -> jujuy-go.vercel.app/api.
+- **Pitch**: https://yapa-pitch.vercel.app — landing estatica con waitlist + analytics.
+- **DB**: Supabase Postgres produccion — migraciones 001-004 backend + seed RN9 corridos; supabase/migrations 001-002 corridas por usuario.
+- **Env vars backend**: DATABASE_URL (pooler :6543), SUPABASE_URL, SUPABASE_ANON_KEY, CORS_ORIGIN=https://jujuygo-web.vercel.app — todas production+preview.
+- **Gotchas Vercel**: SSO protection viene ON por defecto en teams -> hay que desactivarla por proyecto; env vars sensitive no se pueden renombrar; changes de env requieren redeploy; rootDirectory solo aplica al crear proyecto.
+- **Pendiente**: Supabase dashboard Site URL/redirects + Google OAuth provider; resetear password DB (quedo en chat); GEMINI_API_KEY; probar flujo completo desde celu.
