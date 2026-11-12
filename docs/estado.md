@@ -194,3 +194,7 @@ cat docs/estado.md           # este archivo
 - **Env vars backend**: DATABASE_URL (pooler :6543), SUPABASE_URL, SUPABASE_ANON_KEY, CORS_ORIGIN=https://jujuygo-web.vercel.app — todas production+preview.
 - **Gotchas Vercel**: SSO protection viene ON por defecto en teams -> hay que desactivarla por proyecto; env vars sensitive no se pueden renombrar; changes de env requieren redeploy; rootDirectory solo aplica al crear proyecto.
 - **Pendiente**: Supabase dashboard Site URL/redirects + Google OAuth provider; resetear password DB (quedo en chat); GEMINI_API_KEY; probar flujo completo desde celu.
+
+## Nota de orquestación — cuota de workers
+
+- Gemini (Antigravity) recuperó cupo el ~12 nov, pero **dosarse**: no exigirle de más para no volver a agotar los tokens. Usarlo para slices acotados, no para trabajo pesado en loop. Copilot sigue siendo el default sano; Devin coordina/verifica.
