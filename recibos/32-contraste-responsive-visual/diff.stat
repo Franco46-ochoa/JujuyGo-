@@ -1,0 +1,4 @@
+ frontend/src/app/home/home.css                     | 10 ++++++----
+ frontend/src/app/travesia/travesia-plan.css        | 16 +++++++++++++++-
+ frontend/src/app/yapa-mapa/yapa-mapa.component.css | 12 ++++++++----
+ 3 files changed, 29 insertions(+), 9 deletions(-)

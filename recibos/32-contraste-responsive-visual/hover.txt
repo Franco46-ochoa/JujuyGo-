@@ -1,0 +1,5 @@
+paso4 "Armar con mis lugares" disabled:hover: 5.31:1 (color #6b5f58 sobre #f4ede3, bg rgba(0, 0, 0, 0), opac 1) CUMPLE — "Armar con mis lugares
+→"
+"Agregar" disabled:hover (dia activo): 6.02:1 (color #ccccc2 sobre #2e4a3e, bg rgba(0, 0, 0, 0), opac 1) CUMPLE — "Agregar"
+"Agregar" disabled:hover (dia papel): 5.31:1 (color #6b5f58 sobre #f4ede3, bg rgba(0, 0, 0, 0), opac 1) CUMPLE — "Agregar"
+"Agregar" habilitado:hover (dia activo): 4.87:1 (color #d2b477 sobre #2e4a3e, bg rgba(0, 0, 0, 0), opac 1) CUMPLE — "Agregar"
