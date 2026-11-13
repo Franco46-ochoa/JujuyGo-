@@ -1,0 +1,116 @@
+/* ═══ Prototipo travesía: timeline + fotos + mapa por día ═══ */
+
+/* Encabezado del viaje */
+.trip-head { max-width: 1280px; margin: 0 auto; padding: 88px 5% 0; }
+.trip-head h1 { margin-top: 18px; font: 400 clamp(40px, 6vw, var(--fs-4))/1.05 var(--serif); letter-spacing: -.02em; }
+.trip-head h1 em { color: var(--oxido); font-weight: 400; }
+.trip-meta {
+  display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: 28px; padding: 20px 0;
+  border-top: 1px solid var(--t14); border-bottom: 1px solid var(--t14);
+  color: var(--t60); font-size: 14px; letter-spacing: .06em; text-transform: uppercase;
+}
+.trip-meta strong { color: var(--tinta); font-weight: 600; font-variant-numeric: tabular-nums; }
+.trip-meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ocre); align-self: center; }
+
+/* Día */
+.day { max-width: 1280px; margin: 0 auto; padding: 88px 5% 0; }
+.day-heading { display: flex; align-items: baseline; gap: 24px; border-bottom: 1px solid var(--t14); padding-bottom: 20px; }
+.day-num { color: var(--oxido); font: italic 400 clamp(30px, 4vw, 48px)/1 var(--serif); }
+.day-heading h2 { font: 400 clamp(28px, 3.6vw, var(--fs-3))/1.1 var(--serif); letter-spacing: -.02em; }
+.day-heading .day-route { margin-left: auto; color: var(--t60); font-size: 14px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+
+.day-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 48px; margin-top: 40px; align-items: start; }
+
+/* Timeline */
+.timeline { position: relative; list-style: none; padding: 0 0 0 88px; }
+.timeline::before {
+  position: absolute; left: 64px; top: 10px; bottom: 10px;
+  width: 1px; background: var(--t14); content: "";
+}
+.t-item { position: relative; padding: 0 0 34px; }
+.t-item:last-child { padding-bottom: 0; }
+.t-hora {
+  position: absolute; left: -88px; top: 2px; width: 52px; text-align: right;
+  color: var(--oxido); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.t-dot {
+  position: absolute; left: -29px; top: 7px; width: 9px; height: 9px;
+  border-radius: 50%; background: var(--ocre);
+  box-shadow: 0 0 0 4px var(--papel);
+}
+.t-item.t-lugar .t-dot { width: 13px; height: 13px; left: -31px; top: 5px; background: var(--verde); }
+.t-item.t-yapa-item .t-dot { background: var(--oxido); }
+.t-title { font: 500 20px/1.3 var(--serif); }
+.t-detalle { margin-top: 6px; color: var(--t60); font-size: 14px; line-height: 1.6; max-width: 52ch; }
+.t-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.badge {
+  display: inline-flex; align-items: center; min-height: 26px; padding: 3px 12px;
+  border-radius: 999px; border: 1px solid var(--t14);
+  font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+}
+.badge-publicado { color: var(--verde); border-color: rgba(46,74,62,.35); background: rgba(46,74,62,.08); }
+.badge-estimado { color: var(--t60); }
+.badge-local { color: var(--oxido); border-color: rgba(181,73,42,.35); background: rgba(181,73,42,.07); }
+
+/* Foto dentro del timeline */
+.t-foto { margin-top: 14px; max-width: 460px; }
+.t-foto img { width: 100%; aspect-ratio: 1.618/1; object-fit: cover; border-radius: 4px; }
+.t-foto figcaption { margin-top: 8px; color: var(--t60); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+
+/* Yapa */
+.yapa {
+  margin-top: 14px; max-width: 460px; padding: 18px 20px;
+  border: 1px solid rgba(181,73,42,.4); border-left: 3px solid var(--oxido);
+  border-radius: 4px; background: rgba(181,73,42,.05);
+}
+.yapa-kicker { color: var(--oxido); font-size: 13px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.yapa p { margin-top: 8px; font-size: 14px; line-height: 1.6; }
+.yapa small { display: block; margin-top: 10px; color: var(--t60); font-size: 13px; line-height: 1.5; }
+
+/* Columna derecha: mapa + foto del día */
+.day-side { position: sticky; top: 84px; display: flex; flex-direction: column; gap: 20px; }
+.day-map {
+  height: 300px; border-radius: 4px; overflow: hidden;
+  border: 1px solid var(--t14); background: var(--arena);
+}
+.day-map .leaflet-control-attribution { font-size: 10px; }
+.map-caption { margin-top: -14px; color: var(--t60); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+.day-photo { position: relative; border-radius: 4px; overflow: hidden; min-height: 200px; display: flex; align-items: flex-end; color: #fff; }
+.day-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.day-photo::after { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(20,10,6,.75)); content: ""; }
+.day-photo figcaption { position: relative; z-index: 1; padding: 60px 20px 18px; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; }
+
+/* Noche / cierre del día */
+.day-cierre { margin-top: 36px; padding: 18px 0 0; border-top: 1px solid var(--t14); color: var(--t60); font-size: 14px; }
+.day-cierre strong { color: var(--tinta); font-weight: 600; }
+
+/* CTA final */
+.trip-end { max-width: 1280px; margin: 0 auto; padding: 88px 5% 0; }
+.trip-end-band {
+  display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap;
+  padding: 44px 48px; border-radius: 4px; background: var(--verde); color: var(--papel);
+}
+.trip-end-band h2 { font: 400 clamp(28px, 4vw, var(--fs-3))/1.1 var(--serif); letter-spacing: -.02em; }
+.trip-end-band p { margin-top: 10px; max-width: 52ch; color: rgba(244,237,227,.82); font-size: 15px; line-height: 1.6; }
+.trip-end-cta {
+  display: inline-flex; align-items: center; gap: 14px; flex-shrink: 0;
+  min-height: 44px; padding: 14px 26px; border-radius: 999px;
+  background: var(--papel); color: var(--tinta); font-size: 15px; font-weight: 600; text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .day-grid { grid-template-columns: 1fr; gap: 32px; }
+  .day-side { position: static; }
+}
+@media (max-width: 620px) {
+  .trip-head { padding-top: 64px; }
+  .day { padding-top: 64px; }
+  .day-heading { flex-wrap: wrap; gap: 10px; }
+  .day-heading .day-route { margin-left: 0; width: 100%; }
+  .timeline { padding-left: 76px; }
+  .timeline::before { left: 54px; }
+  .t-hora { left: -76px; width: 44px; font-size: 14px; }
+  .t-dot { left: -27px; }
+  .t-item.t-lugar .t-dot { left: -29px; }
+  .trip-end-band { padding: 32px 24px; }
+}

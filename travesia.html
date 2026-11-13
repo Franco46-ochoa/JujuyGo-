@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapa — prototipo travesía por día</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%276%27 fill=%27%23B5492A%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="yapa.css">
+<link rel="stylesheet" href="travesia.css">
+</head>
+<body>
+
+<nav class="inner-nav" aria-label="Navegación principal">
+  <a class="brand" href="home.html">Yapa<span></span></a>
+  <div class="pillnav">
+    <a href="home.html">Explorar</a>
+    <a href="home.html#zonas">Zonas</a>
+    <a href="home.html#imperdibles">Imperdibles</a>
+    <a class="active" href="travesia.html">Travesía</a>
+  </div>
+  <a class="nav-cta" href="#dia-1">Ver el plan</a>
+</nav>
+
+<header class="trip-head">
+  <p class="kicker">Armá tu travesía · Quebrada de Humahuaca</p>
+  <h1>Tres días <em>que cierran.</em></h1>
+  <div class="trip-meta">
+    <span>Vie 14 → Dom 16</span><span class="dot" aria-hidden="true"></span>
+    <span>Salida: <strong>Terminal SS. Jujuy</strong></span><span class="dot" aria-hidden="true"></span>
+    <span>Base: <strong>Tilcara</strong> · <strong>Humahuaca</strong></span><span class="dot" aria-hidden="true"></span>
+    <span><strong>3</strong> tramos de colectivo</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ DÍA 1 ══ -->
+  <section class="day" id="dia-1" aria-labelledby="d1">
+    <div class="day-heading">
+      <span class="day-num">i.</span>
+      <h2 id="d1">Subir la Quebrada</h2>
+      <span class="day-route">SS. Jujuy → Tilcara</span>
+    </div>
+    <div class="day-grid">
+      <ol class="timeline">
+        <li class="t-item">
+          <span class="t-hora">07:45</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Terminal de Ómnibus</p>
+          <p class="t-detalle">Llegá con margen: el boleto se compra en boletería o a bordo según la empresa.</p>
+          <div class="t-badges"><span class="badge badge-estimado">Margen 25 min</span></div>
+        </li>
+        <li class="t-item">
+          <span class="t-hora">08:10</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Colectivo a Tilcara</p>
+          <p class="t-detalle">Panamericano, servicio regular por la RN 9. Bajada en Tilcara ~09:55.</p>
+          <div class="t-badges"><span class="badge badge-publicado">Horario publicado</span></div>
+        </li>
+        <li class="t-item t-yapa-item">
+          <span class="t-hora">—</span><span class="t-dot" aria-hidden="true"></span>
+          <div class="yapa">
+            <p class="yapa-kicker">✳ yapa</p>
+            <p>Pasás por Maimará ~09:10: sentate del lado izquierdo, la Paleta del Pintor se enciende con la luz de la mañana.</p>
+            <small>Cierra porque no cambia tu plan: es la misma butaca, en el mismo servicio.</small>
+          </div>
+        </li>
+        <li class="t-item t-lugar">
+          <span class="t-hora">10:30</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Pucará de Tilcara</p>
+          <p class="t-detalle">La fortaleza sobre el río Grande. 2 h con museo y senderos; queda a 15 min a pie del centro.</p>
+          <figure class="t-foto">
+            <img src="img/tilcara.jpg" srcset="img/tilcara-640.webp 640w, img/tilcara-1280.webp 1280w" sizes="(max-width: 620px) 88vw, 460px" alt="Pucará de Tilcara" loading="lazy" decoding="async">
+            <figcaption>Tilcara · 2.500 msnm</figcaption>
+          </figure>
+        </li>
+        <li class="t-item t-lugar">
+          <span class="t-hora">17:00</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Garganta del Diablo</p>
+          <p class="t-detalle">El cañón y la cascada al caer la tarde. Consultá el estado del camino en el pueblo; llevá agua.</p>
+          <div class="t-badges"><span class="badge badge-local">Traslado local</span></div>
+          <figure class="t-foto">
+            <img src="img/garganta.jpg" srcset="img/garganta-640.webp 640w, img/garganta-1280.webp 1280w" sizes="(max-width: 620px) 88vw, 460px" alt="Garganta del Diablo" loading="lazy" decoding="async">
+            <figcaption>Tilcara · 2.900 msnm</figcaption>
+          </figure>
+        </li>
+      </ol>
+      <div class="day-side">
+        <div class="day-map" id="map-1" role="img" aria-label="Mapa del día 1: Terminal SS. Jujuy, Tilcara, Pucará y Garganta del Diablo"></div>
+        <p class="map-caption">Día 1 · 4 puntos · ~75 km por RN 9</p>
+        <figure class="day-photo">
+          <img src="img/tilcara.jpg" srcset="img/tilcara-640.webp 640w, img/tilcara-1280.webp 1280w" sizes="(max-width: 900px) 88vw, 400px" alt="Tilcara" loading="lazy" decoding="async">
+          <figcaption>Noche 1 · Tilcara</figcaption>
+        </figure>
+      </div>
+    </div>
+    <p class="day-cierre"><strong>Dormís en Tilcara.</strong> El día cierra sin apuros: la Garganta es la última salida posible con luz.</p>
+  </section>
+
+  <!-- ══ DÍA 2 ══ -->
+  <section class="day" id="dia-2" aria-labelledby="d2">
+    <div class="day-heading">
+      <span class="day-num">ii.</span>
+      <h2 id="d2">Purmamarca y subida final</h2>
+      <span class="day-route">Tilcara → Purmamarca → Humahuaca</span>
+    </div>
+    <div class="day-grid">
+      <ol class="timeline">
+        <li class="t-item">
+          <span class="t-hora">08:40</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Colectivo a Purmamarca</p>
+          <p class="t-detalle">Balut, bajada en el cruce. ~35 min de viaje; del cruce al pueblo hay ~2 km (caminata o remis).</p>
+          <div class="t-badges"><span class="badge badge-publicado">Horario publicado</span><span class="badge badge-local">Acceso local</span></div>
+        </li>
+        <li class="t-item t-lugar">
+          <span class="t-hora">10:00</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Cerro de los Siete Colores</p>
+          <p class="t-detalle">Paseo de los Colorados + pueblo y feria. 3 h tranquilas; la luz de la mañana es la buena.</p>
+          <figure class="t-foto">
+            <img src="img/purmamarca.jpg" srcset="img/purmamarca-640.webp 640w, img/purmamarca-1280.webp 1280w" sizes="(max-width: 620px) 88vw, 460px" alt="Cerro de los Siete Colores" loading="lazy" decoding="async">
+            <figcaption>Purmamarca · 2.324 msnm</figcaption>
+          </figure>
+        </li>
+        <li class="t-item t-yapa-item">
+          <span class="t-hora">—</span><span class="t-dot" aria-hidden="true"></span>
+          <div class="yapa">
+            <p class="yapa-kicker">✳ yapa</p>
+            <p>Si volvés al cruce a pie (~30 min), el almuerzo en el puesto de la RN 9 te deja justo para el servicio de las 14:20.</p>
+            <small>Cierra porque el servicio para en el cruce; no necesitás volver al pueblo.</small>
+          </div>
+        </li>
+        <li class="t-item">
+          <span class="t-hora">14:20</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Colectivo a Humahuaca</p>
+          <p class="t-detalle">Panamericano desde el cruce de Purmamarca. Llegada ~15:50.</p>
+          <div class="t-badges"><span class="badge badge-publicado">Horario publicado</span></div>
+        </li>
+        <li class="t-item t-lugar">
+          <span class="t-hora">16:30</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Humahuaca al atardecer</p>
+          <p class="t-detalle">El Monumento a los Héroes de la Independencia y el casco. Subida a pie con pendiente.</p>
+          <figure class="t-foto">
+            <img src="img/humahuaca.jpg" srcset="img/humahuaca-640.webp 640w, img/humahuaca-1280.webp 1280w" sizes="(max-width: 620px) 88vw, 460px" alt="Monumento a los Héroes de la Independencia" loading="lazy" decoding="async">
+            <figcaption>Humahuaca · 2.939 msnm</figcaption>
+          </figure>
+        </li>
+      </ol>
+      <div class="day-side">
+        <div class="day-map" id="map-2" role="img" aria-label="Mapa del día 2: Tilcara, Purmamarca y Humahuaca"></div>
+        <p class="map-caption">Día 2 · 3 puntos · ~85 km por RN 9</p>
+        <figure class="day-photo">
+          <img src="img/humahuaca.jpg" srcset="img/humahuaca-640.webp 640w, img/humahuaca-1280.webp 1280w" sizes="(max-width: 900px) 88vw, 400px" alt="Humahuaca" loading="lazy" decoding="async">
+          <figcaption>Noche 2 · Humahuaca</figcaption>
+        </figure>
+      </div>
+    </div>
+    <p class="day-cierre"><strong>Dormís en Humahuaca.</strong> Último servicio de subida usado; mañana el Hornocal madruga.</p>
+  </section>
+
+  <!-- ══ DÍA 3 ══ -->
+  <section class="day" id="dia-3" aria-labelledby="d3">
+    <div class="day-heading">
+      <span class="day-num">iii.</span>
+      <h2 id="d3">El Hornocal y la vuelta</h2>
+      <span class="day-route">Humahuaca → Hornocal → SS. Jujuy</span>
+    </div>
+    <div class="day-grid">
+      <ol class="timeline">
+        <li class="t-item">
+          <span class="t-hora">08:30</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Traslado al mirador</p>
+          <p class="t-detalle">Los traslados compartidos salen del centro de Humahuaca; ~45 min de camino de cornisa. Confirmá el regreso con el mismo chofer.</p>
+          <div class="t-badges"><span class="badge badge-local">Traslado local</span><span class="badge badge-estimado">No hay servicio regular</span></div>
+        </li>
+        <li class="t-item t-lugar">
+          <span class="t-hora">09:30</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Serranía del Hornocal</p>
+          <p class="t-detalle">El mirador de los catorce colores a 4.350 m. Caminá despacio: la altura se siente.</p>
+          <figure class="t-foto">
+            <img src="img/hornocal.jpg" srcset="img/hornocal-640.webp 640w, img/hornocal-1280.webp 1280w" sizes="(max-width: 620px) 88vw, 460px" alt="Serranía del Hornocal" loading="lazy" decoding="async">
+            <figcaption>Humahuaca · 4.350 msnm</figcaption>
+          </figure>
+        </li>
+        <li class="t-item t-yapa-item">
+          <span class="t-hora">—</span><span class="t-dot" aria-hidden="true"></span>
+          <div class="yapa">
+            <p class="yapa-kicker">✳ yapa</p>
+            <p>Pedile al chofer la parada del mirador intermedio: la serranía entera aparece de golpe, 200 m antes del final.</p>
+            <small>Cierra porque es la misma subida, sin desvío ni tiempo extra.</small>
+          </div>
+        </li>
+        <li class="t-item">
+          <span class="t-hora">15:30</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Colectivo de regreso</p>
+          <p class="t-detalle">Humahuaca → Terminal SS. Jujuy, ~3 h por la RN 9. Último servicio con margen para el traslado del Hornocal.</p>
+          <div class="t-badges"><span class="badge badge-publicado">Horario publicado</span></div>
+        </li>
+        <li class="t-item">
+          <span class="t-hora">18:30</span><span class="t-dot" aria-hidden="true"></span>
+          <p class="t-title">Terminal de Ómnibus</p>
+          <p class="t-detalle">Llegada estimada. La travesía cierra: tres días, tres noches de norte, cero auto.</p>
+          <div class="t-badges"><span class="badge badge-estimado">Hora estimada</span></div>
+        </li>
+      </ol>
+      <div class="day-side">
+        <div class="day-map" id="map-3" role="img" aria-label="Mapa del día 3: Humahuaca, Hornocal y regreso a San Salvador"></div>
+        <p class="map-caption">Día 3 · 3 puntos · ~215 km ida y vuelta</p>
+        <figure class="day-photo">
+          <img src="img/hornocal.jpg" srcset="img/hornocal-640.webp 640w, img/hornocal-1280.webp 1280w" sizes="(max-width: 900px) 88vw, 400px" alt="Serranía del Hornocal" loading="lazy" decoding="async">
+          <figcaption>Cierre · El Hornocal</figcaption>
+        </figure>
+      </div>
+    </div>
+    <p class="day-cierre"><strong>Fin de la travesía.</strong> Si perdés el servicio de las 15:30, el siguiente es ~17:00 — y el plan te lo dice antes, no en la parada.</p>
+  </section>
+
+  <section class="trip-end" aria-labelledby="end-title">
+    <div class="trip-end-band">
+      <div>
+        <h2 id="end-title">Así se siente una travesía <em>que cierra.</em></h2>
+        <p>Cada hora tiene su fuente: publicada, estimada o por confirmar. Las yapas entran solo cuando el reloj del colectivo las deja pasar.</p>
+      </div>
+      <a class="trip-end-cta" href="home.html">Explorar lugares <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="footer-brand" href="home.html">Yapa<span></span></a>
+    <p>El extra que te regala Jujuy: lugares que se sueñan, colectivos que sí pasan, días que cierran.</p>
+  </div>
+  <div class="footer-bottom">
+    <span>Jujuy, Argentina</span>
+    <span>Prototipo · datos demostrativos</span>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const OSM = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+const mk = (id, pts) => {
+  const map = L.map(id, { scrollWheelZoom: false });
+  L.tileLayer(OSM, { attribution: ATTR, maxZoom: 17 }).addTo(map);
+  pts.forEach(p => L.circleMarker(p.ll, {
+    radius: 7, color: '#B5492A', weight: 2, fillColor: '#D2B477', fillOpacity: .95
+  }).addTo(map).bindTooltip(p.n, { direction: 'top', offset: [0, -8] }));
+  map.fitBounds(L.latLngBounds(pts.map(p => p.ll)), { padding: [28, 28] });
+  return map;
+};
+
+// Coordenadas reales del catálogo (seed 001-zonas-lugares) + localidades RN 9
+mk('map-1', [
+  { ll: [-24.1858, -65.2995], n: 'Terminal SS. Jujuy' },
+  { ll: [-23.5770, -65.3920], n: 'Tilcara' },
+  { ll: [-23.5895, -65.4024], n: 'Pucará de Tilcara' },
+  { ll: [-23.5797, -65.3782], n: 'Garganta del Diablo' }
+]);
+mk('map-2', [
+  { ll: [-23.5770, -65.3920], n: 'Tilcara' },
+  { ll: [-23.6240, -65.4100], n: 'Maimará · Paleta del Pintor' },
+  { ll: [-23.7448, -65.4995], n: 'Purmamarca' },
+  { ll: [-23.2054, -65.3508], n: 'Humahuaca' }
+]);
+mk('map-3', [
+  { ll: [-23.2054, -65.3508], n: 'Humahuaca' },
+  { ll: [-23.2050, -65.1810], n: 'Serranía del Hornocal' },
+  { ll: [-24.1858, -65.2995], n: 'Terminal SS. Jujuy' }
+]);
+</script>
+</body>
+</html>

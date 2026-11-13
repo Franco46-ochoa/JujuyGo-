@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapa — prototipo home corto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@300..700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%276%27 fill=%27%23B5492A%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="yapa.css">
+<link rel="preload" as="image" href="img/purmamarca.jpg" imagesrcset="img/purmamarca-640.webp 640w, img/purmamarca-1280.webp 1280w, img/purmamarca-1920.webp 1920w" imagesizes="100vw">
+</head>
+<body>
+
+<header class="hero">
+  <img class="hero-image" src="img/purmamarca.jpg" srcset="img/purmamarca-640.webp 640w, img/purmamarca-1280.webp 1280w, img/purmamarca-1920.webp 1920w" sizes="100vw" alt="Cerro de los Siete Colores en Purmamarca" fetchpriority="high">
+  <div class="hero-veil" aria-hidden="true"></div>
+  <nav class="hero-nav" aria-label="Navegación principal">
+    <a class="brand" href="home.html">Yapa<span></span></a>
+    <div class="pillnav">
+      <a class="active" href="home.html">Explorar</a>
+      <a href="#zonas">Zonas</a>
+      <a href="#imperdibles">Imperdibles</a>
+      <a href="travesia.html">Travesía</a>
+    </div>
+    <a class="nav-cta" href="travesia.html">Armá tu travesía</a>
+  </nav>
+  <div class="hero-content">
+    <p class="eyebrow">Tu yapa para recorrer Jujuy</p>
+    <h1>Descubrí Jujuy.<br><em>El norte que te queda</em></h1>
+    <p class="hero-copy">Los lugares que se sueñan, los colectivos que sí pasan y el día que cierra. Todo se arma sobre horarios reales.</p>
+    <a class="hero-cta" href="travesia.html">Armá tu travesía <span aria-hidden="true">→</span></a>
+  </div>
+  <div class="hero-caption">
+    <span>Quebrada de Humahuaca</span><span class="caption-rule" aria-hidden="true"></span>
+    <span>Patrimonio de la Humanidad</span>
+  </div>
+</header>
+
+<main>
+  <section class="section" id="zonas" aria-labelledby="zones-title">
+    <div class="section-heading">
+      <div>
+        <p class="kicker">Las cuatro regiones</p>
+        <h2 id="zones-title">Cada zona es <em>otro país</em></h2>
+      </div>
+      <p class="section-intro">Del altiplano a la selva. Elegí la que te llama; cada lugar cuenta cómo llegar.</p>
+    </div>
+    <div class="zone-collage">
+      <a class="zone-card zone-card-large" href="#imperdibles">
+        <img src="img/hornocal.jpg" srcset="img/hornocal-640.webp 640w, img/hornocal-1280.webp 1280w, img/hornocal-1920.webp 1920w" sizes="(max-width: 620px) 90vw, (max-width: 900px) 45vw, 55vw" alt="Serranía del Hornocal" fetchpriority="high" decoding="async">
+        <span class="zone-content">
+          <span class="zone-name">Quebrada</span>
+          <span class="zone-description">El corredor de los cerros de colores: Purmamarca, Tilcara, Humahuaca y el Hornocal a 4.350 m.</span>
+          <span class="zone-facts"><span>4.350 m</span><span>Serranía del Hornocal</span></span>
+          <span class="zone-arrival">Servicios diarios por la RN 9 desde la Terminal de San Salvador.</span>
+        </span>
+        <span class="zone-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="zone-card" href="#imperdibles">
+        <img src="img/salinas.jpg" srcset="img/salinas-640.webp 640w, img/salinas-1280.webp 1280w, img/salinas-1920.webp 1920w" sizes="(max-width: 620px) 90vw, (max-width: 900px) 45vw, 34vw" alt="Salinas Grandes" loading="lazy" decoding="async">
+        <span class="zone-content">
+          <span class="zone-name">Puna</span>
+          <span class="zone-description">El altiplano infinito: salares, vicuñas y pueblos de adobe.</span>
+          <span class="zone-facts"><span>3.450 m</span><span>Salinas Grandes</span></span>
+        </span>
+        <span class="zone-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="zone-card" href="#imperdibles">
+        <img src="img/calilegua.jpg" srcset="img/calilegua-640.webp 640w, img/calilegua-1280.webp 1280w, img/calilegua-1920.webp 1920w" sizes="(max-width: 620px) 90vw, (max-width: 900px) 45vw, 34vw" alt="Parque Nacional Calilegua" loading="lazy" decoding="async">
+        <span class="zone-content">
+          <span class="zone-name">Yungas</span>
+          <span class="zone-description">La selva de niebla: Calilegua, senderos y otro verde.</span>
+          <span class="zone-facts"><span>P.N. Calilegua</span></span>
+        </span>
+        <span class="zone-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="zone-card" href="#imperdibles">
+        <img src="img/salsaju.jpg" srcset="img/salsaju-640.webp 640w, img/salsaju-1280.webp 1280w, img/salsaju-1920.webp 1920w" sizes="(max-width: 620px) 90vw, (max-width: 900px) 45vw, 34vw" alt="Termas de Reyes" loading="lazy" decoding="async">
+        <span class="zone-content">
+          <span class="zone-name">Valles</span>
+          <span class="zone-description">Cerca de la capital: termas, diques y tardes lentas.</span>
+          <span class="zone-facts"><span>Termas de Reyes</span></span>
+        </span>
+        <span class="zone-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="imperdibles" aria-labelledby="highlights-title">
+    <div class="section-heading">
+      <div>
+        <p class="kicker">Imperdibles</p>
+        <h2 id="highlights-title">Los lugares que <em>se cuentan</em></h2>
+      </div>
+      <p class="section-intro">Con su dato honesto: cuánto toma, cómo se llega y cuándo conviene.</p>
+    </div>
+    <div class="place-list">
+      <a class="place-row" href="travesia.html">
+        <span class="place-number">01</span>
+        <img class="place-thumb" src="img/purmamarca.jpg" srcset="img/purmamarca-640.webp 640w, img/purmamarca-1280.webp 1280w" sizes="96px" alt="Cerro de los Siete Colores" loading="lazy" decoding="async">
+        <span class="place-title"><strong>Cerro de los Siete Colores</strong><small>Quebrada · Purmamarca</small></span>
+        <span class="place-description">Los tonos del cerro rodean el pueblo; el Paseo de los Colorados se recorre a pie.</span>
+        <span class="place-meta"><strong>2.324 m</strong><span>Todo el año</span></span>
+        <span class="place-arrow" aria-hidden="true">→</span>
+      </a>
+      <a class="place-row" href="travesia.html">
+        <span class="place-number">02</span>
+        <img class="place-thumb" src="img/tilcara.jpg" srcset="img/tilcara-640.webp 640w, img/tilcara-1280.webp 1280w" sizes="96px" alt="Pucará de Tilcara" loading="lazy" decoding="async">
+        <span class="place-title"><strong>Pucará de Tilcara</strong><small>Quebrada · Tilcara</small></span>
+        <span class="place-description">Fortaleza prehispánica sobre el río Grande, con senderos y museo.</span>
+        <span class="place-meta"><strong>2.500 m</strong><span>Todo el año</span></span>
+        <span class="place-arrow" aria-hidden="true">→</span>
+      </a>
+      <a class="place-row" href="travesia.html">
+        <span class="place-number">03</span>
+        <img class="place-thumb" src="img/hornocal.jpg" srcset="img/hornocal-640.webp 640w, img/hornocal-1280.webp 1280w" sizes="96px" alt="Serranía del Hornocal" loading="lazy" decoding="async">
+        <span class="place-title"><strong>Serranía del Hornocal</strong><small>Quebrada · Humahuaca</small></span>
+        <span class="place-description">El mirador de los catorce colores; se llega con traslado local desde Humahuaca.</span>
+        <span class="place-meta"><strong>4.350 m</strong><span>Abr–nov</span></span>
+        <span class="place-arrow" aria-hidden="true">→</span>
+      </a>
+      <a class="place-row" href="travesia.html">
+        <span class="place-number">04</span>
+        <img class="place-thumb" src="img/salinas.jpg" srcset="img/salinas-640.webp 640w, img/salinas-1280.webp 1280w" sizes="96px" alt="Salinas Grandes" loading="lazy" decoding="async">
+        <span class="place-title"><strong>Salinas Grandes</strong><small>Puna</small></span>
+        <span class="place-description">El salar de altura entre Jujuy y Salta; la visita se hace por accesos habilitados.</span>
+        <span class="place-meta"><strong>3.450 m</strong><span>Estación seca</span></span>
+        <span class="place-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <figure class="photo-quote">
+    <img src="img/puna.jpg" srcset="img/puna-640.webp 640w, img/puna-1280.webp 1280w, img/puna-1920.webp 1920w" sizes="100vw" alt="Paisaje de altura en la Puna jujeña" loading="lazy" decoding="async">
+    <div class="photo-quote-veil" aria-hidden="true"></div>
+    <blockquote>“Un viaje no es una sucesión de visitas, es la historia que se cuenta después.”</blockquote>
+    <figcaption>Jujuy · una historia que sigue cuando volvés</figcaption>
+  </figure>
+
+  <section class="transport-band" aria-labelledby="transport-title">
+    <div class="transport-inner">
+      <div class="transport-copy">
+        <p class="kicker">Por eso funciona</p>
+        <h2 id="transport-title">El plan que respeta <em>el reloj del colectivo</em></h2>
+        <p>Cada tramo se apoya en horarios publicados. Si el día no cierra, te avisamos antes de salir.</p>
+        <a href="travesia.html">Armá tu travesía <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="transport-schedule">
+        <h3>Próximos servicios · Terminal a Tilcara</h3>
+        <ol>
+          <li><strong>08:10</strong><span>Panamericano · llegada ~09:55</span><small>Horario publicado · horario-quebrada</small></li>
+          <li><strong>09:30</strong><span>Balut · llegada ~11:15</span><small>Horario publicado · horario-quebrada</small></li>
+          <li><strong>11:40</strong><span>Evelia · llegada ~13:25</span><small>Horario publicado · horario-quebrada</small></li>
+        </ol>
+        <small class="schedule-note">Fuente y confianza corresponden al horario publicado; consultá vigencia antes de viajar.</small>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="footer-brand" href="home.html">Yapa<span></span></a>
+    <p>El extra que te regala Jujuy: lugares que se sueñan, colectivos que sí pasan, días que cierran.</p>
+  </div>
+  <div class="footer-bottom">
+    <span>Jujuy, Argentina</span>
+    <span>Quebrada de Humahuaca · UNESCO 2003</span>
+  </div>
+</footer>
+
+</body>
+</html>
