@@ -2,6 +2,7 @@
 
 .como-llegar-shell { max-width: 1280px; margin: 0 auto; padding: 0 5% 96px; }
 .como-llegar-nav { display: flex; align-items: center; justify-content: space-between; min-height: 80px; border-bottom: 1px solid var(--t14); }
+.volver-links { display: flex; align-items: center; gap: 20px; }
 .como-llegar-brand { display: inline-flex; align-items: baseline; gap: 4px; padding: 12px 0; color: var(--tinta); font: 600 24px var(--serif); text-decoration: none; }
 .como-llegar-brand span { width: 8px; height: 8px; border-radius: 50%; background: var(--oxido); }
 

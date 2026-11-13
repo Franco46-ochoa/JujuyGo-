@@ -26,5 +26,9 @@ export const routes: Routes = [
     loadComponent: () => import('./travesia/travesia').then(m => m.TravesiaPage),
     title: 'Armá tu travesía — Yapa',
   },
-  { path: '**', redirectTo: '' },
+  {
+    path: '**',
+    loadComponent: () => import('./no-encontrado/no-encontrado').then(m => m.NoEncontradoPage),
+    title: 'Página no encontrada — Yapa',
+  },
 ];

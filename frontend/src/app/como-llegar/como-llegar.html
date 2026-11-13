@@ -1,7 +1,12 @@
 <main class="como-llegar-shell">
   <nav class="como-llegar-nav" aria-label="Navegación">
     <a class="como-llegar-brand" routerLink="/">Yapa<span aria-hidden="true"></span></a>
-    <a class="volver-inicio" routerLink="/">Volver a explorar</a>
+    <div class="volver-links">
+      @if (destinoFijado()) {
+        <a class="volver-inicio" [routerLink]="['/lugares', destino()]">← Volver a {{ nombreDestino() }}</a>
+      }
+      <a class="volver-inicio" routerLink="/">Volver a explorar</a>
+    </div>
   </nav>
 
   <header class="como-llegar-intro">

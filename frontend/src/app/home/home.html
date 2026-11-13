@@ -49,7 +49,7 @@
             type="button"
             class="zone-card"
             [class.zone-card-large]="index === 0"
-            (click)="abrirZona(zona)"
+            (click)="abrirZona(zona, $event.currentTarget)"
             [attr.aria-label]="'Explorar ' + zona.nombre"
             [attr.aria-haspopup]="'dialog'"
           >
@@ -148,7 +148,11 @@
                 [id]="'lugar-item-' + lugar.slug"
                 [class.active]="lugarSeleccionado()?.slug === lugar.slug"
                 (mouseenter)="onHoverLugar(lugar)"
+                (mouseleave)="onLeaveLugarCard()"
+                (focusout)="onLeaveLugarCard()"
                 (click)="onClickLugarItem(lugar)"
+                (keydown.enter)="onTeclaLugarItem(lugar, $event)"
+                (keydown.space)="onTeclaLugarItem(lugar, $event)"
                 tabindex="0"
                 role="listitem"
                 [attr.aria-label]="lugar.nombre + ', ' + lugar.zona"
@@ -330,7 +334,7 @@
 <!-- Panel de zona: se abre en la misma página, sin navegar -->
 @if (zonaAbierta(); as zona) {
   <div class="zona-backdrop" (click)="cerrarZona()" aria-hidden="true"></div>
-  <aside class="zona-panel" role="dialog" aria-modal="true" [attr.aria-labelledby]="'panel-zona-' + zona.slug">
+  <aside class="zona-panel" #zonaPanel role="dialog" aria-modal="true" [attr.aria-labelledby]="'panel-zona-' + zona.slug">
     <button type="button" class="zona-cerrar" (click)="cerrarZona()" aria-label="Cerrar panel">×</button>
 
     <div class="zona-panel-hero">
@@ -338,7 +342,7 @@
       <div class="zona-panel-veil" aria-hidden="true"></div>
       <div class="zona-panel-titulo">
         <p class="kicker">Región · {{ lugaresDeZona(zona).length }} lugares</p>
-        <h2 [id]="'panel-zona-' + zona.slug">{{ zona.nombre }}</h2>
+        <h2 [id]="'panel-zona-' + zona.slug" tabindex="-1">{{ zona.nombre }}</h2>
         <p>{{ zona.descripcion }}</p>
       </div>
     </div>

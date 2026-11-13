@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { forkJoin } from 'rxjs';
@@ -32,6 +32,9 @@ export class HomePage {
   protected readonly proximos = signal<RespuestaProximos | null>(null);
   protected readonly lugarSeleccionado = signal<Lugar | null>(null);
   protected readonly zonaAbierta = signal<Zona | null>(null);
+  private readonly zonaPanelEl = viewChild<ElementRef<HTMLElement>>('zonaPanel');
+  private zonaTrigger: HTMLElement | null = null;
+  private seleccionVinoDeHover = false;
   protected readonly navFijada = signal(false);
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal('');
@@ -163,14 +166,29 @@ export class HomePage {
    * Sincronización Lista -> Mapa: al pasar el cursor sobre un ítem de la lista
    */
   protected onHoverLugar(lugar: Lugar | null): void {
+    this.seleccionVinoDeHover = lugar !== null;
     this.lugarSeleccionado.set(lugar);
+  }
+
+  protected onLeaveLugarCard(): void {
+    if (!this.seleccionVinoDeHover) return;
+    this.seleccionVinoDeHover = false;
+    this.lugarSeleccionado.set(null);
   }
 
   /**
    * Sincronización Lista -> Mapa: al cliquear un ítem de la lista
    */
   protected onClickLugarItem(lugar: Lugar): void {
+    this.seleccionVinoDeHover = false;
     this.lugarSeleccionado.set(lugar);
+  }
+
+  protected onTeclaLugarItem(lugar: Lugar, event: Event): void {
+    const key = (event as KeyboardEvent).key;
+    if (key !== 'Enter' && key !== ' ') return;
+    event.preventDefault();
+    this.onClickLugarItem(lugar);
   }
 
   /**
@@ -186,12 +204,21 @@ export class HomePage {
   /**
    * Abre el panel de zona en la misma página (sobre-ventana editorial).
    */
-  protected abrirZona(zona: Zona): void {
+  protected abrirZona(zona: Zona, trigger?: EventTarget | null): void {
+    this.zonaTrigger = (trigger as HTMLElement | null)
+      ?? (document.activeElement as HTMLElement | null);
     this.zonaAbierta.set(zona);
+    setTimeout(() => {
+      const panel = this.zonaPanelEl()?.nativeElement;
+      panel?.querySelector<HTMLElement>('.zona-panel-titulo h2')?.focus();
+    });
   }
 
   protected cerrarZona(): void {
+    const trigger = this.zonaTrigger;
     this.zonaAbierta.set(null);
+    this.zonaTrigger = null;
+    trigger?.focus();
   }
 
   protected lugaresDeZona(zona: Zona | null): Lugar[] {
