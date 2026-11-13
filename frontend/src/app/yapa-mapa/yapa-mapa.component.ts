@@ -12,7 +12,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import * as L from 'leaflet';
+import type * as L from 'leaflet';
 import { Lugar } from '../catalogo.types';
 import { computeClusters } from './yapa-mapa.clustering';
 import { MapCluster, RutaMapaPunto } from './yapa-mapa.types';
@@ -49,7 +49,13 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
   private markersLayer?: L.LayerGroup;
   private routeLayer?: L.LayerGroup;
   private markersMap = new Map<string, L.Marker>();
+  private leafletLib?: typeof import('leaflet');
   private isBrowser = false;
+
+  private requireLeaflet(): typeof import('leaflet') {
+    if (!this.leafletLib) throw new Error('Leaflet no fue cargado');
+    return this.leafletLib;
+  }
 
   constructor() {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -83,7 +89,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.initMap();
+    void this.initMap();
   }
 
   ngOnDestroy(): void {
@@ -97,11 +103,14 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
    * Inicializa la instancia del mapa Leaflet con tiles CARTO Positron
    * (con estilo tinteado hacia la paleta Yapa en CSS)
    */
-  private initMap(): void {
+  private async initMap(): Promise<void> {
     const canvas = this.mapCanvas()?.nativeElement;
     if (!canvas) return;
 
     try {
+      const imported = await import('leaflet');
+      const L = ((imported as unknown as { default?: typeof imported }).default ?? imported);
+      this.leafletLib = L;
       const defaultCenter: [number, number] = this.centro() ?? [-23.6, -65.4];
       const initialZoom = this.zoom() ?? (this.modoMini() ? 12 : 8);
       this.currentZoom.set(initialZoom);
@@ -158,6 +167,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
    */
   private renderMarkers(): void {
     if (!this.map || !this.markersLayer) return;
+    const L = this.requireLeaflet();
 
     this.markersLayer.clearLayers();
     this.markersMap.clear();
@@ -250,6 +260,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
 
   private renderRoute(): void {
     if (!this.map || !this.routeLayer) return;
+    const L = this.requireLeaflet();
 
     this.routeLayer.clearLayers();
     const coordinates = this.rutaPolyline().filter(([lat, lng]) =>
@@ -301,6 +312,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
 
   private fitRouteBounds(): boolean {
     if (!this.map) return false;
+    const L = this.requireLeaflet();
     const coordinates: [number, number][] = [
       ...this.rutaPolyline(),
       ...this.rutaPuntos().map(({ lat, lng }) => [lat, lng] as [number, number]),
@@ -321,6 +333,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
    */
   onClusterClick(cluster: MapCluster): void {
     if (!this.map) return;
+    const L = this.requireLeaflet();
 
     if (cluster.lugares.length === 1) {
       this.seleccionarLugar(cluster.lugares[0]);
@@ -370,6 +383,7 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
    */
   private fitLugaresBounds(): void {
     if (!this.map || this.lugares().length < 2) return;
+    const L = this.requireLeaflet();
 
     try {
       const size = this.map.getSize();
