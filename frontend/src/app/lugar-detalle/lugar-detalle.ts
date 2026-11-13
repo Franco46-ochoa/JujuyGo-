@@ -7,6 +7,7 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { CatalogoService } from '../catalogo.service';
 import { Lugar } from '../catalogo.types';
 import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
+import { fotoSrc, fotoSrcset } from '../foto';
 
 @Component({
   imports: [DecimalPipe, RouterLink, YapaMapaComponent],
@@ -54,15 +55,11 @@ export class LugarDetallePage {
    * de la zona del lugar (nunca la foto de otra zona como fallback).
    */
   protected fotoUrl(foto: string | null, zona_slug?: string): string {
-    if (foto) return `/img/${foto}`;
-    const slug = zona_slug ?? this.lugar()?.zona_slug;
-    const mapa: Record<string, string> = {
-      quebrada: 'purmamarca.jpg',
-      puna: 'puna.jpg',
-      yungas: 'calilegua.jpg',
-      valles: 'salsaju.jpg',
-    };
-    return `/img/${mapa[slug ?? ''] ?? 'purmamarca.jpg'}`;
+    return fotoSrc(foto, zona_slug ?? this.lugar()?.zona_slug);
+  }
+
+  protected fotoSrcset(foto: string | null, zona_slug?: string): string {
+    return fotoSrcset(foto, zona_slug ?? this.lugar()?.zona_slug);
   }
 
   private cargar(slug: string): Observable<Lugar | null> {

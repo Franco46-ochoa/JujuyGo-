@@ -1,0 +1,408 @@
+diff --git a/frontend/public/img/calilegua-1280.webp b/frontend/public/img/calilegua-1280.webp
+new file mode 100644
+index 0000000..09f9697
+Binary files /dev/null and b/frontend/public/img/calilegua-1280.webp differ
+diff --git a/frontend/public/img/calilegua-1920.webp b/frontend/public/img/calilegua-1920.webp
+new file mode 100644
+index 0000000..9fba72e
+Binary files /dev/null and b/frontend/public/img/calilegua-1920.webp differ
+diff --git a/frontend/public/img/calilegua-640.webp b/frontend/public/img/calilegua-640.webp
+new file mode 100644
+index 0000000..fabeff6
+Binary files /dev/null and b/frontend/public/img/calilegua-640.webp differ
+diff --git a/frontend/public/img/garganta-1280.webp b/frontend/public/img/garganta-1280.webp
+new file mode 100644
+index 0000000..581c98b
+Binary files /dev/null and b/frontend/public/img/garganta-1280.webp differ
+diff --git a/frontend/public/img/garganta-1920.webp b/frontend/public/img/garganta-1920.webp
+new file mode 100644
+index 0000000..40f86c7
+Binary files /dev/null and b/frontend/public/img/garganta-1920.webp differ
+diff --git a/frontend/public/img/garganta-640.webp b/frontend/public/img/garganta-640.webp
+new file mode 100644
+index 0000000..0f2c279
+Binary files /dev/null and b/frontend/public/img/garganta-640.webp differ
+diff --git a/frontend/public/img/hornocal-1280.webp b/frontend/public/img/hornocal-1280.webp
+new file mode 100644
+index 0000000..730b3d5
+Binary files /dev/null and b/frontend/public/img/hornocal-1280.webp differ
+diff --git a/frontend/public/img/hornocal-1920.webp b/frontend/public/img/hornocal-1920.webp
+new file mode 100644
+index 0000000..9cf3b89
+Binary files /dev/null and b/frontend/public/img/hornocal-1920.webp differ
+diff --git a/frontend/public/img/hornocal-640.webp b/frontend/public/img/hornocal-640.webp
+new file mode 100644
+index 0000000..a3cdcd2
+Binary files /dev/null and b/frontend/public/img/hornocal-640.webp differ
+diff --git a/frontend/public/img/humahuaca-1280.webp b/frontend/public/img/humahuaca-1280.webp
+new file mode 100644
+index 0000000..860343b
+Binary files /dev/null and b/frontend/public/img/humahuaca-1280.webp differ
+diff --git a/frontend/public/img/humahuaca-1920.webp b/frontend/public/img/humahuaca-1920.webp
+new file mode 100644
+index 0000000..eed332d
+Binary files /dev/null and b/frontend/public/img/humahuaca-1920.webp differ
+diff --git a/frontend/public/img/humahuaca-640.webp b/frontend/public/img/humahuaca-640.webp
+new file mode 100644
+index 0000000..05444d7
+Binary files /dev/null and b/frontend/public/img/humahuaca-640.webp differ
+diff --git a/frontend/public/img/puna-1280.webp b/frontend/public/img/puna-1280.webp
+new file mode 100644
+index 0000000..a9ef283
+Binary files /dev/null and b/frontend/public/img/puna-1280.webp differ
+diff --git a/frontend/public/img/puna-1920.webp b/frontend/public/img/puna-1920.webp
+new file mode 100644
+index 0000000..b98274c
+Binary files /dev/null and b/frontend/public/img/puna-1920.webp differ
+diff --git a/frontend/public/img/puna-640.webp b/frontend/public/img/puna-640.webp
+new file mode 100644
+index 0000000..86419cb
+Binary files /dev/null and b/frontend/public/img/puna-640.webp differ
+diff --git a/frontend/public/img/purmamarca-1280.webp b/frontend/public/img/purmamarca-1280.webp
+new file mode 100644
+index 0000000..a4fa478
+Binary files /dev/null and b/frontend/public/img/purmamarca-1280.webp differ
+diff --git a/frontend/public/img/purmamarca-1920.webp b/frontend/public/img/purmamarca-1920.webp
+new file mode 100644
+index 0000000..17f7813
+Binary files /dev/null and b/frontend/public/img/purmamarca-1920.webp differ
+diff --git a/frontend/public/img/purmamarca-640.webp b/frontend/public/img/purmamarca-640.webp
+new file mode 100644
+index 0000000..7f18f3b
+Binary files /dev/null and b/frontend/public/img/purmamarca-640.webp differ
+diff --git a/frontend/public/img/salinas-1280.webp b/frontend/public/img/salinas-1280.webp
+new file mode 100644
+index 0000000..620119a
+Binary files /dev/null and b/frontend/public/img/salinas-1280.webp differ
+diff --git a/frontend/public/img/salinas-1920.webp b/frontend/public/img/salinas-1920.webp
+new file mode 100644
+index 0000000..cfe0100
+Binary files /dev/null and b/frontend/public/img/salinas-1920.webp differ
+diff --git a/frontend/public/img/salinas-640.webp b/frontend/public/img/salinas-640.webp
+new file mode 100644
+index 0000000..acc5eb5
+Binary files /dev/null and b/frontend/public/img/salinas-640.webp differ
+diff --git a/frontend/public/img/salsaju-1280.webp b/frontend/public/img/salsaju-1280.webp
+new file mode 100644
+index 0000000..cf0979b
+Binary files /dev/null and b/frontend/public/img/salsaju-1280.webp differ
+diff --git a/frontend/public/img/salsaju-1920.webp b/frontend/public/img/salsaju-1920.webp
+new file mode 100644
+index 0000000..5797afa
+Binary files /dev/null and b/frontend/public/img/salsaju-1920.webp differ
+diff --git a/frontend/public/img/salsaju-640.webp b/frontend/public/img/salsaju-640.webp
+new file mode 100644
+index 0000000..1526f7a
+Binary files /dev/null and b/frontend/public/img/salsaju-640.webp differ
+diff --git a/frontend/public/img/tilcara-1280.webp b/frontend/public/img/tilcara-1280.webp
+new file mode 100644
+index 0000000..1f20f27
+Binary files /dev/null and b/frontend/public/img/tilcara-1280.webp differ
+diff --git a/frontend/public/img/tilcara-1920.webp b/frontend/public/img/tilcara-1920.webp
+new file mode 100644
+index 0000000..40488e9
+Binary files /dev/null and b/frontend/public/img/tilcara-1920.webp differ
+diff --git a/frontend/public/img/tilcara-640.webp b/frontend/public/img/tilcara-640.webp
+new file mode 100644
+index 0000000..5680768
+Binary files /dev/null and b/frontend/public/img/tilcara-640.webp differ
+diff --git a/frontend/public/img/tren-1280.webp b/frontend/public/img/tren-1280.webp
+new file mode 100644
+index 0000000..d21ea75
+Binary files /dev/null and b/frontend/public/img/tren-1280.webp differ
+diff --git a/frontend/public/img/tren-1920.webp b/frontend/public/img/tren-1920.webp
+new file mode 100644
+index 0000000..4ef1e5d
+Binary files /dev/null and b/frontend/public/img/tren-1920.webp differ
+diff --git a/frontend/public/img/tren-640.webp b/frontend/public/img/tren-640.webp
+new file mode 100644
+index 0000000..4999ee9
+Binary files /dev/null and b/frontend/public/img/tren-640.webp differ
+diff --git a/frontend/src/app/foto.spec.ts b/frontend/src/app/foto.spec.ts
+new file mode 100644
+index 0000000..5c17e81
+--- /dev/null
++++ b/frontend/src/app/foto.spec.ts
+@@ -0,0 +1,40 @@
++import { describe, expect, it } from 'vitest';
++import { fotoFallbackZona, fotoSrc, fotoSrcset } from './foto';
++
++describe('foto helpers', () => {
++  it('fallback por zona conocida', () => {
++    expect(fotoFallbackZona('quebrada')).toBe('purmamarca.jpg');
++    expect(fotoFallbackZona('puna')).toBe('puna.jpg');
++    expect(fotoFallbackZona('yungas')).toBe('calilegua.jpg');
++    expect(fotoFallbackZona('valles')).toBe('salsaju.jpg');
++  });
++
++  it('fallback por defecto para zona desconocida o ausente', () => {
++    expect(fotoFallbackZona('otra')).toBe('purmamarca.jpg');
++    expect(fotoFallbackZona(undefined)).toBe('purmamarca.jpg');
++    expect(fotoFallbackZona('')).toBe('purmamarca.jpg');
++  });
++
++  it('fotoSrc con foto devuelve el JPG', () => {
++    expect(fotoSrc('garganta.jpg')).toBe('/img/garganta.jpg');
++    expect(fotoSrc('garganta.jpg', 'puna')).toBe('/img/garganta.jpg');
++  });
++
++  it('fotoSrc sin foto usa el fallback de la zona', () => {
++    expect(fotoSrc(null, 'puna')).toBe('/img/puna.jpg');
++    expect(fotoSrc(undefined, 'yungas')).toBe('/img/calilegua.jpg');
++    expect(fotoSrc(null)).toBe('/img/purmamarca.jpg');
++  });
++
++  it('fotoSrcset deriva las tres variantes WebP de un nombre .jpg', () => {
++    expect(fotoSrcset('garganta.jpg')).toBe(
++      '/img/garganta-640.webp 640w, /img/garganta-1280.webp 1280w, /img/garganta-1920.webp 1920w',
++    );
++  });
++
++  it('fotoSrcset sin foto usa el fallback de la zona', () => {
++    expect(fotoSrcset(null, 'valles')).toBe(
++      '/img/salsaju-640.webp 640w, /img/salsaju-1280.webp 1280w, /img/salsaju-1920.webp 1920w',
++    );
++  });
++});
+diff --git a/frontend/src/app/foto.ts b/frontend/src/app/foto.ts
+new file mode 100644
+index 0000000..0ec06b5
+--- /dev/null
++++ b/frontend/src/app/foto.ts
+@@ -0,0 +1,30 @@
++/**
++ * Resolución de fotos de lugares y zonas.
++ * Los nombres de archivo vienen de la base (columna `foto`); las variantes
++ * WebP (-640/-1280/-1920) se derivan del nombre, sin tocar datos.
++ */
++
++const FALLBACK_POR_ZONA: Record<string, string> = {
++  quebrada: 'purmamarca.jpg',
++  puna: 'puna.jpg',
++  yungas: 'calilegua.jpg',
++  valles: 'salsaju.jpg',
++};
++
++const FOTO_DEFECTO = 'purmamarca.jpg';
++
++/** Nombre del archivo de fallback para una zona (nunca la foto de otra zona). */
++export function fotoFallbackZona(zona_slug?: string): string {
++  return FALLBACK_POR_ZONA[zona_slug ?? ''] ?? FOTO_DEFECTO;
++}
++
++/** `/img/<archivo>.jpg` — el JPG original, que queda como fallback. */
++export function fotoSrc(foto: string | null | undefined, zona_slug?: string): string {
++  return `/img/${foto || fotoFallbackZona(zona_slug)}`;
++}
++
++/** `srcset` con las tres variantes WebP derivadas del nombre del archivo. */
++export function fotoSrcset(foto: string | null | undefined, zona_slug?: string): string {
++  const base = (foto || fotoFallbackZona(zona_slug)).replace(/\.[^.]+$/, '');
++  return `/img/${base}-640.webp 640w, /img/${base}-1280.webp 1280w, /img/${base}-1920.webp 1920w`;
++}
+diff --git a/frontend/src/app/home/home.html b/frontend/src/app/home/home.html
+index 9da975f..aa2a356 100644
+--- a/frontend/src/app/home/home.html
++++ b/frontend/src/app/home/home.html
+@@ -1,5 +1,5 @@
+ <header class="hero">
+-  <img class="hero-image" src="/img/purmamarca.jpg" alt="Cerro de los Siete Colores en Purmamarca" fetchpriority="high">
++  <img class="hero-image" src="/img/purmamarca.jpg" srcset="/img/purmamarca-640.webp 640w, /img/purmamarca-1280.webp 1280w, /img/purmamarca-1920.webp 1920w" sizes="100vw" alt="Cerro de los Siete Colores en Purmamarca" fetchpriority="high">
+   <div class="hero-veil" aria-hidden="true"></div>
+   <nav class="hero-nav" [class.fijada]="navFijada()" aria-label="Navegación principal">
+     <a class="brand" routerLink="/" aria-label="Yapa, inicio">Yapa<span></span></a>
+@@ -54,8 +54,11 @@
+           >
+             <img
+               [src]="fotoUrl(zona.lugar_destacado?.foto, zona.slug)"
++              [srcset]="fotoSrcset(zona.lugar_destacado?.foto, zona.slug)"
++              [attr.sizes]="index === 0 ? sizesZonaGrande : sizesZonaChica"
+               [alt]="zona.lugar_destacado?.nombre || zona.nombre"
+               [attr.loading]="index === 0 ? 'eager' : 'lazy'"
++              decoding="async"
+             >
+             <span class="zone-content">
+               <span class="zone-name">{{ zona.nombre }}</span>
+@@ -197,7 +200,7 @@
+             [routerLink]="['/lugares', lugar.slug]"
+           >
+             <span class="place-number">{{ index + 1 | number:'2.0-0' }}</span>
+-            <img class="place-thumb" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [alt]="lugar.nombre" loading="lazy">
++            <img class="place-thumb" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [srcset]="fotoSrcset(lugar.foto, lugar.zona_slug)" sizes="96px" [alt]="lugar.nombre" loading="lazy" decoding="async">
+             <span class="place-title">
+               <strong>{{ lugar.nombre }}</strong>
+               <small>{{ lugar.zona }} · {{ lugar.datos_json.localidad || 'Jujuy' }}</small>
+@@ -217,7 +220,7 @@
+   </section>
+ 
+   <figure class="photo-quote">
+-    <img src="/img/puna.jpg" alt="Paisaje de altura en la Puna jujeña" loading="lazy">
++    <img src="/img/puna.jpg" srcset="/img/puna-640.webp 640w, /img/puna-1280.webp 1280w, /img/puna-1920.webp 1920w" sizes="100vw" alt="Paisaje de altura en la Puna jujeña" loading="lazy" decoding="async">
+     <div class="photo-quote-veil" aria-hidden="true"></div>
+     <blockquote>“Un viaje no es una sucesión de visitas, es la historia que se cuenta después.”</blockquote>
+     <figcaption>Jujuy · una historia que sigue cuando volvés</figcaption>
+@@ -337,7 +340,7 @@
+     <button type="button" class="zona-cerrar" (click)="cerrarZona()" aria-label="Cerrar panel">×</button>
+ 
+     <div class="zona-panel-hero">
+-      <img [src]="fotoUrl(zona.lugar_destacado?.foto, zona.slug)" [alt]="zona.lugar_destacado?.nombre || zona.nombre">
++      <img [src]="fotoUrl(zona.lugar_destacado?.foto, zona.slug)" [srcset]="fotoSrcset(zona.lugar_destacado?.foto, zona.slug)" sizes="(max-width: 560px) 100vw, 560px" [alt]="zona.lugar_destacado?.nombre || zona.nombre" loading="lazy" decoding="async">
+       <div class="zona-panel-veil" aria-hidden="true"></div>
+       <div class="zona-panel-titulo">
+         <p class="kicker">Región · {{ lugaresDeZona(zona).length }} lugares</p>
+@@ -350,7 +353,7 @@
+       <p class="zona-lista-titulo">Qué ver en {{ zona.nombre }}</p>
+       @for (lugar of lugaresDeZona(zona); track lugar.slug) {
+         <a class="zona-lugar" [routerLink]="['/lugares', lugar.slug]" (click)="cerrarZona()">
+-          <img class="zona-lugar-foto" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [alt]="lugar.nombre" loading="lazy">
++          <img class="zona-lugar-foto" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [srcset]="fotoSrcset(lugar.foto, lugar.zona_slug)" sizes="88px" [alt]="lugar.nombre" loading="lazy" decoding="async">
+           <span class="zona-lugar-info">
+             <strong>{{ lugar.nombre }}</strong>
+             <small>{{ lugar.datos_json.localidad || 'Jujuy' }}@if (lugar.altitud_m) { · {{ lugar.altitud_m | number }} msnm }</small>
+diff --git a/frontend/src/app/home/home.ts b/frontend/src/app/home/home.ts
+index 90218ec..6d72182 100644
+--- a/frontend/src/app/home/home.ts
++++ b/frontend/src/app/home/home.ts
+@@ -9,6 +9,7 @@ import { Guia, Hospedaje } from '../hospedaje.types';
+ import { TravesiaService } from '../travesia/travesia.service';
+ import { RespuestaProximos } from '../travesia/travesia.types';
+ import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
++import { fotoSrc, fotoSrcset } from '../foto';
+ 
+ @Component({
+   imports: [DecimalPipe, RouterLink, YapaMapaComponent],
+@@ -134,20 +135,20 @@ export class HomePage {
+    * El parámetro zona_slug es opcional: sin él, el fallback es el placeholder de Quebrada.
+    */
+   protected fotoUrl(foto: string | null | undefined, zona_slug?: string): string {
+-    if (foto) return `/img/${foto}`;
+-    return `/img/${this.fallbackFotoZona(zona_slug)}`;
++    return fotoSrc(foto, zona_slug);
+   }
+ 
+-  private fallbackFotoZona(zona_slug?: string): string {
+-    const mapa: Record<string, string> = {
+-      quebrada: 'purmamarca.jpg',
+-      puna: 'puna.jpg',
+-      yungas: 'calilegua.jpg',
+-      valles: 'salsaju.jpg',
+-    };
+-    return mapa[zona_slug ?? ''] ?? 'purmamarca.jpg';
++  protected fotoSrcset(foto: string | null | undefined, zona_slug?: string): string {
++    return fotoSrcset(foto, zona_slug);
+   }
+ 
++  // Ancho pintado de las tarjetas de zona (zone-collage 1.618fr/1fr en .section
++  // de máx. 1280px con padding 5%; 1fr 1fr a ≤900px; 1fr a ≤620px).
++  protected readonly sizesZonaGrande =
++    '(max-width: 620px) 90vw, (max-width: 900px) 45vw, (max-width: 1440px) 55vw, 776px';
++  protected readonly sizesZonaChica =
++    '(max-width: 620px) 90vw, (max-width: 900px) 45vw, (max-width: 1440px) 34vw, 480px';
++
+   /**
+    * Sincronización Mapa -> Lista: al cliquear un pin o seleccionarlo en el mapa
+    */
+diff --git a/frontend/src/app/lugar-detalle/lugar-detalle.html b/frontend/src/app/lugar-detalle/lugar-detalle.html
+index 7d66105..68b40f5 100644
+--- a/frontend/src/app/lugar-detalle/lugar-detalle.html
++++ b/frontend/src/app/lugar-detalle/lugar-detalle.html
+@@ -18,7 +18,7 @@
+     <article>
+       <header class="detail-hero">
+         @if (lugar.foto) {
+-          <img [src]="fotoUrl(lugar.foto)" [alt]="lugar.nombre">
++          <img [src]="fotoUrl(lugar.foto)" [srcset]="fotoSrcset(lugar.foto)" sizes="100vw" [alt]="lugar.nombre" fetchpriority="high" decoding="async">
+         }
+         <div class="detail-veil"></div>
+         <div class="detail-title">
+diff --git a/frontend/src/app/lugar-detalle/lugar-detalle.ts b/frontend/src/app/lugar-detalle/lugar-detalle.ts
+index 1c2efb3..afa7c9b 100644
+--- a/frontend/src/app/lugar-detalle/lugar-detalle.ts
++++ b/frontend/src/app/lugar-detalle/lugar-detalle.ts
+@@ -7,6 +7,7 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
+ import { CatalogoService } from '../catalogo.service';
+ import { Lugar } from '../catalogo.types';
+ import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
++import { fotoSrc, fotoSrcset } from '../foto';
+ 
+ @Component({
+   imports: [DecimalPipe, RouterLink, YapaMapaComponent],
+@@ -54,15 +55,11 @@ export class LugarDetallePage {
+    * de la zona del lugar (nunca la foto de otra zona como fallback).
+    */
+   protected fotoUrl(foto: string | null, zona_slug?: string): string {
+-    if (foto) return `/img/${foto}`;
+-    const slug = zona_slug ?? this.lugar()?.zona_slug;
+-    const mapa: Record<string, string> = {
+-      quebrada: 'purmamarca.jpg',
+-      puna: 'puna.jpg',
+-      yungas: 'calilegua.jpg',
+-      valles: 'salsaju.jpg',
+-    };
+-    return `/img/${mapa[slug ?? ''] ?? 'purmamarca.jpg'}`;
++    return fotoSrc(foto, zona_slug ?? this.lugar()?.zona_slug);
++  }
++
++  protected fotoSrcset(foto: string | null, zona_slug?: string): string {
++    return fotoSrcset(foto, zona_slug ?? this.lugar()?.zona_slug);
+   }
+ 
+   private cargar(slug: string): Observable<Lugar | null> {
+diff --git a/frontend/src/app/travesia/travesia.html b/frontend/src/app/travesia/travesia.html
+index 4ca0843..8bfff04 100644
+--- a/frontend/src/app/travesia/travesia.html
++++ b/frontend/src/app/travesia/travesia.html
+@@ -147,7 +147,7 @@
+                 <div class="seleccion-lugares">
+                   @for (lugar of grupo.lugares; track lugar.slug) {
+                     <button class="lugar-eleccion" type="button" [class.lugar-elegido]="lugaresElegidos().includes(lugar.slug)" [attr.aria-pressed]="lugaresElegidos().includes(lugar.slug)" (click)="alternarLugar(lugar)">
+-                      <img [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [alt]="lugar.nombre" loading="lazy">
++                      <img [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [srcset]="fotoSrcset(lugar.foto, lugar.zona_slug)" sizes="(max-width: 720px) 76px, 90px" [alt]="lugar.nombre" loading="lazy" decoding="async">
+                       <span class="lugar-eleccion-texto">
+                         <strong>{{ lugar.nombre }}</strong>
+                         <span>{{ lugar.datos_json.localidad || grupo.zona }}</span>
+diff --git a/frontend/src/app/travesia/travesia.ts b/frontend/src/app/travesia/travesia.ts
+index 4051195..bb0b3b0 100644
+--- a/frontend/src/app/travesia/travesia.ts
++++ b/frontend/src/app/travesia/travesia.ts
+@@ -23,6 +23,7 @@ import {
+ import { TravesiaService } from './travesia.service';
+ import { generarYapas } from './travesia.yapas';
+ import { TravesiaGuardada, TravesiasGuardadasService } from './travesias-guardadas.service';
++import { fotoSrc, fotoSrcset } from '../foto';
+ 
+ const ETIQUETA_YAPA: Record<TipoYapa, string> = {
+   localidad: 'Para seguir explorando',
+@@ -209,14 +210,11 @@ export class TravesiaPage {
+    * de la zona del lugar (nunca la foto de otra zona como fallback).
+    */
+   protected fotoUrl(foto: string | null, zona_slug?: string): string {
+-    if (foto) return `/img/${foto}`;
+-    const mapa: Record<string, string> = {
+-      quebrada: 'purmamarca.jpg',
+-      puna: 'puna.jpg',
+-      yungas: 'calilegua.jpg',
+-      valles: 'salsaju.jpg',
+-    };
+-    return `/img/${mapa[zona_slug ?? ''] ?? 'purmamarca.jpg'}`;
++    return fotoSrc(foto, zona_slug);
++  }
++
++  protected fotoSrcset(foto: string | null, zona_slug?: string): string {
++    return fotoSrcset(foto, zona_slug);
+   }
+ 
+   protected lugaresDisponibles(): Lugar[] {
+diff --git a/frontend/src/index.html b/frontend/src/index.html
+index c802a4c..63d5015 100644
+--- a/frontend/src/index.html
++++ b/frontend/src/index.html
+@@ -6,7 +6,7 @@
+   <base href="/">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="icon" type="image/x-icon" href="favicon.ico">
+-  <link rel="preload" as="image" href="/img/purmamarca.jpg" fetchpriority="high">
++  <link rel="preload" as="image" href="/img/purmamarca.jpg" imagesrcset="/img/purmamarca-640.webp 640w, /img/purmamarca-1280.webp 1280w, /img/purmamarca-1920.webp 1920w" imagesizes="100vw" fetchpriority="high">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">

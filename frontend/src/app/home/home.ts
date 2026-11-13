@@ -9,6 +9,7 @@ import { Guia, Hospedaje } from '../hospedaje.types';
 import { TravesiaService } from '../travesia/travesia.service';
 import { RespuestaProximos } from '../travesia/travesia.types';
 import { YapaMapaComponent } from '../yapa-mapa/yapa-mapa.component';
+import { fotoSrc, fotoSrcset } from '../foto';
 
 @Component({
   imports: [DecimalPipe, RouterLink, YapaMapaComponent],
@@ -134,19 +135,19 @@ export class HomePage {
    * El parámetro zona_slug es opcional: sin él, el fallback es el placeholder de Quebrada.
    */
   protected fotoUrl(foto: string | null | undefined, zona_slug?: string): string {
-    if (foto) return `/img/${foto}`;
-    return `/img/${this.fallbackFotoZona(zona_slug)}`;
+    return fotoSrc(foto, zona_slug);
   }
 
-  private fallbackFotoZona(zona_slug?: string): string {
-    const mapa: Record<string, string> = {
-      quebrada: 'purmamarca.jpg',
-      puna: 'puna.jpg',
-      yungas: 'calilegua.jpg',
-      valles: 'salsaju.jpg',
-    };
-    return mapa[zona_slug ?? ''] ?? 'purmamarca.jpg';
+  protected fotoSrcset(foto: string | null | undefined, zona_slug?: string): string {
+    return fotoSrcset(foto, zona_slug);
   }
+
+  // Ancho pintado de las tarjetas de zona (zone-collage 1.618fr/1fr en .section
+  // de máx. 1280px con padding 5%; 1fr 1fr a ≤900px; 1fr a ≤620px).
+  protected readonly sizesZonaGrande =
+    '(max-width: 620px) 90vw, (max-width: 900px) 45vw, (max-width: 1440px) 55vw, 776px';
+  protected readonly sizesZonaChica =
+    '(max-width: 620px) 90vw, (max-width: 900px) 45vw, (max-width: 1440px) 34vw, 480px';
 
   /**
    * Sincronización Mapa -> Lista: al cliquear un pin o seleccionarlo en el mapa

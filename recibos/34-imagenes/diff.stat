@@ -1,0 +1,40 @@
+ frontend/public/img/calilegua-1280.webp           | Bin 0 -> 355512 bytes
+ frontend/public/img/calilegua-1920.webp           | Bin 0 -> 905472 bytes
+ frontend/public/img/calilegua-640.webp            | Bin 0 -> 71488 bytes
+ frontend/public/img/garganta-1280.webp            | Bin 0 -> 665980 bytes
+ frontend/public/img/garganta-1920.webp            | Bin 0 -> 1598188 bytes
+ frontend/public/img/garganta-640.webp             | Bin 0 -> 149258 bytes
+ frontend/public/img/hornocal-1280.webp            | Bin 0 -> 133730 bytes
+ frontend/public/img/hornocal-1920.webp            | Bin 0 -> 361702 bytes
+ frontend/public/img/hornocal-640.webp             | Bin 0 -> 27554 bytes
+ frontend/public/img/humahuaca-1280.webp           | Bin 0 -> 288570 bytes
+ frontend/public/img/humahuaca-1920.webp           | Bin 0 -> 703092 bytes
+ frontend/public/img/humahuaca-640.webp            | Bin 0 -> 72708 bytes
+ frontend/public/img/puna-1280.webp                | Bin 0 -> 131662 bytes
+ frontend/public/img/puna-1920.webp                | Bin 0 -> 306130 bytes
+ frontend/public/img/puna-640.webp                 | Bin 0 -> 32974 bytes
+ frontend/public/img/purmamarca-1280.webp          | Bin 0 -> 276086 bytes
+ frontend/public/img/purmamarca-1920.webp          | Bin 0 -> 710702 bytes
+ frontend/public/img/purmamarca-640.webp           | Bin 0 -> 55518 bytes
+ frontend/public/img/salinas-1280.webp             | Bin 0 -> 95060 bytes
+ frontend/public/img/salinas-1920.webp             | Bin 0 -> 247968 bytes
+ frontend/public/img/salinas-640.webp              | Bin 0 -> 20342 bytes
+ frontend/public/img/salsaju-1280.webp             | Bin 0 -> 60080 bytes
+ frontend/public/img/salsaju-1920.webp             | Bin 0 -> 164332 bytes
+ frontend/public/img/salsaju-640.webp              | Bin 0 -> 15582 bytes
+ frontend/public/img/tilcara-1280.webp             | Bin 0 -> 270228 bytes
+ frontend/public/img/tilcara-1920.webp             | Bin 0 -> 696972 bytes
+ frontend/public/img/tilcara-640.webp              | Bin 0 -> 53682 bytes
+ frontend/public/img/tren-1280.webp                | Bin 0 -> 97584 bytes
+ frontend/public/img/tren-1920.webp                | Bin 0 -> 191090 bytes
+ frontend/public/img/tren-640.webp                 | Bin 0 -> 27778 bytes
+ frontend/src/app/foto.spec.ts                     |  40 ++++++++++++++++++++++
+ frontend/src/app/foto.ts                          |  30 ++++++++++++++++
+ frontend/src/app/home/home.html                   |  13 ++++---
+ frontend/src/app/home/home.ts                     |  21 ++++++------
+ frontend/src/app/lugar-detalle/lugar-detalle.html |   2 +-
+ frontend/src/app/lugar-detalle/lugar-detalle.ts   |  15 ++++----
+ frontend/src/app/travesia/travesia.html           |   2 +-
+ frontend/src/app/travesia/travesia.ts             |  14 ++++----
+ frontend/src/index.html                           |   2 +-
+ 39 files changed, 104 insertions(+), 35 deletions(-)

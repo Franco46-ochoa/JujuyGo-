@@ -23,6 +23,7 @@ import {
 import { TravesiaService } from './travesia.service';
 import { generarYapas } from './travesia.yapas';
 import { TravesiaGuardada, TravesiasGuardadasService } from './travesias-guardadas.service';
+import { fotoSrc, fotoSrcset } from '../foto';
 
 const ETIQUETA_YAPA: Record<TipoYapa, string> = {
   localidad: 'Para seguir explorando',
@@ -209,14 +210,11 @@ export class TravesiaPage {
    * de la zona del lugar (nunca la foto de otra zona como fallback).
    */
   protected fotoUrl(foto: string | null, zona_slug?: string): string {
-    if (foto) return `/img/${foto}`;
-    const mapa: Record<string, string> = {
-      quebrada: 'purmamarca.jpg',
-      puna: 'puna.jpg',
-      yungas: 'calilegua.jpg',
-      valles: 'salsaju.jpg',
-    };
-    return `/img/${mapa[zona_slug ?? ''] ?? 'purmamarca.jpg'}`;
+    return fotoSrc(foto, zona_slug);
+  }
+
+  protected fotoSrcset(foto: string | null, zona_slug?: string): string {
+    return fotoSrcset(foto, zona_slug);
   }
 
   protected lugaresDisponibles(): Lugar[] {

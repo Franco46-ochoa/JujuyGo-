@@ -1,5 +1,5 @@
 <header class="hero">
-  <img class="hero-image" src="/img/purmamarca.jpg" alt="Cerro de los Siete Colores en Purmamarca" fetchpriority="high">
+  <img class="hero-image" src="/img/purmamarca.jpg" srcset="/img/purmamarca-640.webp 640w, /img/purmamarca-1280.webp 1280w, /img/purmamarca-1920.webp 1920w" sizes="100vw" alt="Cerro de los Siete Colores en Purmamarca" fetchpriority="high">
   <div class="hero-veil" aria-hidden="true"></div>
   <nav class="hero-nav" [class.fijada]="navFijada()" aria-label="Navegación principal">
     <a class="brand" routerLink="/" aria-label="Yapa, inicio">Yapa<span></span></a>
@@ -54,8 +54,11 @@
           >
             <img
               [src]="fotoUrl(zona.lugar_destacado?.foto, zona.slug)"
+              [srcset]="fotoSrcset(zona.lugar_destacado?.foto, zona.slug)"
+              [attr.sizes]="index === 0 ? sizesZonaGrande : sizesZonaChica"
               [alt]="zona.lugar_destacado?.nombre || zona.nombre"
               [attr.loading]="index === 0 ? 'eager' : 'lazy'"
+              decoding="async"
             >
             <span class="zone-content">
               <span class="zone-name">{{ zona.nombre }}</span>
@@ -197,7 +200,7 @@
             [routerLink]="['/lugares', lugar.slug]"
           >
             <span class="place-number">{{ index + 1 | number:'2.0-0' }}</span>
-            <img class="place-thumb" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [alt]="lugar.nombre" loading="lazy">
+            <img class="place-thumb" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [srcset]="fotoSrcset(lugar.foto, lugar.zona_slug)" sizes="96px" [alt]="lugar.nombre" loading="lazy" decoding="async">
             <span class="place-title">
               <strong>{{ lugar.nombre }}</strong>
               <small>{{ lugar.zona }} · {{ lugar.datos_json.localidad || 'Jujuy' }}</small>
@@ -217,7 +220,7 @@
   </section>
 
   <figure class="photo-quote">
-    <img src="/img/puna.jpg" alt="Paisaje de altura en la Puna jujeña" loading="lazy">
+    <img src="/img/puna.jpg" srcset="/img/puna-640.webp 640w, /img/puna-1280.webp 1280w, /img/puna-1920.webp 1920w" sizes="100vw" alt="Paisaje de altura en la Puna jujeña" loading="lazy" decoding="async">
     <div class="photo-quote-veil" aria-hidden="true"></div>
     <blockquote>“Un viaje no es una sucesión de visitas, es la historia que se cuenta después.”</blockquote>
     <figcaption>Jujuy · una historia que sigue cuando volvés</figcaption>
@@ -337,7 +340,7 @@
     <button type="button" class="zona-cerrar" (click)="cerrarZona()" aria-label="Cerrar panel">×</button>
 
     <div class="zona-panel-hero">
-      <img [src]="fotoUrl(zona.lugar_destacado?.foto, zona.slug)" [alt]="zona.lugar_destacado?.nombre || zona.nombre">
+      <img [src]="fotoUrl(zona.lugar_destacado?.foto, zona.slug)" [srcset]="fotoSrcset(zona.lugar_destacado?.foto, zona.slug)" sizes="(max-width: 560px) 100vw, 560px" [alt]="zona.lugar_destacado?.nombre || zona.nombre" loading="lazy" decoding="async">
       <div class="zona-panel-veil" aria-hidden="true"></div>
       <div class="zona-panel-titulo">
         <p class="kicker">Región · {{ lugaresDeZona(zona).length }} lugares</p>
@@ -350,7 +353,7 @@
       <p class="zona-lista-titulo">Qué ver en {{ zona.nombre }}</p>
       @for (lugar of lugaresDeZona(zona); track lugar.slug) {
         <a class="zona-lugar" [routerLink]="['/lugares', lugar.slug]" (click)="cerrarZona()">
-          <img class="zona-lugar-foto" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [alt]="lugar.nombre" loading="lazy">
+          <img class="zona-lugar-foto" [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [srcset]="fotoSrcset(lugar.foto, lugar.zona_slug)" sizes="88px" [alt]="lugar.nombre" loading="lazy" decoding="async">
           <span class="zona-lugar-info">
             <strong>{{ lugar.nombre }}</strong>
             <small>{{ lugar.datos_json.localidad || 'Jujuy' }}@if (lugar.altitud_m) { · {{ lugar.altitud_m | number }} msnm }</small>

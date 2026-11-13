@@ -1,0 +1,12 @@
+{
+  "slice": "34-imagenes",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "834cf88",
+  "verificado": "2026-11-13T13:07:55-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 39,
+  "juez": "devin: CIERRA",
+  "cerrado": true,
+  "motivo": ""
+}
