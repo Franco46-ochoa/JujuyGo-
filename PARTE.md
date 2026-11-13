@@ -65,7 +65,14 @@ Nada — etapa 2 cerrada el 2026-11-13.
   - Home más corto con fotos: https://franco46-ochoa.github.io/JujuyGo-/home.html
   - Plan con timeline/fotos/mapa por día: https://franco46-ochoa.github.io/JujuyGo-/travesia.html
 - Fuente local de los prototipos: `C:\Users\Elect\orca\projects\prototipos-jujuygo\` (repo propio, branch gh-pages). Sistema visual fiel a `docs/design.md` + home.css; fotos y coordenadas reales del catálogo.
-- **Falta**: que Franco los revise, apruebe o pida cambios → recién ahí se escriben los specs de rediseño.
+- **Revisión de Franco (2026-11-13)**: dirección visual y conceptual APROBADA en ambos (conservar como base, no empezar de cero). Copy favorito: "Los lugares que se sueñan, los colectivos que sí pasan y el día que cierra."
+- **Correcciones ya aplicadas** a los prototipos (commit gh-pages `4854d67`):
+  - Duración: "tres días, dos noches" (antes decía 3 noches).
+  - Purmamarca: la vuelta al cruce RN9 (~2 km a pie o remis) ahora está contada como traslado, con margen — ya no "vuelve caminando en 30 min" suelto.
+  - Hornocal: traslado local etiquetado "sin horario fijo / verificar regreso", con plan B explícito.
+  - Home: la banda de horarios subió — ahora va zonas → banda operativa → imperdibles (el diferencial aparece temprano).
+- **Pendiente de validación real** (datos demostrativos, no validados por backend): margen 30' a pie Tilcara↔cruce es realista/seguro; timing real del traslado a Hornocal y colectivo de vuelta 15:30. Hay que chequearlo con la fuente de horarios antes de convertir en spec.
+- **Falta**: aprobación final de Franco de los prototipos corregidos → recién ahí se escriben los specs de rediseño.
 - Nada de implementación de rediseño hasta esa aprobación.
 
 ## Lo que no se toca (transversal)
