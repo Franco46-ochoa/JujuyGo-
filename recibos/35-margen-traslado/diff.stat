@@ -1,0 +1,12 @@
+ backend/src/itinerario/margenes.js               |  24 ++++
+ backend/src/itinerario/validar.js                |  16 +--
+ backend/src/routes/travesia.js                   |   6 +
+ backend/test/itinerario.test.js                  | 166 +++++++++++++++++++++++
+ backend/test/travesia.test.js                    |  19 +++
+ frontend/src/app/travesia/travesia.model.spec.ts |  81 ++++++++++-
+ frontend/src/app/travesia/travesia.model.ts      |  26 +++-
+ frontend/src/app/travesia/travesia.spec.ts       |  10 +-
+ frontend/src/app/travesia/travesia.types.ts      |   7 +
+ frontend/src/app/travesia/travesia.yapas.spec.ts |   3 +-
+ frontend/src/app/travesia/travesia.yapas.ts      |   4 +-
+ 11 files changed, 340 insertions(+), 22 deletions(-)

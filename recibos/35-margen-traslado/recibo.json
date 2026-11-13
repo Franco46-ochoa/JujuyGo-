@@ -1,0 +1,12 @@
+{
+  "slice": "35-margen-traslado",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "25b899e",
+  "verificado": "2026-11-13T04:56:56-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 11,
+  "juez": "devin: CIERRA",
+  "cerrado": true,
+  "motivo": ""
+}

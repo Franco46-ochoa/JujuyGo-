@@ -149,4 +149,23 @@ describe('GET /api/travesia/contexto', () => {
     assert.deepEqual(response.body.paradas.map(parada => parada.slug), ['volcan', 'purmamarca-cruce']);
     assert.deepEqual(response.body.horarios[0].paradas.map(parada => parada.hora), ['06:15', '06:35']);
   });
+
+  test('incluye los márgenes de traslado y los lugares con acceso local', async () => {
+    const app = createApp({
+      pool: {
+        async query(sql) {
+          if (sql.includes('FROM parada')) return { rows: [] };
+          if (sql.includes('FROM horario')) return { rows: [] };
+          throw new Error('Consulta inesperada en el contexto de travesía');
+        },
+      },
+    });
+
+    const response = await request(app).get('/api/travesia/contexto');
+
+    assert.equal(response.status, 200);
+    assert.equal(response.body.margenes.base_minutos, 15);
+    assert.equal(response.body.margenes.acceso_local_minutos, 30);
+    assert.ok(response.body.margenes.accesos_locales.includes('purmamarca-cruce'));
+  });
 });
