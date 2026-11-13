@@ -39,7 +39,15 @@
           </div>
           <div class="travesia-guardada-acciones">
             <button class="boton-secundario" type="button" (click)="cargarTravesia(guardada)">Cargar</button>
-            <button class="boton-secundario" type="button" (click)="borrarTravesia(guardada)">Borrar</button>
+            @if (borradoPendiente() === guardada.id) {
+              <div class="travesia-borrar-confirm" role="group" [attr.aria-label]="'Confirmación de borrado de ' + guardada.titulo" (keydown.escape)="cancelarBorrarTravesia()">
+                <span class="travesia-borrar-texto">¿Borrar «{{ guardada.titulo }}»?</span>
+                <button class="travesia-borrar-opcion" type="button" data-accion="si" (click)="confirmarBorrarTravesia(guardada)">Sí</button>
+                <button class="travesia-borrar-opcion" type="button" data-accion="no" (click)="cancelarBorrarTravesia()">No</button>
+              </div>
+            } @else {
+              <button class="boton-secundario" type="button" [attr.data-borrar-travesia]="guardada.id" (click)="pedirBorrarTravesia(guardada)">Borrar</button>
+            }
           </div>
         </article>
       }

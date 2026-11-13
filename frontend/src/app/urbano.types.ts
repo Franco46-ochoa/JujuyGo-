@@ -55,11 +55,3 @@ export interface UrbanoFlota extends UrbanoMetadata {
   buses: UrbanoColectivo[];
   stale: boolean;
 }
-
-export interface UrbanoParadasCercanas extends UrbanoMetadata {
-  paradas: (UrbanoParada & {
-    linea_id: string;
-    linea?: string;
-    distancia_m: number;
-  })[];
-}

@@ -380,12 +380,61 @@ describe('TravesiaPage', () => {
     expect(persistencia.guardar).toHaveBeenCalledWith('user-2', planGuardado, ['pucara']);
     expect(fixture.nativeElement.textContent).toContain('Travesía guardada en tu cuenta.');
 
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
-    const botonesActualizados = Array.from(fixture.nativeElement.querySelectorAll('.travesia-guardada-acciones button')) as HTMLButtonElement[];
-    botonesActualizados.find(boton => boton.textContent?.includes('Borrar'))?.click();
+    const botonBorrar = (): HTMLButtonElement | null =>
+      fixture.nativeElement.querySelector('[data-borrar-travesia="trav-1"]');
+    const confirmacion = (): HTMLElement | null =>
+      fixture.nativeElement.querySelector('.travesia-borrar-confirm');
+
+    // Click en Borrar: aparece la confirmación, el foco queda en "No" y no se borró.
+    botonBorrar()?.click();
+    fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(window.confirm).toHaveBeenCalledOnce();
+
+    expect(confirmacion()).toBeTruthy();
+    expect(confirmacion()?.getAttribute('role')).toBe('group');
+    expect(confirmacion()?.getAttribute('aria-label')).toContain(guardada.titulo);
+    expect(confirmacion()?.textContent).toContain(`¿Borrar «${guardada.titulo}»?`);
+    const botonNo = confirmacion()?.querySelector('[data-accion="no"]') as HTMLButtonElement;
+    expect(document.activeElement).toBe(botonNo);
+    expect(persistencia.borrar).not.toHaveBeenCalled();
+
+    // Escape: cierra la confirmación, devuelve el foco a Borrar y no borra.
+    botonNo.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(confirmacion()).toBeNull();
+    expect(document.activeElement).toBe(botonBorrar());
+    expect(persistencia.borrar).not.toHaveBeenCalled();
+
+    // Borrar y luego No: cierra sin borrar.
+    botonBorrar()?.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    (confirmacion()?.querySelector('[data-accion="no"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(confirmacion()).toBeNull();
+    expect(document.activeElement).toBe(botonBorrar());
+    expect(persistencia.borrar).not.toHaveBeenCalled();
+    expect(fixture.nativeElement.textContent).toContain(guardada.titulo);
+
+    // Borrar y luego Sí: ejecuta el borrado.
+    botonBorrar()?.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    (confirmacion()?.querySelector('[data-accion="si"]') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
     expect(persistencia.borrar).toHaveBeenCalledWith('trav-1');
+    expect(confirmacion()).toBeNull();
+    expect(fixture.nativeElement.textContent).not.toContain(guardada.titulo);
   });
 });

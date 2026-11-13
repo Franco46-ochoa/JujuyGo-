@@ -1,0 +1,9 @@
+ frontend/src/app/catalogo.types.ts                 |  4 --
+ frontend/src/app/travesia/travesia-auth.css        |  4 ++
+ frontend/src/app/travesia/travesia.html            | 10 +++-
+ frontend/src/app/travesia/travesia.spec.ts         | 57 ++++++++++++++++++++--
+ frontend/src/app/travesia/travesia.ts              | 36 ++++++++++++--
+ frontend/src/app/urbano.types.ts                   |  8 ---
+ frontend/src/app/yapa-mapa/yapa-mapa.component.css | 29 ++++++++++-
+ frontend/src/app/yapa-mapa/yapa-mapa.component.ts  |  6 ++-
+ 8 files changed, 131 insertions(+), 23 deletions(-)

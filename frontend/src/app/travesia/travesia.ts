@@ -1,5 +1,5 @@
-import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
-import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { DOCUMENT, DecimalPipe, NgTemplateOutlet } from '@angular/common';
+import { Component, DestroyRef, Injector, afterNextRender, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -43,6 +43,8 @@ export class TravesiaPage {
   private readonly travesia = inject(TravesiaService);
   private readonly travesiasGuardadas = inject(TravesiasGuardadasService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly injector = inject(Injector);
+  private readonly documento = inject(DOCUMENT);
 
   protected readonly lugares = signal<Lugar[]>([]);
   protected readonly contexto = signal<ContextoTravesia | null>(null);
@@ -74,6 +76,7 @@ export class TravesiaPage {
   protected readonly guardandoTravesia = signal(false);
   protected readonly errorTravesias = signal('');
   protected readonly mensajeGuardado = signal('');
+  protected readonly borradoPendiente = signal<string | null>(null);
   private validacionId = 0;
   private cargaTravesiasId = 0;
 
@@ -474,8 +477,33 @@ export class TravesiaPage {
     this.validar(datos.plan);
   }
 
-  protected async borrarTravesia(guardada: TravesiaGuardada): Promise<void> {
-    if (!window.confirm(`¿Borrar “${guardada.titulo}” de tus travesías?`)) return;
+  /**
+   * Muestra la confirmación de borrado dentro de la tarjeta. Como el estado es
+   * un único id, abrir otra confirmación cierra la anterior. El foco cae en
+   * "No", la opción que conserva la travesía.
+   */
+  protected pedirBorrarTravesia(guardada: TravesiaGuardada): void {
+    this.borradoPendiente.set(guardada.id);
+    afterNextRender(() => {
+      this.documento.querySelector<HTMLElement>('.travesia-borrar-confirm [data-accion="no"]')?.focus();
+    }, { injector: this.injector });
+  }
+
+  /**
+   * Cierra la confirmación sin borrar (botón "No" o Escape) y devuelve el foco
+   * al botón "Borrar" de la tarjeta, que se recrea al cerrarse.
+   */
+  protected cancelarBorrarTravesia(): void {
+    const id = this.borradoPendiente();
+    this.borradoPendiente.set(null);
+    if (!id) return;
+    afterNextRender(() => {
+      this.documento.querySelector<HTMLElement>(`[data-borrar-travesia="${id}"]`)?.focus();
+    }, { injector: this.injector });
+  }
+
+  protected async confirmarBorrarTravesia(guardada: TravesiaGuardada): Promise<void> {
+    this.borradoPendiente.set(null);
     this.errorTravesias.set('');
     try {
       await this.travesiasGuardadas.borrar(guardada.id);

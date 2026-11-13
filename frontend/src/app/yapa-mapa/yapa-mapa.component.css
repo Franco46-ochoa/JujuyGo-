@@ -66,7 +66,8 @@
   :host ::ng-deep .yapa-marker-pin:hover,
   :host ::ng-deep .yapa-popup-link:hover {
     background-color: var(--arena);
-    color: var(--oxido);
+    /* Óxido oscuro local: ~5.8:1 sobre arena (--oxido daba 4.15:1) */
+    color: #8F3A21;
   }
 
   :host ::ng-deep .yapa-marker-pin:hover {
@@ -125,9 +126,35 @@
 }
 
 :host ::ng-deep .yapa-route-crossing {
+  position: relative;
   border-color: var(--verde);
   background: var(--verde);
   color: #fff;
+}
+
+/* Las etiquetas de cruces y paradas quedan debajo de su coordenada
+   (iconAnchor negativo); el pico apunta hacia arriba, al punto al que
+   corresponde. */
+:host ::ng-deep .yapa-route-stop {
+  position: relative;
+}
+
+:host ::ng-deep .yapa-route-crossing::before,
+:host ::ng-deep .yapa-route-stop::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 1px);
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border: 7px solid transparent;
+  border-top: 0;
+  border-bottom-color: var(--papel);
+}
+
+:host ::ng-deep .yapa-route-crossing::before {
+  border-bottom-color: var(--verde);
 }
 
 /* Clusters ("Tilcara · 2") */

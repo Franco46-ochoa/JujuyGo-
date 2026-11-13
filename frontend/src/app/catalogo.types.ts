@@ -25,7 +25,3 @@ export interface Zona {
   orden: number;
   lugar_destacado: Pick<Lugar, 'nombre' | 'slug' | 'altitud_m' | 'foto' | 'como_llegar'> | null;
 }
-
-export interface ZonaDetalle extends Omit<Zona, 'lugar_destacado'> {
-  lugares: Lugar[];
-}

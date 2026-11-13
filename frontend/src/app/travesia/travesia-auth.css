@@ -20,6 +20,8 @@
 .travesia-guardada-acciones { display: flex; flex: none; align-items: center; gap: 12px; }
 .travesia-guardada-acciones button { display: inline-flex; min-width: 72px; min-height: 44px; align-items: center; justify-content: center; padding: 8px 16px; border: 1px solid var(--verde); border-radius: 999px; background: var(--verde); color: #fff; cursor: pointer; font: 600 14px var(--sans); touch-action: manipulation; }
 .travesia-guardada-acciones button:last-child { border-color: var(--oxido); background: transparent; color: var(--oxido); }
+.travesia-borrar-confirm { display: flex; flex: none; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.travesia-borrar-texto { flex-basis: 100%; color: var(--tinta); font-size: 14px; }
 .guardar-travesia { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
 .guardar-travesia .boton-principal:disabled { cursor: wait; opacity: .7; }
 .guardado-mensaje { color: var(--verde); font-size: 14px; }
@@ -29,6 +31,8 @@
   .auth-salir:hover { color: var(--oxido); }
   .travesia-guardada-acciones button:first-child:hover { background: var(--verde-hover); }
   .travesia-guardada-acciones button:last-child:hover { background: rgba(181,73,42,.08); }
+  .travesia-borrar-confirm button:hover { background: var(--verde-hover); }
+  .travesia-borrar-confirm button:last-child:hover { background: rgba(181,73,42,.08); }
 }
 
 @media (max-width: 720px) {

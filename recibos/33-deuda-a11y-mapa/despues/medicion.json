@@ -1,0 +1,208 @@
+{
+  "base": "http://localhost:4323",
+  "fecha": "2026-11-13T07:51:30.061Z",
+  "metodo": "Cálculo WCAG 2.x sobre colores pintados: color computado del texto (alfa × opacidad acumulada) compuesto sobre la pila de background-color de los ancestros (lienzo blanco). Hover real con playwright hover().",
+  "hover": [
+    {
+      "fila": ".yapa-cluster-pin:hover",
+      "minimo": 4.5,
+      "ratio": 5.86,
+      "texto": "#8f3a21",
+      "fondo": "#ede2d0",
+      "hover": true,
+      "contenido": "Quebrada · 4",
+      "cumple": true
+    },
+    {
+      "fila": ".yapa-marker-pin:hover",
+      "minimo": 4.5,
+      "ratio": 5.86,
+      "texto": "#8f3a21",
+      "fondo": "#ede2d0",
+      "hover": true,
+      "contenido": "Tren Solar de la Quebrada — estación Vol",
+      "cumple": true
+    },
+    {
+      "fila": ".leaflet-bar a:hover (zoom +)",
+      "minimo": 4.5,
+      "ratio": 15.09,
+      "texto": "#241610",
+      "fondo": "#f4ede3",
+      "hover": true,
+      "contenido": "+",
+      "cumple": true
+    }
+  ],
+  "pins": {
+    "cerro-siete-colores-1440": {
+      "pins": [
+        {
+          "texto": "Terminal de Ómnibus SS.Jujuy",
+          "clases": "yapa-route-pin yapa-route-origin",
+          "rect": {
+            "l": 646,
+            "t": 1679,
+            "r": 870,
+            "b": 1715
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        },
+        {
+          "texto": "Purmamarca Cruce",
+          "clases": "yapa-route-pin yapa-route-crossing",
+          "rect": {
+            "l": 618,
+            "t": 1540,
+            "r": 768,
+            "b": 1576
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        },
+        {
+          "texto": "Cerro de los Siete Colores",
+          "clases": "yapa-route-pin yapa-route-destination",
+          "rect": {
+            "l": 585,
+            "t": 1493,
+            "r": 777,
+            "b": 1529
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        }
+      ],
+      "intersecciones": [],
+      "ok": true
+    },
+    "cerro-siete-colores-390": {
+      "pins": [
+        {
+          "texto": "Terminal de Ómnibus SS.Jujuy",
+          "clases": "yapa-route-pin yapa-route-origin",
+          "rect": {
+            "l": 121,
+            "t": 2045,
+            "r": 345,
+            "b": 2081
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        },
+        {
+          "texto": "Purmamarca Cruce",
+          "clases": "yapa-route-pin yapa-route-crossing",
+          "rect": {
+            "l": 93,
+            "t": 1906,
+            "r": 243,
+            "b": 1942
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        },
+        {
+          "texto": "Cerro de los Siete Colores",
+          "clases": "yapa-route-pin yapa-route-destination",
+          "rect": {
+            "l": 60,
+            "t": 1859,
+            "r": 252,
+            "b": 1895
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        }
+      ],
+      "intersecciones": [],
+      "ok": true
+    },
+    "pucara-de-tilcara-1440": {
+      "pins": [
+        {
+          "texto": "Terminal de Ómnibus SS.Jujuy",
+          "clases": "yapa-route-pin yapa-route-origin",
+          "rect": {
+            "l": 643,
+            "t": 1664,
+            "r": 867,
+            "b": 1700
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        },
+        {
+          "texto": "Tilcara",
+          "clases": "yapa-route-pin yapa-route-stop",
+          "rect": {
+            "l": 682,
+            "t": 1459,
+            "r": 752,
+            "b": 1495
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        },
+        {
+          "texto": "Pucará de Tilcara",
+          "clases": "yapa-route-pin yapa-route-destination",
+          "rect": {
+            "l": 645,
+            "t": 1416,
+            "r": 783,
+            "b": 1452
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        }
+      ],
+      "intersecciones": [],
+      "ok": true
+    },
+    "pucara-de-tilcara-390": {
+      "pins": [
+        {
+          "texto": "Terminal de Ómnibus SS.Jujuy",
+          "clases": "yapa-route-pin yapa-route-origin",
+          "rect": {
+            "l": 118,
+            "t": 1977,
+            "r": 342,
+            "b": 2013
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        },
+        {
+          "texto": "Tilcara",
+          "clases": "yapa-route-pin yapa-route-stop",
+          "rect": {
+            "l": 157,
+            "t": 1772,
+            "r": 227,
+            "b": 1808
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        },
+        {
+          "texto": "Pucará de Tilcara",
+          "clases": "yapa-route-pin yapa-route-destination",
+          "rect": {
+            "l": 120,
+            "t": 1729,
+            "r": 258,
+            "b": 1765
+          },
+          "recortado": false,
+          "dentroDelMapa": true
+        }
+      ],
+      "intersecciones": [],
+      "ok": true
+    }
+  },
+  "consola": []
+}
