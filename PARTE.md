@@ -60,7 +60,11 @@ Nada — etapa 2 cerrada el 2026-11-13.
 
 ## Etapa 3 — Rediseño (BLOQUEADA)
 
-- Dos prototipos listos en la VM de Devin: home más corto con fotos, y plan con timeline/fotos/mapa por día. Preview: https://prototipos-jujuygo--2k1sa2tx.preview.devinapps.com/home.html (el zip no llegó a esta máquina).
+- Los dos prototipos originales vivían en una sesión de Devin Cloud que **expiró y no se puede revivir** ("too old"; preview 401). Se reconstruyeron el 2026-11-13 y quedaron públicos en GitHub Pages (branch `gh-pages`, sin tocar master):
+  - Índice: https://franco46-ochoa.github.io/JujuyGo-/
+  - Home más corto con fotos: https://franco46-ochoa.github.io/JujuyGo-/home.html
+  - Plan con timeline/fotos/mapa por día: https://franco46-ochoa.github.io/JujuyGo-/travesia.html
+- Fuente local de los prototipos: `C:\Users\Elect\orca\projects\prototipos-jujuygo\` (repo propio, branch gh-pages). Sistema visual fiel a `docs/design.md` + home.css; fotos y coordenadas reales del catálogo.
 - **Falta**: que Franco los revise, apruebe o pida cambios → recién ahí se escriben los specs de rediseño.
 - Nada de implementación de rediseño hasta esa aprobación.
 
