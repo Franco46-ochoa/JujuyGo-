@@ -18,7 +18,7 @@
     <article>
       <header class="detail-hero">
         @if (lugar.foto) {
-          <img [src]="fotoUrl(lugar.foto)" [alt]="lugar.nombre">
+          <img [src]="fotoUrl(lugar.foto)" [srcset]="fotoSrcset(lugar.foto)" sizes="100vw" [alt]="lugar.nombre" fetchpriority="high" decoding="async">
         }
         <div class="detail-veil"></div>
         <div class="detail-title">

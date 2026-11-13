@@ -147,7 +147,7 @@
                 <div class="seleccion-lugares">
                   @for (lugar of grupo.lugares; track lugar.slug) {
                     <button class="lugar-eleccion" type="button" [class.lugar-elegido]="lugaresElegidos().includes(lugar.slug)" [attr.aria-pressed]="lugaresElegidos().includes(lugar.slug)" (click)="alternarLugar(lugar)">
-                      <img [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [alt]="lugar.nombre" loading="lazy">
+                      <img [src]="fotoUrl(lugar.foto, lugar.zona_slug)" [srcset]="fotoSrcset(lugar.foto, lugar.zona_slug)" sizes="(max-width: 720px) 76px, 90px" [alt]="lugar.nombre" loading="lazy" decoding="async">
                       <span class="lugar-eleccion-texto">
                         <strong>{{ lugar.nombre }}</strong>
                         <span>{{ lugar.datos_json.localidad || grupo.zona }}</span>

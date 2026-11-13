@@ -1,0 +1,428 @@
+{
+  "base": "http://localhost:4326",
+  "fecha": "2026-11-13T08:12:27.772Z",
+  "metodo": "performance.getEntriesByType(\"resource\"): transferSize por recurso con content-type/URL de imagen. LCP vía PerformanceObserver. Sin scroll = tras networkidle; con scroll = scroll completo en pasos hasta el fondo.",
+  "mediciones": {
+    "home-390": {
+      "url": "/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sinScroll": {
+        "totalBytes": 2697756,
+        "archivos": [
+          {
+            "url": "purmamarca.jpg",
+            "bytes": 1027303
+          },
+          {
+            "url": "salinas.jpg",
+            "bytes": 488992
+          },
+          {
+            "url": "calilegua.jpg",
+            "bytes": 1181461
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          }
+        ],
+        "heroPeticiones": 1,
+        "heroArchivos": [
+          "purmamarca.jpg (1027303b)"
+        ]
+      },
+      "conScroll": {
+        "totalBytes": 3639912,
+        "archivos": [
+          {
+            "url": "purmamarca.jpg",
+            "bytes": 1027303
+          },
+          {
+            "url": "salinas.jpg",
+            "bytes": 488992
+          },
+          {
+            "url": "calilegua.jpg",
+            "bytes": 1181461
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "salsaju.jpg",
+            "bytes": 356195
+          },
+          {
+            "url": "puna.jpg",
+            "bytes": 585961
+          }
+        ],
+        "heroPeticiones": 1,
+        "heroArchivos": [
+          "purmamarca.jpg (1027303b)"
+        ]
+      },
+      "lcpMs": 1944
+    },
+    "home-1440": {
+      "url": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "sinScroll": {
+        "totalBytes": 3053951,
+        "archivos": [
+          {
+            "url": "purmamarca.jpg",
+            "bytes": 1027303
+          },
+          {
+            "url": "salinas.jpg",
+            "bytes": 488992
+          },
+          {
+            "url": "calilegua.jpg",
+            "bytes": 1181461
+          },
+          {
+            "url": "salsaju.jpg",
+            "bytes": 356195
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          }
+        ],
+        "heroPeticiones": 1,
+        "heroArchivos": [
+          "purmamarca.jpg (1027303b)"
+        ]
+      },
+      "conScroll": {
+        "totalBytes": 8806033,
+        "archivos": [
+          {
+            "url": "purmamarca.jpg",
+            "bytes": 1027303
+          },
+          {
+            "url": "salinas.jpg",
+            "bytes": 488992
+          },
+          {
+            "url": "calilegua.jpg",
+            "bytes": 1181461
+          },
+          {
+            "url": "salsaju.jpg",
+            "bytes": 356195
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "145.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "144.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "146.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "143.png",
+            "bytes": 0
+          },
+          {
+            "url": "garganta.jpg",
+            "bytes": 2306370
+          },
+          {
+            "url": "humahuaca.jpg",
+            "bytes": 1282087
+          },
+          {
+            "url": "puna.jpg",
+            "bytes": 585961
+          },
+          {
+            "url": "tilcara.jpg",
+            "bytes": 1004916
+          },
+          {
+            "url": "hornocal.jpg",
+            "bytes": 572748
+          }
+        ],
+        "heroPeticiones": 1,
+        "heroArchivos": [
+          "purmamarca.jpg (1027303b)"
+        ]
+      },
+      "lcpMs": 992
+    },
+    "detalle-390": {
+      "url": "/lugares/cerro-siete-colores",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sinScroll": {
+        "totalBytes": 1027303,
+        "archivos": [
+          {
+            "url": "purmamarca.jpg",
+            "bytes": 1027303
+          },
+          {
+            "url": "2325.png",
+            "bytes": 0
+          },
+          {
+            "url": "2325.png",
+            "bytes": 0
+          },
+          {
+            "url": "2326.png",
+            "bytes": 0
+          },
+          {
+            "url": "2326.png",
+            "bytes": 0
+          }
+        ],
+        "heroPeticiones": 1,
+        "heroArchivos": [
+          "purmamarca.jpg (1027303b)"
+        ]
+      },
+      "conScroll": null,
+      "lcpMs": 1412
+    },
+    "detalle-1440": {
+      "url": "/lugares/cerro-siete-colores",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "sinScroll": {
+        "totalBytes": 1027303,
+        "archivos": [
+          {
+            "url": "purmamarca.jpg",
+            "bytes": 1027303
+          },
+          {
+            "url": "2325.png",
+            "bytes": 0
+          },
+          {
+            "url": "2325.png",
+            "bytes": 0
+          },
+          {
+            "url": "2326.png",
+            "bytes": 0
+          },
+          {
+            "url": "2326.png",
+            "bytes": 0
+          },
+          {
+            "url": "2325.png",
+            "bytes": 0
+          },
+          {
+            "url": "2325.png",
+            "bytes": 0
+          },
+          {
+            "url": "2326.png",
+            "bytes": 0
+          },
+          {
+            "url": "2326.png",
+            "bytes": 0
+          }
+        ],
+        "heroPeticiones": 1,
+        "heroArchivos": [
+          "purmamarca.jpg (1027303b)"
+        ]
+      },
+      "conScroll": null,
+      "lcpMs": 896
+    }
+  },
+  "consola": []
+}
