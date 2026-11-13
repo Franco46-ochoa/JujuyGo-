@@ -1,0 +1,12 @@
+{
+  "slice": "30-copy-home",
+  "ejecutor": "cmd",
+  "modelo": "default",
+  "base": "499fe04",
+  "verificado": "2026-11-13T00:04:07-03:00",
+  "chequeos": { "tests": true, "tests-front": true, "tests-back": true },
+  "archivos_tocados": 1,
+  "juez": "devin: CIERRA",
+  "cerrado": true,
+  "motivo": ""
+}
