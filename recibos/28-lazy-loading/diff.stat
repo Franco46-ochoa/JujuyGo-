@@ -1,0 +1,5 @@
+ frontend/src/app/app.routes.ts                    | 34 +++++++++++++++++------
+ frontend/src/app/home/home.html                   |  2 +-
+ frontend/src/app/yapa-mapa/yapa-mapa.component.ts | 20 +++++++++++--
+ frontend/src/index.html                           |  1 +
+ 4 files changed, 44 insertions(+), 13 deletions(-)
