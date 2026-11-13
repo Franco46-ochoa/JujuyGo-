@@ -269,7 +269,7 @@ describe('TravesiaPage', () => {
 
     const login = fixture.nativeElement.querySelector('.auth-entrar') as HTMLButtonElement;
     expect(login.disabled).toBe(true);
-    expect(fixture.nativeElement.textContent).toContain('login no configurado');
+    expect(fixture.nativeElement.textContent).toContain('Guardar tu plan no está disponible en este momento');
 
     const fechas = fixture.nativeElement.querySelectorAll('input[type="date"]') as NodeListOf<HTMLInputElement>;
     fechas[0].value = '2026-11-07';
@@ -286,7 +286,7 @@ describe('TravesiaPage', () => {
 
     const guardar = fixture.nativeElement.querySelector('.guardar-travesia button') as HTMLButtonElement;
     expect(guardar.disabled).toBe(true);
-    expect(guardar.textContent).toContain('login no configurado');
+    expect(guardar.textContent).toContain('Guardar tu plan no está disponible');
   });
 
   it('loads, saves, and deletes the signed-in traveler’s saved plans', async () => {

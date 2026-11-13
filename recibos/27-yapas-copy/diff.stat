@@ -1,0 +1,4 @@
+ frontend/src/app/travesia/travesia.html    |  9 ++++++---
+ frontend/src/app/travesia/travesia.spec.ts |  4 ++--
+ frontend/src/app/travesia/travesia.ts      | 15 +++++++++++++++
+ 3 files changed, 23 insertions(+), 5 deletions(-)
