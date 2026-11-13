@@ -1,0 +1,258 @@
+### tests: test ! -f package.json || npm test
+### fin tests (ok=true)
+
+### tests-front: test ! -d frontend || (cd frontend && npm test -- --watch=false)
+
+> frontend@0.0.0 test
+> ng test --watch=false
+
+Automatically searching for and using Vitest configuration file.
+❯ Building...
+✔ Building...
+Application bundle generation complete. [14.944 seconds] - 2026-11-13T05:46:35.515Z
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/Elect/orca/projects/JujuyGo/.slices/31-limpieza-codigo/frontend[39m
+
+
+[2m Test Files [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[32m69 passed[39m[22m[90m (69)[39m
+[2m   Start at [22m 02:46:37
+[2m   Duration [22m 37.40s[2m (environment 72%, transform 11%, setup 6%, tests 6%, import 4%)[22m
+
+### fin tests-front (ok=true)
+
+### tests-back: test ! -d backend || (cd backend && npm test)
+
+> jujuygo-backend@0.1.0 test
+> node --test
+
+aplicada: 001-zonas-lugares.sql
+aplicada: 002-transporte.sql
+aplicada: 003-hospedaje.sql
+aplicada: 004-fotos-lugares.sql
+▶ API de catálogo
+  ✔ lista las cuatro zonas con un lugar destacado (328.469ms)
+  ✔ el detalle de zona incluye sus lugares (43.5075ms)
+  ✔ lista todos los lugares sembrados (31.532ms)
+  ✔ filtra lugares por zona (36.0029ms)
+  ✔ responde 404 para un lugar inexistente (22.0833ms)
+  ✔ detalle expone todos los campos de catálogo (21.6376ms)
+  ✔ el seed puede aplicarse varias veces sin duplicar registros (48.8848ms)
+✔ API de catálogo (1505.3387ms)
+▶ API Cómo Llegar (Slice 06)
+  ✖ GET /api/transporte/como-llegar desde Terminal a Cerro de los Siete Colores
+  ✖ GET /api/transporte/como-llegar desde Aeropuerto Jujuy incluye transfer inicial a Terminal
+  ✖ GET /api/transporte/como-llegar a Salinas Grandes advierte sin servicio directo RN9 y da alternativa honesta
+  ✖ GET /api/transporte/como-llegar a Yungas (Parque Calilegua) advierte corredor RN34
+  ✖ GET /api/transporte/como-llegar con mismo origen y destino
+  ✖ GET /api/transporte/como-llegar con destino inexistente responde 404
+  ✖ GET /api/transporte/como-llegar resuelve el origen GPS y no agrega caminata dentro de 300 m
+  ✖ GET /api/transporte/como-llegar informa caminata aproximada a la parada RN9 cercana
+  ✖ GET /api/transporte/como-llegar conecta por la Terminal cuando el GPS está en el área metropolitana
+  ✖ GET /api/transporte/como-llegar no inventa parada RN9 a más de 5 km
+  ✖ GET /api/transporte/como-llegar valida coordenadas GPS y conserva el 404 de destino inválido
+✖ API Cómo Llegar (Slice 06) (554.8702ms)
+✔ GET /health responde ok (142.1411ms)
+▶ API de hospedajes y guías
+  ✖ lista hospedajes con fuente y estado de verificación
+  ✖ filtra hospedajes por zona
+  ✖ responde una lista vacía si no hay hospedajes en la zona
+  ✖ la lista de guías vacía responde correctamente
+  ✖ la migración puede aplicarse varias veces sin duplicar hospedajes
+✖ API de hospedajes y guías (532.4631ms)
+✔ lista ciudades y empresas del dataset (5.4569ms)
+✔ buscarCiudad acepta id, slug y nombre con/sin acentos (1.0633ms)
+✔ salidas SSJ->Humahuaca devuelve servicios ordenados con tarifa y duración (62.0115ms)
+✔ salidas filtra por hora de salida (2.3657ms)
+✔ salidas incluye direccion ida/vuelta segun sentido del servicio (2.2483ms)
+✔ salidas con origen invalido devuelve error (2.2361ms)
+✔ salidas misma ciudad devuelve error (0.5606ms)
+✔ tarifaPar urbano usa SUBE y tarifa generica usa faresGeneric (0.4946ms)
+✔ duracionEstimadaMinutos urbano y generico (1.0754ms)
+✔ endpoint /api/hq/salidas responde y valida params (325.8624ms)
+▶ motor de validación de travesía
+  ✔ valida un día que llega a Tilcara y toma el regreso dentro del horario (15.8518ms)
+  ✔ detecta que el regreso de Humahuaca no llega antes del cierre y sugiere una alternativa (2.8446ms)
+  ✔ mapea Purmamarca al cruce y nunca afirma que el colectivo llega al pueblo (0.9538ms)
+  ✔ advierte el traslado local desde Humahuaca hasta Hornocal (0.8619ms)
+  ✔ detecta eventos superpuestos aun cuando ocurren en la misma parada (2.0448ms)
+  ✔ no permite que una visita se prolongue al día siguiente (1.131ms)
+  ✔ marca como conflicto un tramo para el que no hay servicio cargado (2.4133ms)
+✔ motor de validación de travesía (35.1774ms)
+Seed de transporte RN9 completado con éxito.
+▶ Transporte y horarios RN9 (Slice 04)
+  ▶ Orden de paradas
+    ✔ GET /api/transporte/paradas devuelve lista completa en orden estricto de ruta (178.0556ms)
+    ✔ GET /api/transporte/paradas con línea inexistente devuelve 404 (13.7934ms)
+  ✔ Orden de paradas (193.6987ms)
+  ▶ Regla crítica: Cruce ≠ Pueblo
+    ✔ Purmamarca Cruce tiene tipo="cruce" y notas explicativas diferenciadas del pueblo (12.8755ms)
+    ✔ La base de datos rechaza tipos de parada no válidos (10.3501ms)
+  ✔ Regla crítica: Cruce ≠ Pueblo (24.1142ms)
+  ▶ Cálculo de próximos servicios
+    ✔ GET /api/transporte/proximos?origen=terminal-jjs&destino=tilcara devuelve servicios con hora estimada (132.2341ms)
+    ✔ GET /api/transporte/proximos dirección vuelta (Humahuaca -> SS.Jujuy) (14.1406ms)
+    ✔ GET /api/transporte/proximos con filtro ?hora=12:00 devuelve solo salidas posteriores (14.3052ms)
+    ✔ Validación de errores en parámetros origen y destino (23.6855ms)
+  ✔ Cálculo de próximos servicios (185.5855ms)
+  ▶ Confianza y fuente presente en cada horario
+    ✔ Ningún horario en la DB carece de fuente o confianza (3.0345ms)
+    ✔ Todos los valores de confianza son válidos ("publicado", "estimado" o "tiempo-real") (2.2507ms)
+    ✔ Tramos que incluyen paradas intermedias sin boletería oficial marcan confianza="estimado" (14.0887ms)
+  ✔ Confianza y fuente presente en cada horario (19.9402ms)
+Seed de transporte RN9 completado con éxito.
+  ▶ Idempotencia del seed
+    ✔ Ejecutar el seed nuevamente no duplica registros (304.2497ms)
+  ✔ Idempotencia del seed (304.6575ms)
+✔ Transporte y horarios RN9 (Slice 04) (1396.1234ms)
+▶ POST /api/travesia/validar
+  ✔ devuelve los tramos RN9 reales que permiten completar el plan (153.1212ms)
+  ✔ propone una corrección cuando el regreso no llega antes de la hora de cierre (22.2681ms)
+  ✔ rechaza planes incompletos (15.094ms)
+✔ POST /api/travesia/validar (194.0274ms)
+▶ GET /api/travesia/contexto
+  ✔ devuelve paradas ordenadas y solo servicios con tramos cargados (17.9243ms)
+✔ GET /api/travesia/contexto (18.5532ms)
+✔ proxy de líneas, red, línea y flota preserva el shape y agrega metadatos (141.2092ms)
+✔ el cliente reutiliza en caché la respuesta del endpoint dentro del TTL (1.0224ms)
+✔ errores HTTP y timeout upstream responden 502 con fuente (29.192ms)
+✔ línea inexistente responde 404 (14.7868ms)
+✔ paradas cercanas filtra por distancia y ordena por proximidad (18.1504ms)
+✔ paradas cercanas valida coordenadas y radio (46.771ms)
+ℹ tests 63
+ℹ suites 12
+ℹ pass 47
+ℹ fail 0
+ℹ cancelled 16
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5484.8402
+
+✖ failing tests:
+
+test at test\como-llegar.test.js:55:3
+✖ GET /api/transporte/como-llegar desde Terminal a Cerro de los Siete Colores
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:91:3
+✖ GET /api/transporte/como-llegar desde Aeropuerto Jujuy incluye transfer inicial a Terminal
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:101:3
+✖ GET /api/transporte/como-llegar a Salinas Grandes advierte sin servicio directo RN9 y da alternativa honesta
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:110:3
+✖ GET /api/transporte/como-llegar a Yungas (Parque Calilegua) advierte corredor RN34
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:117:3
+✖ GET /api/transporte/como-llegar con mismo origen y destino
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:123:3
+✖ GET /api/transporte/como-llegar con destino inexistente responde 404
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:128:3
+✖ GET /api/transporte/como-llegar resuelve el origen GPS y no agrega caminata dentro de 300 m
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:147:3
+✖ GET /api/transporte/como-llegar informa caminata aproximada a la parada RN9 cercana
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:159:3
+✖ GET /api/transporte/como-llegar conecta por la Terminal cuando el GPS está en el área metropolitana
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:172:3
+✖ GET /api/transporte/como-llegar no inventa parada RN9 a más de 5 km
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:185:3
+✖ GET /api/transporte/como-llegar valida coordenadas GPS y conserva el 404 de destino inválido
+  'test did not finish before its parent and was cancelled'
+
+test at test\como-llegar.test.js:42:1
+✖ API Cómo Llegar (Slice 06) (554.8702ms)
+  error: llave duplicada viola restricción de unicidad «pg_type_typname_nsp_index»
+      at C:\Users\Elect\orca\projects\JujuyGo\.slices\31-limpieza-codigo\backend\node_modules\pg\lib\client.js:694:17
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async applyMigrations (file:///C:/Users/Elect/orca/projects/JujuyGo/.slices/31-limpieza-codigo/backend/test/como-llegar.test.js:20:5)
+      at async SuiteContext.<anonymous> (file:///C:/Users/Elect/orca/projects/JujuyGo/.slices/31-limpieza-codigo/backend/test/como-llegar.test.js:46:5)
+      at async TestHook.run (node:internal/test_runner/test:1208:7)
+      at async Suite.runHook (node:internal/test_runner/test:1117:9)
+      at async Suite.run (node:internal/test_runner/test:1613:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    length: 254,
+    severity: 'ERROR',
+    code: '23505',
+    detail: 'Ya existe la llave (typname, typnamespace)=(_migrations, 73728).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'pg_catalog',
+    table: 'pg_type',
+    column: undefined,
+    dataType: undefined,
+    constraint: 'pg_type_typname_nsp_index',
+    file: 'nbtinsert.c',
+    line: '673',
+    routine: '_bt_check_unique'
+  }
+
+test at test\hospedaje.test.js:26:3
+✖ lista hospedajes con fuente y estado de verificación
+  'test did not finish before its parent and was cancelled'
+
+test at test\hospedaje.test.js:33:3
+✖ filtra hospedajes por zona
+  'test did not finish before its parent and was cancelled'
+
+test at test\hospedaje.test.js:40:3
+✖ responde una lista vacía si no hay hospedajes en la zona
+  'test did not finish before its parent and was cancelled'
+
+test at test\hospedaje.test.js:46:3
+✖ la lista de guías vacía responde correctamente
+  'test did not finish before its parent and was cancelled'
+
+test at test\hospedaje.test.js:52:3
+✖ la migración puede aplicarse varias veces sin duplicar hospedajes
+  'test did not finish before its parent and was cancelled'
+
+test at test\hospedaje.test.js:14:1
+✖ API de hospedajes y guías (532.4631ms)
+  error: llave duplicada viola restricción de unicidad «pg_type_typname_nsp_index»
+      at C:\Users\Elect\orca\projects\JujuyGo\.slices\31-limpieza-codigo\backend\node_modules\pg\lib\client.js:694:17
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async migrate (file:///C:/Users/Elect/orca/projects/JujuyGo/.slices/31-limpieza-codigo/backend/src/migrate.js:23:5)
+      at async SuiteContext.<anonymous> (file:///C:/Users/Elect/orca/projects/JujuyGo/.slices/31-limpieza-codigo/backend/test/hospedaje.test.js:19:5)
+      at async TestHook.run (node:internal/test_runner/test:1208:7)
+      at async Suite.runHook (node:internal/test_runner/test:1117:9)
+      at async Suite.run (node:internal/test_runner/test:1613:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    length: 254,
+    severity: 'ERROR',
+    code: '23505',
+    detail: 'Ya existe la llave (typname, typnamespace)=(_migrations, 73728).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'pg_catalog',
+    table: 'pg_type',
+    column: undefined,
+    dataType: undefined,
+    constraint: 'pg_type_typname_nsp_index',
+    file: 'nbtinsert.c',
+    line: '673',
+    routine: '_bt_check_unique'
+  }
+### fin tests-back (ok=false)
+

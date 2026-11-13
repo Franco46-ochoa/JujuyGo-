@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { Lugar, Zona, ZonaDetalle } from './catalogo.types';
+import { Lugar, Zona } from './catalogo.types';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogoService {
@@ -22,9 +22,5 @@ export class CatalogoService {
 
   getLugar(slug: string): Observable<Lugar> {
     return this.http.get<Lugar>(`${this.apiUrl}/lugares/${encodeURIComponent(slug)}`);
-  }
-
-  getZona(slug: string): Observable<ZonaDetalle> {
-    return this.http.get<ZonaDetalle>(`${this.apiUrl}/zonas/${encodeURIComponent(slug)}`);
   }
 }

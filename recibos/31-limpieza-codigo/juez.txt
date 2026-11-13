@@ -1,0 +1,7 @@
+CIERRA
+ninguno
+menor: tipos huérfanos ZonaDetalle (catalogo.types.ts) y UrbanoParadasCercanas (urbano.types.ts) quedan; .types fuera de alcance, declarado en el recibo.
+menor: window.confirm (travesia.ts:478) pendiente; requiere travesia.html, fuera de alcance.
+menor: sin test unitario nuevo para funciones extraídas ni test de destroy; declarado como gap.
+menor: primera corrida backend falló por carrera de migración en esquema aislado recién creado (ambiental); segunda 63/63.
+Juez: subagente Devin (subagent_explore) con contexto fresco sobre el diff actualizado de 6 archivos (incluye DestroyRef/takeUntilDestroyed en travesia.ts:45,533,559). Funciones movidas verificadas idénticas a master.

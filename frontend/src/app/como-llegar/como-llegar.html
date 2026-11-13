@@ -115,7 +115,7 @@
                   @if (paso.servicio; as servicio) {
                     <p class="dato-fuente">
                       <span>{{ confianza(servicio) }}</span>
-                      <span>Fuente: {{ horaFuente(servicio) }}</span>
+                      <span>Fuente: {{ servicio.fuente }}</span>
                     </p>
                   }
                   @if (paso.traslado; as traslado) {

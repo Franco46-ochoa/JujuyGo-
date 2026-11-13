@@ -1,0 +1,7 @@
+ frontend/src/app/catalogo.service.ts          |   6 +-
+ frontend/src/app/como-llegar/como-llegar.html |   2 +-
+ frontend/src/app/como-llegar/como-llegar.ts   | 122 +++-----------------------
+ frontend/src/app/como-llegar/urbano-ruteo.ts  |  89 ++++++++++++++++++-
+ frontend/src/app/travesia/travesia.ts         |   9 +-
+ frontend/src/app/urbano.service.ts            |  14 +--
+ 6 files changed, 107 insertions(+), 135 deletions(-)

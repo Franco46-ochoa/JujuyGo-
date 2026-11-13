@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, shareReplay } from 'rxjs';
 import { environment } from '../environments/environment';
@@ -6,7 +6,6 @@ import {
   UrbanoDetalleLinea,
   UrbanoFlota,
   UrbanoLineas,
-  UrbanoParadasCercanas,
   UrbanoRed,
 } from './urbano.types';
 
@@ -35,16 +34,5 @@ export class UrbanoService {
 
   getFlota(): Observable<UrbanoFlota> {
     return this.http.get<UrbanoFlota>(`${this.apiUrl}/urbano/flota`);
-  }
-
-  getParadasCercanas(lat: number, lng: number, radioM = 600): Observable<UrbanoParadasCercanas> {
-    const params = new HttpParams()
-      .set('lat', lat)
-      .set('lng', lng)
-      .set('radio_m', radioM);
-    return this.http.get<UrbanoParadasCercanas>(
-      `${this.apiUrl}/urbano/paradas-cercanas`,
-      { params },
-    );
   }
 }
