@@ -58,7 +58,7 @@ Nada — etapa 2 cerrada el 2026-11-13.
 - Imágenes: variantes derivadas del nombre en el frontend; DB intacta; JPG como fallback.
 - Juez: `subagent_explore` con contexto fresco por slice; push único al final de la tanda.
 
-## Etapa 3 — Rediseño (BLOQUEADA)
+## Etapa 3 — Rediseño (EN CURSO: specs escritos, pendiente de lanzamiento)
 
 - Los dos prototipos originales vivían en una sesión de Devin Cloud que **expiró y no se puede revivir** ("too old"; preview 401). Se reconstruyeron el 2026-11-13 y quedaron públicos en GitHub Pages (branch `gh-pages`, sin tocar master):
   - Índice: https://franco46-ochoa.github.io/JujuyGo-/
@@ -76,9 +76,18 @@ Nada — etapa 2 cerrada el 2026-11-13.
     - La caminata cruce↔pueblo (~2 km banquina) quedó como plan B con remis, NO como recomendación — pedido explícito de Franco hasta verificar el recorrido peatonal.
     - Banda home: servicios reales (07:00 Evelia directo, 08:30 Panamericano→Humahuaca, 11:20 Evelia directo).
   - Hornocal: traslado local etiquetado "sin horario fijo / verificar regreso".
-- **Pendiente de validación de mundo real** (no resoluble con el dataset): condiciones/safety del sendero cruce↔pueblo; existencia real y horarios de los traslados compartidos a Hornocal (el dataset solo cubre colectivos de línea); vigencia actual del horario publicado.
-- **Falta**: aprobación final de Franco de los prototipos corregidos → recién ahí se escriben los specs de rediseño.
-- Nada de implementación de rediseño hasta esa aprobación.
+- **Pendiente de validación de mundo real** (no resoluble con el dataset; Franco pidió mantenerla viva cuando el prototipo pase a código): condiciones/safety del sendero cruce↔pueblo; existencia real y horarios de los traslados compartidos a Hornocal (el dataset solo cubre colectivos de línea); vigencia actual del horario publicado.
+- **APROBACIÓN DE FRANCO (2026-11-13)**: dirección conceptual y visual aprobada para ambos prototipos → se autorizaron los specs de etapa 3, sin ampliar alcance por iniciativa propia. Condiciones que quedan escritas dentro de los specs:
+  - Datos demostrativos nunca como garantía funcional — todo sale de la API validada.
+  - Hornocal conserva "sin horario fijo" + "verificar regreso".
+  - Purmamarca usa la parada del pueblo cuando el servicio "por Purmamarca" corresponde.
+  - La caminata por banquina nunca como opción recomendada (plan B con remis).
+  - Horarios desde la fuente autorizada + nota de vigencia.
+- **Specs escritos** (`specs/`, pendientes de lanzamiento):
+  - `36-home-rediseno.spec.md` — home corto: hero → zonas → banda operativa (endpoint real `/transporte/proximos` + badges de confianza) → imperdibles → pausa → footer.
+  - `37-travesia-timeline.spec.md` — plan por día: timeline con horas, badges por `confianza` real, foto por lugar, mapa Leaflet por día con fitBounds. Depende del 36 por las clases de badge.
+  - `38-yapas-inline.spec.md` — yapas insertadas dentro del timeline con línea "Cierra porque…" compuesta de datos reales (nunca genérica). Depende del 37.
+- **Siguiente paso**: lanzar la ola (36 y 37 son casi paralelizables — comparten solo clases de badge; 38 detrás del 37). `./slices lanzar <id>` por Orca/Copilot según `slices.conf`.
 
 ## Lo que no se toca (transversal)
 
