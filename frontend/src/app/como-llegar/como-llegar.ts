@@ -10,7 +10,6 @@ import {
   UrbanoColectivo,
   UrbanoDetalleLinea,
   UrbanoLinea,
-  UrbanoParada,
   UrbanoRed,
 } from '../urbano.types';
 import { UrbanoService } from '../urbano.service';
@@ -23,7 +22,16 @@ import {
   ServicioTransporte,
   TrasladoLocal,
 } from './como-llegar.types';
-import { buscarCombinacionesUrbanas, type UrbanoCombinacion } from './urbano-ruteo';
+import {
+  buscarCombinacionesUrbanas,
+  buscarLineasCandidatas,
+  coordenadasValidas,
+  distanciaMetros,
+  nombreLinea,
+  paradasCercanas,
+  type UrbanoCombinacion,
+  type UrbanoLineaCandidata,
+} from './urbano-ruteo';
 
 interface PasoRelato {
   titulo: string;
@@ -39,39 +47,6 @@ const ORIGENES_BASE: OpcionOrigen[] = [
 
 // Bbox urbano aproximado de San Salvador; evita ofrecer esta red para tramos RN9.
 const BBOX_URBANO_SSJ = { minLat: -24.30, maxLat: -24.15, minLng: -65.35, maxLng: -65.20 };
-const RADIO_PARADA_METROS = 600;
-const RADIO_TIERRA_METROS = 6_371_000;
-
-interface ParadaConDistancia {
-  parada: UrbanoParada;
-  distanciaM: number;
-}
-
-interface LineaCandidata {
-  linea: UrbanoLinea;
-  ascenso: ParadaConDistancia;
-  descenso: ParadaConDistancia;
-  direccion: string;
-}
-
-interface ParadaCercana {
-  linea: UrbanoLinea;
-  parada: ParadaConDistancia;
-}
-
-function distanciaMetros(
-  lat1: number,
-  lng1: number,
-  lat2: number,
-  lng2: number,
-): number {
-  const radians = (degrees: number) => degrees * Math.PI / 180;
-  const deltaLat = radians(lat2 - lat1);
-  const deltaLng = radians(lng2 - lng1);
-  const a = Math.sin(deltaLat / 2) ** 2
-    + Math.cos(radians(lat1)) * Math.cos(radians(lat2)) * Math.sin(deltaLng / 2) ** 2;
-  return RADIO_TIERRA_METROS * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
 
 function puntoValido(
   punto: { lat: number | null; lng: number | null },
@@ -80,81 +55,10 @@ function puntoValido(
     coordenadasValidas(punto.lat, punto.lng);
 }
 
-function coordenadasValidas(lat: number, lng: number): boolean {
-  return Number.isFinite(lat) && lat >= -90 && lat <= 90 &&
-    Number.isFinite(lng) && lng >= -180 && lng <= 180;
-}
-
 function dentroDelAreaUrbana(punto: { lat: number | null; lng: number | null }): boolean {
   return puntoValido(punto) &&
     punto.lat >= BBOX_URBANO_SSJ.minLat && punto.lat <= BBOX_URBANO_SSJ.maxLat &&
     punto.lng >= BBOX_URBANO_SSJ.minLng && punto.lng <= BBOX_URBANO_SSJ.maxLng;
-}
-
-function nombreLinea(linea: UrbanoLinea): string {
-  return String(linea.number ?? linea.name ?? linea.id);
-}
-
-function buscarLineasCandidatas(
-  red: UrbanoRed,
-  origen: { lat: number; lng: number },
-  destino: { lat: number; lng: number },
-): LineaCandidata[] {
-  return red.lines.flatMap(linea => {
-    const sentidos = new Map<string, UrbanoParada[]>();
-    for (const parada of linea.stops ?? []) {
-      if (!coordenadasValidas(parada.lat, parada.lng)) continue;
-      const sentido = parada.direction ?? '';
-      sentidos.set(sentido, [...(sentidos.get(sentido) ?? []), parada]);
-    }
-
-    const candidatas: LineaCandidata[] = [];
-    for (const [direccion, paradasSentido] of sentidos) {
-      const ascensos = paradasSentido.map(parada => ({
-        parada,
-        distanciaM: distanciaMetros(origen.lat, origen.lng, parada.lat, parada.lng),
-      })).filter(item => item.distanciaM <= RADIO_PARADA_METROS);
-      const descensos = paradasSentido.map(parada => ({
-        parada,
-        distanciaM: distanciaMetros(destino.lat, destino.lng, parada.lat, parada.lng),
-      })).filter(item => item.distanciaM <= RADIO_PARADA_METROS);
-
-      for (const ascenso of ascensos) {
-        for (const descenso of descensos) {
-          if (ascenso.parada.id === descenso.parada.id) continue;
-          if (typeof ascenso.parada.order === 'number' &&
-            typeof descenso.parada.order === 'number' &&
-            ascenso.parada.order >= descenso.parada.order) continue;
-          candidatas.push({ linea, ascenso, descenso, direccion });
-        }
-      }
-    }
-    candidatas.sort((a, b) =>
-      a.ascenso.distanciaM + a.descenso.distanciaM -
-      b.ascenso.distanciaM - b.descenso.distanciaM,
-    );
-    return candidatas.slice(0, 1);
-  }).sort((a, b) =>
-    a.ascenso.distanciaM + a.descenso.distanciaM -
-    b.ascenso.distanciaM - b.descenso.distanciaM,
-  );
-}
-
-function paradasCercanas(
-  red: UrbanoRed,
-  origen: { lat: number; lng: number },
-): ParadaCercana[] {
-  return red.lines.flatMap(linea => (linea.stops ?? [])
-    .filter(parada => coordenadasValidas(parada.lat, parada.lng))
-    .map(parada => ({
-      linea,
-      parada: {
-        parada,
-        distanciaM: distanciaMetros(origen.lat, origen.lng, parada.lat, parada.lng),
-      },
-    })))
-    .sort((a, b) => a.parada.distanciaM - b.parada.distanciaM)
-    .slice(0, 3);
 }
 
 @Component({
@@ -463,7 +367,7 @@ export class ComoLlegarPage {
     });
   }
 
-  private cargarDetalleUrbano(candidata: LineaCandidata, solicitud: number): void {
+  private cargarDetalleUrbano(candidata: UrbanoLineaCandidata, solicitud: number): void {
     this.urbanoService.getLinea(candidata.linea.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -597,10 +501,6 @@ export class ComoLlegarPage {
       case 'tiempo-real': return 'Tiempo real';
       default: return servicio.confianza;
     }
-  }
-
-  protected horaFuente(servicio: ServicioTransporte): string {
-    return servicio.fuente;
   }
 
   protected etiquetaGrupo(grupo: OpcionOrigen): string {

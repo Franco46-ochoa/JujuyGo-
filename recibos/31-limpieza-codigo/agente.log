@@ -1,0 +1,3 @@
+kimi version 2.5.1
+error: failed to run prompt: provider.auth_error: Your current subscription does not have access to Kimi Code right now. Upgrade your plan to keep coding with Kimi Code: https://www.kimi.com/code/#pricing
+See log: C:\Users\Elect\.kimi-code\logs\kimi-code.log

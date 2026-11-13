@@ -11,6 +11,18 @@ export interface UrbanoParadaConDistancia {
   distanciaM: number;
 }
 
+export interface UrbanoLineaCandidata {
+  linea: UrbanoLinea;
+  ascenso: UrbanoParadaConDistancia;
+  descenso: UrbanoParadaConDistancia;
+  direccion: string;
+}
+
+export interface UrbanoParadaCercana {
+  linea: UrbanoLinea;
+  parada: UrbanoParadaConDistancia;
+}
+
 export interface UrbanoCombinacion {
   lineaA: UrbanoLinea;
   direccionA: string;
@@ -23,12 +35,12 @@ export interface UrbanoCombinacion {
   distanciaTotalCaminadaM: number;
 }
 
-function coordenadasValidas(lat: number, lng: number): boolean {
+export function coordenadasValidas(lat: number, lng: number): boolean {
   return Number.isFinite(lat) && lat >= -90 && lat <= 90 &&
     Number.isFinite(lng) && lng >= -180 && lng <= 180;
 }
 
-function distanciaMetros(
+export function distanciaMetros(
   lat1: number,
   lng1: number,
   lat2: number,
@@ -142,4 +154,77 @@ export function buscarCombinacionesUrbanas(
   return [...mejorPorPar.values()]
     .sort((a, b) => a.distanciaTotalCaminadaM - b.distanciaTotalCaminadaM)
     .slice(0, Math.floor(limite));
+}
+
+const RADIO_PARADA_METROS = 600;
+
+export function nombreLinea(linea: UrbanoLinea): string {
+  return String(linea.number ?? linea.name ?? linea.id);
+}
+
+/**
+ * Mejor candidata de línea directa por sentido: exige ascenso y descenso a
+ * <=600 m del origen/destino y orden de paradas ascendente cuando existe.
+ */
+export function buscarLineasCandidatas(
+  red: UrbanoRed,
+  origen: { lat: number; lng: number },
+  destino: { lat: number; lng: number },
+): UrbanoLineaCandidata[] {
+  return red.lines.flatMap(linea => {
+    const sentidos = new Map<string, UrbanoParada[]>();
+    for (const parada of linea.stops ?? []) {
+      if (!coordenadasValidas(parada.lat, parada.lng)) continue;
+      const sentido = parada.direction ?? '';
+      sentidos.set(sentido, [...(sentidos.get(sentido) ?? []), parada]);
+    }
+
+    const candidatas: UrbanoLineaCandidata[] = [];
+    for (const [direccion, paradasSentido] of sentidos) {
+      const ascensos = paradasSentido.map(parada => ({
+        parada,
+        distanciaM: distanciaMetros(origen.lat, origen.lng, parada.lat, parada.lng),
+      })).filter(item => item.distanciaM <= RADIO_PARADA_METROS);
+      const descensos = paradasSentido.map(parada => ({
+        parada,
+        distanciaM: distanciaMetros(destino.lat, destino.lng, parada.lat, parada.lng),
+      })).filter(item => item.distanciaM <= RADIO_PARADA_METROS);
+
+      for (const ascenso of ascensos) {
+        for (const descenso of descensos) {
+          if (ascenso.parada.id === descenso.parada.id) continue;
+          if (typeof ascenso.parada.order === 'number' &&
+            typeof descenso.parada.order === 'number' &&
+            ascenso.parada.order >= descenso.parada.order) continue;
+          candidatas.push({ linea, ascenso, descenso, direccion });
+        }
+      }
+    }
+    candidatas.sort((a, b) =>
+      a.ascenso.distanciaM + a.descenso.distanciaM -
+      b.ascenso.distanciaM - b.descenso.distanciaM,
+    );
+    return candidatas.slice(0, 1);
+  }).sort((a, b) =>
+    a.ascenso.distanciaM + a.descenso.distanciaM -
+    b.ascenso.distanciaM - b.descenso.distanciaM,
+  );
+}
+
+/** Las 3 paradas publicadas más cercanas al origen, para el fallback honesto. */
+export function paradasCercanas(
+  red: UrbanoRed,
+  origen: { lat: number; lng: number },
+): UrbanoParadaCercana[] {
+  return red.lines.flatMap(linea => (linea.stops ?? [])
+    .filter(parada => coordenadasValidas(parada.lat, parada.lng))
+    .map(parada => ({
+      linea,
+      parada: {
+        parada,
+        distanciaM: distanciaMetros(origen.lat, origen.lng, parada.lat, parada.lng),
+      },
+    })))
+    .sort((a, b) => a.parada.distanciaM - b.parada.distanciaM)
+    .slice(0, 3);
 }

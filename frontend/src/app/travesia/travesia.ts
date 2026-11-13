@@ -1,5 +1,6 @@
 import { DecimalPipe, NgTemplateOutlet } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AuthService } from '../auth.service';
@@ -41,6 +42,7 @@ export class TravesiaPage {
   private readonly catalogo = inject(CatalogoService);
   private readonly travesia = inject(TravesiaService);
   private readonly travesiasGuardadas = inject(TravesiasGuardadasService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly lugares = signal<Lugar[]>([]);
   protected readonly contexto = signal<ContextoTravesia | null>(null);
@@ -528,7 +530,7 @@ export class TravesiaPage {
     this.errorTransporte.set('');
     this.validacion.set(null);
     this.transporte.set({});
-    this.travesia.validar(plan).subscribe({
+    this.travesia.validar(plan).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: resultado => {
         if (validacionId !== this.validacionId) return;
         this.validacion.set(resultado);
@@ -553,7 +555,8 @@ export class TravesiaPage {
       this.transporte.set({});
       return;
     }
-    forkJoin(consultas.map(consulta => consulta.observable)).subscribe({
+    forkJoin(consultas.map(consulta => consulta.observable))
+      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: respuestas => {
         if (validacionId !== this.validacionId) return;
         this.transporte.set(Object.fromEntries(respuestas.map((respuesta, indice) => [
