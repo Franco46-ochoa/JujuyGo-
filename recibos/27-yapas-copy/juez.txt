@@ -1,0 +1,3 @@
+CIERRA
+- Screenshots antes/después de la tarjeta de yapa: NO obtenidos (gap declarado en recibo por muerte del worker por cuota). Aceptable como gap documentado: el cambio es solo texto/etiquetas, los textos están cubiertos por assertions en travesia.spec.ts (líneas 272, 289) y el riesgo visual es bajo; queda como deuda de revisión, no bloquea.
+- Build final no reportado por el worker: riesgo bajo — el diff es TS/template con sintaxis Angular estándar, sin cambios de tipos ni contratos; la verificación externa de ./slices debe confirmar `npm run build`.

@@ -15,12 +15,20 @@ import {
   PlanTravesia,
   RespuestaProximos,
   ResultadoValidacion,
+  TipoYapa,
   TramoTravesia,
   YapaTravesia,
 } from './travesia.types';
 import { TravesiaService } from './travesia.service';
 import { generarYapas } from './travesia.yapas';
 import { TravesiaGuardada, TravesiasGuardadasService } from './travesias-guardadas.service';
+
+const ETIQUETA_YAPA: Record<TipoYapa, string> = {
+  localidad: 'Para seguir explorando',
+  zona: 'Misma zona',
+  rn9: 'Sobre la RN9',
+  aclimatacion: 'Para el cuerpo',
+};
 
 @Component({
   imports: [DecimalPipe, NgTemplateOutlet, RouterLink],
@@ -58,6 +66,7 @@ export class TravesiaPage {
   private readonly yapaPedidas = new Set<string>();
   protected readonly lugarPendientePorDia = signal<Record<number, string>>({});
   protected readonly errorTransporte = signal('');
+  protected readonly yapaExplicada = signal(false);
   protected readonly travesias = signal<TravesiaGuardada[]>([]);
   protected readonly cargandoTravesias = signal(false);
   protected readonly guardandoTravesia = signal(false);
@@ -291,6 +300,7 @@ export class TravesiaPage {
   }
 
   protected sumarYapa(diaIndex: number, yapa: YapaTravesia): void {
+    this.yapaExplicada.set(true);
     const actual = this.plan();
     const lugar = this.lugares().find(item => item.slug === yapa.lugar_sugerido_slug);
     if (!actual || !lugar) return;
@@ -319,6 +329,7 @@ export class TravesiaPage {
   }
 
   protected dejarYapa(yapa: YapaTravesia, diaIndex: number): void {
+    this.yapaExplicada.set(true);
     const fecha = this.plan()?.dias[diaIndex].fecha;
     if (!fecha) return;
     this.descartadas.update(actuales => [...actuales, `${fecha}:${yapa.lugar_sugerido_slug}`]);
@@ -499,6 +510,10 @@ export class TravesiaPage {
 
   protected etiquetaLlegada(value: Llegada): string {
     return { avion: 'Avión', terminal: 'Terminal', auto: 'Auto propio' }[value];
+  }
+
+  protected etiquetaYapa(tipo: TipoYapa): string {
+    return ETIQUETA_YAPA[tipo];
   }
 
   protected fechaLegible(fecha: string): string {

@@ -14,7 +14,7 @@
           </div>
         } @else {
           <button class="auth-entrar" type="button" (click)="entrarConGoogle()" [disabled]="!auth.configurado">Entrar con Google</button>
-          @if (!auth.configurado) { <span class="auth-nota">login no configurado</span> }
+          @if (!auth.configurado) { <span class="auth-nota">Guardar tu plan no está disponible en este momento</span> }
         }
       }
     </div>
@@ -191,7 +191,7 @@
             </button>
           } @else {
             <button class="boton-principal" type="button" (click)="entrarConGoogle()" [disabled]="!auth.configurado || validando()">
-              {{ auth.configurado ? 'Iniciá sesión para guardar' : 'login no configurado' }}
+              {{ auth.configurado ? 'Iniciá sesión para guardar' : 'Guardar tu plan no está disponible' }}
             </button>
           }
           @if (mensajeGuardado()) { <p class="guardado-mensaje" role="status">{{ mensajeGuardado() }}</p> }
@@ -237,7 +237,10 @@
               @if (yapaActual(); as sugerencia) {
                 @if (sugerencia.diaIndex === diaIndex) {
                   <aside class="yapa-card" aria-label="Yapa para este día">
-                    <p class="yapa-kicker">Tu yapa · {{ sugerencia.yapa.tipo }}</p>
+                    @if (!yapaExplicada()) {
+                      <p class="yapa-explica">La yapa es el extra que cierra tu día — sale de los horarios reales.</p>
+                    }
+                    <p class="yapa-kicker">Tu yapa · {{ etiquetaYapa(sugerencia.yapa.tipo) }}</p>
                     <p class="yapa-mensaje">{{ sugerencia.yapa.mensaje }}</p>
                     <div class="yapa-acciones">
                       <button class="boton-yapa-sumar" type="button" (click)="sumarYapa(diaIndex, sugerencia.yapa)">Sumar</button>
