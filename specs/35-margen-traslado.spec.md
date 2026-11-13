@@ -1,0 +1,157 @@
+# Slice 35 — Margen de traslado entre colectivo y visita
+
+**Depende de:** 32 (mergeado en `8e8929c`). Corre en paralelo con 33 (no
+comparten archivos).
+
+**Fuente:** bug encontrado al verificar producción el 13-nov. El plan real
+deja 10 minutos entre la llegada a Purmamarca Cruce (08:50, estimada) y la
+visita al Cerro de los Siete Colores (09:00), con 3 km de traslado local en
+el medio. Decisión de Franco: **15 min de margen base + 30 min extra si el
+lugar tiene acceso local**. El margen vive en **un solo lugar**: si mañana
+hay que ajustarlo, se cambia una vez.
+
+## Causa raíz (verificada en el código)
+
+- **Validador** (`backend/src/itinerario/validar.js`):
+  - `validarTramo` usa `hasta = evento.hora` sin margen.
+  - `buscarServicio` elige el colectivo que llega **más tarde** antes de esa
+    hora. Para una visita a las 09:00 elige el que llega a las 08:50.
+  - Después de la visita, el próximo tramo y el regreso salen desde el fin
+    exacto de la visita (`horaDisponible`), sin tiempo para volver a la
+    parada.
+- **Generador** (`frontend/src/app/travesia/travesia.model.ts`, `crearPlan`):
+  - Calcula con el **primer** servicio desde las 07:00 y le suma 30 min fijos
+    (`llegada + 30`).
+  - `finEvento = hora + 150`, que en la práctica es 120 de visita + 30.
+  - El validador después elige otro colectivo, así que generador y validador
+    no razonan igual.
+- **Yapas** (`frontend/src/app/travesia/travesia.yapas.ts:152`): proponen
+  `hora_sugerida = llegada + 30` fijo.
+- `ACCESOS_LOCALES` (`validar.js:16-19`) ya identifica Purmamarca Cruce y el
+  Hornocal, pero solo se usa para el texto `acceso_local`.
+
+## Diseño (decidido)
+
+**Fuente única en el backend:** archivo nuevo
+`backend/src/itinerario/margenes.js`, con
+`MARGEN_BASE_MINUTOS = 15`, `MARGEN_ACCESO_LOCAL_MINUTOS = 30` y
+`margenDeLugar(lugar)`:
+- Devuelve `15`.
+- Devuelve `15 + 30` si `resolverParadaLugar(lugar).accesoLocal` existe, es
+  decir si el slug del lugar o el de su parada está en `ACCESOS_LOCALES`.
+- Para que no haya import circular, mover `ACCESOS_LOCALES` a `margenes.js`
+  y que `validar.js` lo importe.
+
+**El frontend recibe los valores por la API.** `GET /api/travesia/contexto`
+agrega:
+```json
+"margenes": { "base_minutos": 15, "acceso_local_minutos": 30, "accesos_locales": ["purmamarca-cruce", "serrania-del-hornocal"] }
+```
+- `accesos_locales` son las claves de `ACCESOS_LOCALES`: pueden ser slugs de
+  lugar o de parada.
+- En el frontend, `ContextoTravesia` (`travesia.types.ts`) suma
+  `margenes: MargenesTravesia`.
+- `travesia.model.ts` exporta
+  `margenDeLugar(lugar: Lugar, margenes: MargenesTravesia): number`, con la
+  misma regla: base, más acceso local si `lugar.slug` o
+  `paradaSlugDeLugar(lugar)` está en `accesos_locales`.
+- En el frontend no queda ningún número de margen escrito a mano.
+
+**Validador** (`validar.js`). Sea `m = margenDeLugar(lugar)`:
+- Tramo de visita: `hasta = evento.hora − m`. Si queda antes de `desde`,
+  `buscarServicio` ya devuelve `no-llega-a-tiempo` con el mensaje actual.
+- Al terminar la visita: `horaDisponible = fin de la visita + m`, el tiempo
+  de volver a la parada. Esto vale para el próximo tramo, para el regreso y
+  para el chequeo de `eventos-superpuestos`.
+- Si `fin + m` pasa de 23:59, se mantiene el tope y el conflicto actual
+  `visita-excede-dia`.
+
+**Generador** (`crearPlan`). Con `m = margenDeLugar(lugar, contexto.margenes)`:
+- Con servicio: `hora = max(horaDefault, llegada + m)`.
+- Misma parada, sin servicio: `hora = max(horaDefault, finEvento)`.
+- `finEvento = hora + duracion_minutos + m`, con la duración real del evento
+  (hoy 120) en lugar del 150 fijo.
+- Sin `contexto`, el comportamiento sin horarios queda igual.
+
+**Yapas** (`travesia.yapas.ts`): `hora_sugerida = llegada + margenDeLugar(lugar sugerido, contexto.margenes)`.
+`generarYapas` ya recibe el `contexto` completo, así que no hace falta
+tocar `travesia.ts`.
+
+## Alcance de archivos
+
+- `backend/src/itinerario/margenes.js` (nuevo)
+- `backend/src/itinerario/validar.js`
+- `backend/src/routes/travesia.js`
+- Tests de backend: `backend/test/itinerario.test.js` y
+  `backend/test/travesia.test.js`
+- `frontend/src/app/travesia/travesia.types.ts`
+- `frontend/src/app/travesia/travesia.model.ts`
+- `frontend/src/app/travesia/travesia.yapas.ts`
+- Sus specs: `travesia.model*.spec.ts` y `travesia.yapas.spec.ts`; si no hay
+  spec del modelo, crearlo.
+- Fixtures de `ContextoTravesia` en otros specs (por ejemplo
+  `travesia.spec.ts`), **solo** para agregar el campo `margenes` si el tipo
+  lo exige. Declararlo en el recibo, porque 33 también edita
+  `travesia.spec.ts`: el segundo en mergear rebasa.
+
+**No tocar:** `travesia.ts`, `travesia.html`, horarios y datos de
+seed/migraciones, el texto de `acceso_local`, ni la elección "más tarde"
+de `buscarServicio`: con el margen correcto deja de ser un problema.
+
+## Tests exigidos (escribir primero y ver que fallan en master)
+
+### Backend, `itinerario.test.js`
+1. Visita a `cerro-siete-colores` a las 09:00 cuando el único servicio llega
+   a `purmamarca-cruce` a las 08:50: conflicto `no-llega-a-tiempo`. Con un
+   servicio que llega a las 08:15: tramo encontrado (09:00 − 45 = 08:15, el
+   borde inclusive).
+2. Margen base: visita en Tilcara a las 09:00; un servicio que llega a las
+   08:50 da conflicto y uno que llega a las 08:45 da OK.
+3. Regreso: la última visita a Purmamarca termina a las 16:00; un servicio de
+   regreso que sale a las 16:30 no se elige y uno que sale a las 16:45 sí
+   (16:00 + 45).
+4. Dos visitas seguidas en la misma parada sin acceso local: si la segunda
+   empieza antes de `fin de la primera + 15`, da `eventos-superpuestos`.
+
+### Backend, `travesia.test.js`
+- `GET /api/travesia/contexto` incluye
+  `margenes: { base_minutos: 15, acceso_local_minutos: 30 }` y
+  `accesos_locales` contiene `purmamarca-cruce`.
+
+### Frontend
+- `crearPlan` con contexto: la visita al Cerro queda a `llegada + 45` o
+  después, y una visita en Tilcara a `llegada + 15` o después.
+- `margenDeLugar` devuelve 15, o 45 para Cerro de los Siete Colores y para
+  Hornocal.
+- La yapa sugerida a un lugar con acceso local tiene `hora_sugerida = llegada + 45`.
+- Los tests existentes que codificaban el margen de 0 o el +30 fijo se
+  actualizan. Listar cada uno en el recibo, con su valor viejo y el nuevo.
+
+## Criterios de aceptación
+
+- [ ] Pasan los chequeos de `slices.conf`: front, back y raíz.
+- [ ] `npm run build` OK.
+- [ ] `git diff --check` limpio. `git diff --stat` muestra solo el alcance,
+      más `recibos/`.
+- [ ] `grep` en `frontend/src` muestra que no queda ningún `+ 30`, `150` ni
+      número de margen literal en `travesia.model.ts` y `travesia.yapas.ts`.
+- [ ] Caso real, con el backend local sobre la base de test sembrada:
+  - Armar con `crearPlan` el plan Terminal → Cerro de los Siete Colores, con
+    el mismo `contexto` que devuelve `/api/travesia/contexto`, y validarlo con
+    `POST /api/travesia/validar`.
+  - Ese plan ya no tiene una llegada a 10 min de la visita.
+  - El tramo elegido llega a la hora de la visita − 45 o antes.
+  - El plan cierra sin conflictos nuevos, o el recibo explica cada conflicto
+    que aparezca.
+  - Pegar en el recibo el JSON de entrada y el de salida.
+- [ ] Recibo con: la causa raíz, dónde vive el margen y la lista de tests
+      cambiados.
+
+## Fuera de alcance
+
+- Tiempos de traslado específicos por lugar (por ejemplo un Hornocal más
+  largo). Se tunea después cambiando `margenes.js`.
+- Cambiar la UI que muestra el margen o el traslado (rediseño).
+- `travesia.ts:316` (`horaFinal + 30` como fallback cuando una yapa no
+  trae `hora_sugerida`): queda como está y se declara como gap. Es
+  `travesia.ts` y lo edita el 33.
