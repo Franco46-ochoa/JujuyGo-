@@ -276,11 +276,15 @@ export class YapaMapaComponent implements AfterViewInit, OnDestroy {
     }
 
     for (const punto of this.rutaPuntos()) {
+      // Las etiquetas intermedias (cruces y paradas) anclan debajo de su
+      // coordenada para no tapar otros pins; origen y destino quedan
+      // centrados (el pico ::before del pin apunta hacia arriba, al punto).
+      const iconAnchor: [number, number] = punto.tipo === 'origen' || punto.tipo === 'destino' ? [76, 22] : [76, -26];
       const icon = L.divIcon({
         className: 'yapa-route-div-icon',
         html: `<span class="yapa-route-pin yapa-route-${this.routePointClass(punto.tipo)}">${this.escapeHtml(punto.nombre)}</span>`,
         iconSize: [152, 44],
-        iconAnchor: [76, 22],
+        iconAnchor,
       });
 
       L.marker([punto.lat, punto.lng], {

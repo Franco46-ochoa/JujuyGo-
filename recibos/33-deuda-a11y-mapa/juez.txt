@@ -1,0 +1,30 @@
+CIERRA
+
+Verificado por juez independiente (subagent_explore, contexto fresco):
+
+- Contraste hover: yapa-mapa.component.css:63-80 usa #8F3A21 en los 4 selectores del
+  media (hover:hover); WCAG propio = 5.86:1 sobre #EDE2D0, coincide con medicion.json
+  (5.86/5.86/15.09 → 3/3 >=4.5). Borde sigue en --oxido; estados no-hover y
+  .yapa-pin-active intactos. (.leaflet-bar a:hover: el !important de la regla base
+  manda como antes — 15.09:1 medido; .yapa-popup-link comparte declaración.)
+- Pin del cruce: yapa-mapa.component.ts:282 — origen/destino [76,22], resto [76,-26],
+  solo en renderRoute (alcance permitido). Pico ::before en .yapa-route-crossing y
+  .yapa-route-stop apunta hacia arriba. Extensión a parada aceptada: medición mostró
+  solape real Tilcara/Pucará y el spec exige segunda ruta sin intersecciones; mismo
+  patrón, mismos archivos, declarado en recibo. medicion.json: intersecciones [],
+  recortado false, dentroDelMapa true en las 4 combinaciones; consola [].
+- Borrado inline: window.confirm eliminado (0 refs); role=group + aria-label;
+  "¿Borrar «…»?"; Sí/No; foco inicial en No vía afterNextRender con injector; Escape
+  cancela y restaura foco a [data-borrar-travesia]; Sí borra con mismo manejo de
+  error; signal garantiza una sola confirmación; sin setTimeout ni fugas; >=44px y
+  :focus-visible heredados.
+- Tests: travesia.spec.ts:383-438 cubre aparición+foco No+role/aria, Escape con
+  restauración de foco, No sin borrar, Sí con borrar('trav-1') y tarjeta removida.
+- Tipos: ZonaDetalle y UrbanoParadasCercanas eliminados; 0 referencias en frontend/src.
+- Alcance: archivos del recibo coinciden 1:1 con el spec + recibos/ (diff-stat a
+  confirmar por el coordinador, el juez no tiene shell).
+- Gaps aceptables: sin antes/ (kero-audit 4.15:1 y pendientes-auditoria-visual.md
+  documentan el antes); sin travesia-confirmacion.png (requiere sesión; tests cubren
+  el flujo); chequeos corridos por el coordinador (build OK, tests 69/69).
+- Deuda fuera de alcance: choques de etiquetas según zoom (excluido por el spec) y
+  role=listitem de .map-place-card (deuda del 29).
