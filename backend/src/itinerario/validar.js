@@ -1,3 +1,5 @@
+import { ACCESOS_LOCALES, margenDeLugar } from './margenes.js';
+
 const PARADAS_POR_LOCALIDAD = new Map([
   ['abra pampa', 'abra-pampa'],
   ['humahuaca', 'humahuaca'],
@@ -11,11 +13,6 @@ const PARADAS_POR_LOCALIDAD = new Map([
   ['uquia', 'uquia'],
   ['volcán', 'volcan'],
   ['volcan', 'volcan'],
-]);
-
-const ACCESOS_LOCALES = new Map([
-  ['purmamarca-cruce', 'El colectivo deja en Purmamarca Cruce, a 3 km del pueblo; coordiná un traslado local.'],
-  ['serrania-del-hornocal', 'El colectivo llega a Humahuaca; el Hornocal requiere un traslado local de altura.'],
 ]);
 
 export function resolverParadaLugar(lugar) {
@@ -188,6 +185,7 @@ export function validarItinerario(plan, { lugares, horarios }) {
       }
 
       const conflictoInicial = conflictos.length;
+      const margen = margenDeLugar(lugar, parada);
       if (horaEvento === null) {
         conflictos.push(crearConflicto({
           dia: numeroDia,
@@ -209,7 +207,7 @@ export function validarItinerario(plan, { lugares, horarios }) {
             origen: paradaActual,
             destino: parada.slug,
             desde: horaDisponible,
-            hasta: evento.hora,
+            hasta: horaDesdeMinutos(Math.max(0, horaEvento - margen)),
             horarios,
             conflictos,
             tramos,
@@ -221,8 +219,8 @@ export function validarItinerario(plan, { lugares, horarios }) {
         const duracion = Number.isInteger(evento.duracion_minutos) && evento.duracion_minutos >= 0
           ? evento.duracion_minutos
           : 90;
-        const finEvento = horaEvento + duracion;
-        if (finEvento >= 24 * 60) {
+        const finConMargen = horaEvento + duracion + margen;
+        if (finConMargen >= 24 * 60) {
           conflictos.push(crearConflicto({
             dia: numeroDia,
             tipo: 'visita-excede-dia',
@@ -231,7 +229,7 @@ export function validarItinerario(plan, { lugares, horarios }) {
           }));
           horaDisponible = '23:59';
         } else {
-          horaDisponible = horaDesdeMinutos(finEvento);
+          horaDisponible = horaDesdeMinutos(finConMargen);
         }
       }
 

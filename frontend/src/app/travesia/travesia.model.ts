@@ -5,6 +5,7 @@ import {
   HorarioTravesia,
   Interes,
   Llegada,
+  MargenesTravesia,
   ParadaTravesia,
   PlanTravesia,
 } from './travesia.types';
@@ -46,6 +47,21 @@ const PALABRAS_POR_INTERES: Record<Interes, RegExp> = {
 export function paradaSlugDeLugar(lugar: Lugar): string | null {
   const localidad = lugar.datos_json.localidad?.trim().toLocaleLowerCase('es');
   return localidad ? PARADAS_POR_LOCALIDAD[localidad] ?? null : null;
+}
+
+/**
+ * Minutos de margen entre la llegada del colectivo y la visita (y entre el
+ * fin de la visita y la vuelta a la parada). Replica la regla del backend:
+ * base, más el extra cuando el slug del lugar o el de su parada está en
+ * `margenes.accesos_locales`. Los valores llegan por /api/travesia/contexto.
+ */
+export function margenDeLugar(lugar: Lugar, margenes: MargenesTravesia): number {
+  const paradaSlug = paradaSlugDeLugar(lugar);
+  const conAccesoLocal = margenes.accesos_locales.includes(lugar.slug)
+    || (paradaSlug !== null && margenes.accesos_locales.includes(paradaSlug));
+  return conAccesoLocal
+    ? margenes.base_minutos + margenes.acceso_local_minutos
+    : margenes.base_minutos;
 }
 
 function fechasEntre(inicio: string, fin: string): string[] {
@@ -211,6 +227,8 @@ export function crearPlan(
 
     grupo.forEach((lugar, eventoIndex) => {
       const paradaActual = paradaSlugDeLugar(lugar);
+      const duracion = 120;
+      const margen = contexto ? margenDeLugar(lugar, contexto.margenes) : 0;
       let hora = eventoIndex === 0 ? '09:00' : '14:00';
       if (contexto && paradaActual) {
         const servicio = primerServicio(
@@ -222,9 +240,9 @@ export function crearPlan(
         );
         if (servicio) {
           const llegadaMinutos = minutos(servicio.llegada) ?? 0;
-          hora = horaDesdeMinutos(Math.max(llegadaMinutos + 30, minutos(hora) ?? 0));
+          hora = horaDesdeMinutos(Math.max(llegadaMinutos + margen, minutos(hora) ?? 0));
         } else if (paradaActual === paradaAnterior) {
-          hora = horaDesdeMinutos(Math.max(minutos(hora) ?? 0, (minutos(finEvento) ?? 0) + 30));
+          hora = horaDesdeMinutos(Math.max(minutos(hora) ?? 0, minutos(finEvento) ?? 0));
         }
       }
 
@@ -233,10 +251,10 @@ export function crearPlan(
         lugar: lugar.slug,
         nombre: lugar.nombre,
         hora,
-        duracion_minutos: 120,
+        duracion_minutos: duracion,
       });
       paradaAnterior = paradaActual ?? paradaAnterior;
-      finEvento = horaDesdeMinutos((minutos(hora) ?? 0) + 150);
+      finEvento = horaDesdeMinutos((minutos(hora) ?? 0) + duracion + margen);
     });
 
     const ultimaParada = grupo.at(-1) ? paradaSlugDeLugar(grupo.at(-1)!) : null;

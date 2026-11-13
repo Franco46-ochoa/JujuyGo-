@@ -21,6 +21,7 @@ const contexto: ContextoTravesia = {
     { slug: 'volcan', nombre: 'Volcán', orden_en_linea: 2 },
     { slug: 'purmamarca-cruce', nombre: 'Purmamarca Cruce', orden_en_linea: 3 },
   ],
+  margenes: { base_minutos: 15, acceso_local_minutos: 30, accesos_locales: ['purmamarca-cruce', 'serrania-del-hornocal'] },
   horarios: [{
     servicio_id: 'rn9-ida',
     direccion: 'ida',
@@ -39,7 +40,7 @@ describe('generarYapas', () => {
       tipo: 'rn9',
       lugar_sugerido_slug: 'cerro-siete-colores',
       accion: 'agregar-al-dia',
-      hora_sugerida: '12:05',
+      hora_sugerida: '12:20',
     });
     expect(sugerencias[0].mensaje).toContain('Purmamarca Cruce');
     expect(sugerencias[0].mensaje).toContain('3 km');

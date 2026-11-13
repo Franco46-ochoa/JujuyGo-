@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { horaAMinutos, resolverParadaLugar, validarItinerario } from '../itinerario/validar.js';
+import { ACCESOS_LOCALES, MARGEN_ACCESO_LOCAL_MINUTOS, MARGEN_BASE_MINUTOS } from '../itinerario/margenes.js';
 
 const asyncHandler = handler => (req, res, next) => {
   Promise.resolve(handler(req, res, next)).catch(next);
@@ -66,6 +67,11 @@ export function createTravesiaRouter(pool) {
     res.json({
       paradas: paradasResult.rows,
       horarios: agruparHorarios(horariosResult.rows),
+      margenes: {
+        base_minutos: MARGEN_BASE_MINUTOS,
+        acceso_local_minutos: MARGEN_ACCESO_LOCAL_MINUTOS,
+        accesos_locales: [...ACCESOS_LOCALES.keys()],
+      },
     });
   }));
 

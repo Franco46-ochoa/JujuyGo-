@@ -100,9 +100,16 @@ export interface HorarioTravesia {
   paradas: HorarioParadaTravesia[];
 }
 
+export interface MargenesTravesia {
+  base_minutos: number;
+  acceso_local_minutos: number;
+  accesos_locales: string[];
+}
+
 export interface ContextoTravesia {
   paradas: ParadaTravesia[];
   horarios: HorarioTravesia[];
+  margenes: MargenesTravesia;
 }
 
 export type TipoYapa = 'localidad' | 'zona' | 'rn9' | 'aclimatacion';

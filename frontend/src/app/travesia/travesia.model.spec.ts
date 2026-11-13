@@ -1,5 +1,5 @@
 import { Lugar } from '../catalogo.types';
-import { crearPlan } from './travesia.model';
+import { crearPlan, margenDeLugar } from './travesia.model';
 import { ContextoTravesia } from './travesia.types';
 
 const lugares: Lugar[] = [
@@ -23,6 +23,8 @@ const lugares: Lugar[] = [
   },
 ];
 
+const margenes = { base_minutos: 15, acceso_local_minutos: 30, accesos_locales: ['purmamarca-cruce', 'serrania-del-hornocal'] };
+
 const contexto: ContextoTravesia = {
   paradas: [
     { slug: 'terminal-jjs', nombre: 'Terminal de San Salvador', orden_en_linea: 1 },
@@ -33,6 +35,7 @@ const contexto: ContextoTravesia = {
     { slug: 'abra-pampa', nombre: 'Abra Pampa', orden_en_linea: 9 },
   ],
   horarios: [],
+  margenes,
 };
 
 describe('crearPlan', () => {
@@ -94,5 +97,81 @@ describe('crearPlan', () => {
     ];
 
     expect(crearPlan('2026-11-07', '2026-11-07', 'terminal', ['paisaje'], lugaresMixtos, ['hornocal', 'abra'], contexto)).toBeNull();
+  });
+});
+
+describe('margenDeLugar', () => {
+  const cerro: Lugar = {
+    id: 4, nombre: 'Cerro de los Siete Colores', slug: 'cerro-siete-colores', lat: 0, lng: 0,
+    altitud_m: 2324, descripcion: 'Paleta de colores.', como_llegar: '',
+    mejor_epoca: '', foto: null, zona: 'Quebrada', zona_slug: 'quebrada',
+    datos_json: { localidad: 'Purmamarca' },
+  };
+  const hornocal: Lugar = {
+    ...cerro,
+    slug: 'serrania-del-hornocal',
+    nombre: 'Serranía del Hornocal',
+    datos_json: { localidad: 'Humahuaca' },
+  };
+
+  it('returns the base margin for a place without local access', () => {
+    expect(margenDeLugar(lugares[1], margenes)).toBe(15);
+  });
+
+  it('adds the local-access margin when the stop requires a transfer', () => {
+    expect(margenDeLugar(cerro, margenes)).toBe(45);
+  });
+
+  it('adds the local-access margin when the place slug itself is listed', () => {
+    expect(margenDeLugar(hornocal, margenes)).toBe(45);
+  });
+});
+
+describe('crearPlan con horarios', () => {
+  const cerro: Lugar = {
+    id: 4, nombre: 'Cerro de los Siete Colores', slug: 'cerro-siete-colores', lat: 0, lng: 0,
+    altitud_m: 2324, descripcion: 'Paleta de colores.', como_llegar: '',
+    mejor_epoca: '', foto: null, zona: 'Quebrada', zona_slug: 'quebrada',
+    datos_json: { localidad: 'Purmamarca' },
+  };
+
+  const contextoConHorarios = (paradaDestino: string, ordenDestino: number, llegada: string): ContextoTravesia => ({
+    ...contexto,
+    horarios: [{
+      servicio_id: 'rn9-ida',
+      direccion: 'ida',
+      paradas: [
+        { slug: 'terminal-jjs', orden_en_linea: 1, hora: '07:30', confianza: 'publicado', fuente: 'seed' },
+        { slug: paradaDestino, orden_en_linea: ordenDestino, hora: llegada, confianza: 'publicado', fuente: 'seed' },
+      ],
+    }],
+  });
+
+  it('leaves the local-access margin between the bus arrival and the visit', () => {
+    const plan = crearPlan(
+      '2026-11-07',
+      '2026-11-07',
+      'terminal',
+      ['paisaje'],
+      [cerro],
+      ['cerro-siete-colores'],
+      contextoConHorarios('purmamarca-cruce', 3, '08:50'),
+    );
+
+    expect(plan?.dias[0].eventos[0].hora).toBe('09:35');
+  });
+
+  it('leaves only the base margin for a stop without local access', () => {
+    const plan = crearPlan(
+      '2026-11-07',
+      '2026-11-07',
+      'terminal',
+      ['cultura'],
+      [lugares[1]],
+      ['pucara'],
+      contextoConHorarios('tilcara', 5, '08:50'),
+    );
+
+    expect(plan?.dias[0].eventos[0].hora).toBe('09:05');
   });
 });

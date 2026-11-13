@@ -1,0 +1,26 @@
+CIERRA
+
+Verificado por juez independiente (subagent_explore, contexto fresco):
+
+- Fuente única: backend/src/itinerario/margenes.js concentra MARGEN_BASE_MINUTOS=15,
+  MARGEN_ACCESO_LOCAL_MINUTOS=30, ACCESOS_LOCALES (movido desde validar.js, textos
+  idénticos a master) y margenDeLugar. Sin literales de margen duplicados en
+  validar.js, routes/travesia.js, travesia.model.ts ni travesia.yapas.ts.
+- API: routes/travesia.js:70-74 devuelve margenes { base_minutos, acceso_local_minutos,
+  accesos_locales } con las keys de ACCESOS_LOCALES.
+- Validador: hasta = horaEvento - margen (clamp 00:00); horaDisponible = fin + duracion
+  + margen alimenta tramo siguiente, regreso y eventos-superpuestos; visita-excede-dia
+  dispara con fin + margen >= 24*60. Sin márgenes duplicados ida/vuelta.
+- Generador: usa contexto.margenes vía helper propio; sin contexto el comportamiento
+  observable es idéntico a master. Helper frontend replica la regla del backend.
+- Yapas: hora_sugerida = llegada + margenDeLugar(candidato, contexto.margenes).
+- Tests: los 4 casos exigidos de itinerario.test.js + test de /contexto; frontend
+  3 tests de margenDeLugar, 2 de crearPlan, yapa 12:20. Tests preexistentes intactos.
+- Solapamiento: travesia.spec.ts difiere de master SOLO en el campo margenes de los
+  5 mocks getContexto (declarado en el spec).
+- Caso real: llegada 08:10 (<= 09:00-45) en vez de 08:50, plan validado sin conflictos.
+
+Notas menores (no bloquean): firma margenDeLugar(lugar, parada) vs (lugar) del spec —
+desviación declarada y justificada (evita ciclo de imports); slug 'purmamarca-cruce'
+hardcodeado en el texto de acceso local de yapas (preexistente, fuera de alcance);
+mensaje no-llega-a-tiempo muestra el "hasta" ya con margen (consecuencia del diseño).

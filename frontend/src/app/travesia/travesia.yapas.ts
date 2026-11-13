@@ -1,5 +1,5 @@
 import { Lugar } from '../catalogo.types';
-import { paradaSlugDeLugar } from './travesia.model';
+import { margenDeLugar, paradaSlugDeLugar } from './travesia.model';
 import {
   ContextoTravesia,
   HorarioTravesia,
@@ -149,7 +149,7 @@ export function generarYapas(
         tipo,
         candidato,
         `${detalleServicio} conecta ${paradaSalida} con ${paradaLlegada} a las ${servicio.hora}; podés sumar ${candidato.nombre}.${accesoLocal}${advertenciaAltitud}`,
-        sumarMinutos(servicio.hora, 30),
+        sumarMinutos(servicio.hora, margenDeLugar(candidato, contexto.margenes)),
       ),
     });
   }

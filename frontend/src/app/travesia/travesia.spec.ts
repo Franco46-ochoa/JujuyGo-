@@ -63,7 +63,7 @@ describe('TravesiaPage', () => {
           provide: TravesiaService,
           useValue: {
             validar: validate,
-            getContexto: () => of({ paradas: [], horarios: [] }),
+            getContexto: () => of({ paradas: [], horarios: [], margenes: { base_minutos: 15, acceso_local_minutos: 30, accesos_locales: [] } }),
             redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({
               origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
@@ -141,7 +141,7 @@ describe('TravesiaPage', () => {
               tramos: [],
               conflictos: [],
             }),
-            getContexto: () => of({ paradas: [], horarios: [] }),
+            getContexto: () => of({ paradas: [], horarios: [], margenes: { base_minutos: 15, acceso_local_minutos: 30, accesos_locales: [] } }),
             redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({
               origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
@@ -199,7 +199,7 @@ describe('TravesiaPage', () => {
           provide: TravesiaService,
           useValue: {
             validar: vi.fn(),
-            getContexto: () => of({ paradas: [], horarios: [] }),
+            getContexto: () => of({ paradas: [], horarios: [], margenes: { base_minutos: 15, acceso_local_minutos: 30, accesos_locales: [] } }),
             redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({
               origen: { slug: 'terminal-jjs', nombre: 'Terminal' },
@@ -254,7 +254,7 @@ describe('TravesiaPage', () => {
           provide: TravesiaService,
           useValue: {
             validar: (plan: PlanTravesia) => of({ plan, validado: true, tramos: [], conflictos: [] }),
-            getContexto: () => of({ paradas: [], horarios: [] }),
+            getContexto: () => of({ paradas: [], horarios: [], margenes: { base_minutos: 15, acceso_local_minutos: 30, accesos_locales: [] } }),
             redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({ origen: {}, destino: {}, direccion: 'ida', servicios: [] }),
           },
@@ -345,7 +345,7 @@ describe('TravesiaPage', () => {
           provide: TravesiaService,
           useValue: {
             validar,
-            getContexto: () => of({ paradas: [], horarios: [] }),
+            getContexto: () => of({ paradas: [], horarios: [], margenes: { base_minutos: 15, acceso_local_minutos: 30, accesos_locales: [] } }),
             redactarYapas: () => of({ mensajes: [] }),
             getProximos: () => of({ origen: {}, destino: {}, direccion: 'ida', servicios: [] }),
           },
