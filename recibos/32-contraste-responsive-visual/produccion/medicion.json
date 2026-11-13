@@ -1,0 +1,643 @@
+{
+  "base": "https://jujuygo-web.vercel.app",
+  "fecha": "2026-11-13T07:09:08.292Z",
+  "metodo": "Cálculo WCAG 2.x sobre colores pintados: color computado del texto (alfa × opacidad acumulada del elemento y ancestros) compuesto sobre la pila de background-color de los ancestros (lienzo blanco). Fondos con imagen/degradado se marcan y no se puntúan.",
+  "contraste": [
+    {
+      "ancho": 1440,
+      "fila": "boton-principal:disabled (paso 4, papel)",
+      "selector": ".acciones-lugares .boton-principal:disabled",
+      "minimo": 4.5,
+      "ratio": 5.31,
+      "texto": "#6b5f58",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Armar con mis lugares\n→",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "\"Sumar un lugar al día\" (label, activo)",
+      "selector": ".dia-activo .agregar-lugar label > span",
+      "minimo": 4.5,
+      "ratio": 6.67,
+      "texto": "#d8d6cc",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Sumar un lugar al día",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "\"Elegí del catálogo\" (select, activo)",
+      "selector": ".dia-activo .agregar-lugar select",
+      "minimo": 4.5,
+      "ratio": 8.35,
+      "texto": "#f4ede3",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Elegí del catálogo\nGarganta del Diablo ·",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "borde select (activo, ≥3:1)",
+      "selector": ".dia-activo .agregar-lugar select",
+      "minimo": 3,
+      "ratio": 4.15,
+      "texto": "#a5aca1",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Elegí del catálogo\nGarganta del Diablo ·",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "separador .agregar-lugar (activo, ≥3:1)",
+      "selector": ".dia-activo .agregar-lugar",
+      "minimo": 3,
+      "ratio": 3.76,
+      "texto": "#9ba499",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Sumar un lugar al día\nElegí del catálogo",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "\"Agregar\" deshabilitado (activo)",
+      "selector": ".dia-activo .agregar-lugar button:disabled",
+      "minimo": 4.5,
+      "ratio": 6.02,
+      "texto": "#ccccc2",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Agregar",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "\"Agregar\" deshabilitado (papel)",
+      "selector": ".dia:not(.dia-activo) .agregar-lugar button:disabled",
+      "minimo": 4.5,
+      "ratio": 5.31,
+      "texto": "#6b5f58",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Agregar",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": ".yapa-kicker (activo)",
+      "selector": "[data-medir=medir-yapa-activo]",
+      "minimo": 4.5,
+      "ratio": 4.97,
+      "texto": "#e8c98f",
+      "fondo": "#425644",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "TU YAPA · MISMA ZONA",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": ".yapa-kicker (papel)",
+      "selector": "[data-medir=medir-yapa-papel]",
+      "minimo": 4.5,
+      "ratio": 5.05,
+      "texto": "#7a5a1e",
+      "fondo": "#eee4d3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "TU YAPA · MISMA ZONA",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "label \"Sumar un lugar\" (papel)",
+      "selector": ".dia:not(.dia-activo) .agregar-lugar label > span",
+      "minimo": 4.5,
+      "ratio": 5.31,
+      "texto": "#6b5f58",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Sumar un lugar al día",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "select (papel)",
+      "selector": ".dia:not(.dia-activo) .agregar-lugar select",
+      "minimo": 4.5,
+      "ratio": 15.09,
+      "texto": "#241610",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Elegí del catálogo\nGarganta del Diablo ·",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "outline foco select (activo, ≥3:1)",
+      "selector": ".dia-activo .agregar-lugar select",
+      "minimo": 3,
+      "ratio": 8.35,
+      "texto": "#f4ede3",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Elegí del catálogo\nGarganta del Diablo ·",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "\"Agregar\" habilitado (activo)",
+      "selector": ".dia-activo .agregar-lugar button:not(:disabled)",
+      "minimo": 4.5,
+      "ratio": 8.35,
+      "texto": "#f4ede3",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Agregar",
+      "cumple": true
+    },
+    {
+      "ancho": 1440,
+      "fila": "\"Agregar\" habilitado (papel)",
+      "selector": ".dia:not(.dia-activo) .agregar-lugar button:not(:disabled)",
+      "minimo": 4.5,
+      "ratio": 15.09,
+      "texto": "#241610",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Agregar",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "boton-principal:disabled (paso 4, papel)",
+      "selector": ".acciones-lugares .boton-principal:disabled",
+      "minimo": 4.5,
+      "ratio": 5.31,
+      "texto": "#6b5f58",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Armar con mis lugares\n→",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "\"Sumar un lugar al día\" (label, activo)",
+      "selector": ".dia-activo .agregar-lugar label > span",
+      "minimo": 4.5,
+      "ratio": 6.67,
+      "texto": "#d8d6cc",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Sumar un lugar al día",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "\"Elegí del catálogo\" (select, activo)",
+      "selector": ".dia-activo .agregar-lugar select",
+      "minimo": 4.5,
+      "ratio": 8.35,
+      "texto": "#f4ede3",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Elegí del catálogo\nGarganta del Diablo ·",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "borde select (activo, ≥3:1)",
+      "selector": ".dia-activo .agregar-lugar select",
+      "minimo": 3,
+      "ratio": 4.15,
+      "texto": "#a5aca1",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Elegí del catálogo\nGarganta del Diablo ·",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "separador .agregar-lugar (activo, ≥3:1)",
+      "selector": ".dia-activo .agregar-lugar",
+      "minimo": 3,
+      "ratio": 3.76,
+      "texto": "#9ba499",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Sumar un lugar al día\nElegí del catálogo",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "\"Agregar\" deshabilitado (activo)",
+      "selector": ".dia-activo .agregar-lugar button:disabled",
+      "minimo": 4.5,
+      "ratio": 6.02,
+      "texto": "#ccccc2",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Agregar",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "\"Agregar\" deshabilitado (papel)",
+      "selector": ".dia:not(.dia-activo) .agregar-lugar button:disabled",
+      "minimo": 4.5,
+      "ratio": 5.31,
+      "texto": "#6b5f58",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Agregar",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": ".yapa-kicker (activo)",
+      "selector": "[data-medir=medir-yapa-activo]",
+      "minimo": 4.5,
+      "ratio": 4.97,
+      "texto": "#e8c98f",
+      "fondo": "#425644",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "TU YAPA · MISMA ZONA",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": ".yapa-kicker (papel)",
+      "selector": "[data-medir=medir-yapa-papel]",
+      "minimo": 4.5,
+      "ratio": 5.05,
+      "texto": "#7a5a1e",
+      "fondo": "#eee4d3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "TU YAPA · MISMA ZONA",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "label \"Sumar un lugar\" (papel)",
+      "selector": ".dia:not(.dia-activo) .agregar-lugar label > span",
+      "minimo": 4.5,
+      "ratio": 5.31,
+      "texto": "#6b5f58",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Sumar un lugar al día",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "select (papel)",
+      "selector": ".dia:not(.dia-activo) .agregar-lugar select",
+      "minimo": 4.5,
+      "ratio": 15.09,
+      "texto": "#241610",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Elegí del catálogo\nGarganta del Diablo ·",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "outline foco select (activo, ≥3:1)",
+      "selector": ".dia-activo .agregar-lugar select",
+      "minimo": 3,
+      "ratio": 8.35,
+      "texto": "#f4ede3",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Elegí del catálogo\nGarganta del Diablo ·",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "\"Agregar\" habilitado (activo)",
+      "selector": ".dia-activo .agregar-lugar button:not(:disabled)",
+      "minimo": 4.5,
+      "ratio": 8.35,
+      "texto": "#f4ede3",
+      "fondo": "#2e4a3e",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Agregar",
+      "cumple": true
+    },
+    {
+      "ancho": 390,
+      "fila": "\"Agregar\" habilitado (papel)",
+      "selector": ".dia:not(.dia-activo) .agregar-lugar button:not(:disabled)",
+      "minimo": 4.5,
+      "ratio": 15.09,
+      "texto": "#241610",
+      "fondo": "#f4ede3",
+      "opacidad": 1,
+      "conImagen": false,
+      "contenido": "Agregar",
+      "cumple": true
+    }
+  ],
+  "zonas": {
+    "390": {
+      "tarjetas": [
+        {
+          "nombre": "Quebrada",
+          "rect": {
+            "x": 20,
+            "y": -228,
+            "w": 351,
+            "h": 390
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        },
+        {
+          "nombre": "Puna",
+          "rect": {
+            "x": 20,
+            "y": 176,
+            "w": 351,
+            "h": 275
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        },
+        {
+          "nombre": "Yungas",
+          "rect": {
+            "x": 20,
+            "y": 466,
+            "w": 351,
+            "h": 327
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        },
+        {
+          "nombre": "Valles",
+          "rect": {
+            "x": 20,
+            "y": 806,
+            "w": 351,
+            "h": 265
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        }
+      ],
+      "ok": true
+    },
+    "768": {
+      "tarjetas": [
+        {
+          "nombre": "Quebrada",
+          "rect": {
+            "x": 38,
+            "y": 37,
+            "w": 334,
+            "h": 951
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        },
+        {
+          "nombre": "Puna",
+          "rect": {
+            "x": 396,
+            "y": 37,
+            "w": 334,
+            "h": 304
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        },
+        {
+          "nombre": "Yungas",
+          "rect": {
+            "x": 396,
+            "y": 364,
+            "w": 334,
+            "h": 335
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        },
+        {
+          "nombre": "Valles",
+          "rect": {
+            "x": 396,
+            "y": 723,
+            "w": 334,
+            "h": 265
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        }
+      ],
+      "ok": true
+    },
+    "1440": {
+      "tarjetas": [
+        {
+          "nombre": "Quebrada",
+          "rect": {
+            "x": 152,
+            "y": -15,
+            "w": 687,
+            "h": 931
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        },
+        {
+          "nombre": "Puna",
+          "rect": {
+            "x": 863,
+            "y": -15,
+            "w": 425,
+            "h": 301
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        },
+        {
+          "nombre": "Yungas",
+          "rect": {
+            "x": 863,
+            "y": 310,
+            "w": 425,
+            "h": 301
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        },
+        {
+          "nombre": "Valles",
+          "rect": {
+            "x": 863,
+            "y": 635,
+            "w": 425,
+            "h": 281
+          },
+          "textoFuera": [],
+          "flechaPisa": [],
+          "ok": true
+        }
+      ],
+      "ok": true
+    }
+  },
+  "pins": {
+    "desktop": [
+      {
+        "texto": "Terminal de Ómnibus SS.Jujuy",
+        "ancho": 223,
+        "alto": 36,
+        "scrollWidth": 221,
+        "clientWidth": 221,
+        "recortado": false,
+        "dentroDelMapa": true,
+        "desvioCentroPx": 0,
+        "ok": true
+      },
+      {
+        "texto": "Purmamarca Cruce",
+        "ancho": 150,
+        "alto": 36,
+        "scrollWidth": 148,
+        "clientWidth": 148,
+        "recortado": false,
+        "dentroDelMapa": true,
+        "desvioCentroPx": 0,
+        "ok": true
+      },
+      {
+        "texto": "Cerro de los Siete Colores",
+        "ancho": 193,
+        "alto": 36,
+        "scrollWidth": 191,
+        "clientWidth": 191,
+        "recortado": false,
+        "dentroDelMapa": true,
+        "desvioCentroPx": 0,
+        "ok": true
+      }
+    ],
+    "mobile": [
+      {
+        "texto": "Terminal de Ómnibus SS.Jujuy",
+        "ancho": 223,
+        "alto": 36,
+        "scrollWidth": 221,
+        "clientWidth": 221,
+        "recortado": false,
+        "dentroDelMapa": true,
+        "desvioCentroPx": 0,
+        "ok": true
+      },
+      {
+        "texto": "Purmamarca Cruce",
+        "ancho": 150,
+        "alto": 36,
+        "scrollWidth": 148,
+        "clientWidth": 148,
+        "recortado": false,
+        "dentroDelMapa": true,
+        "desvioCentroPx": 0,
+        "ok": true
+      },
+      {
+        "texto": "Cerro de los Siete Colores",
+        "ancho": 193,
+        "alto": 36,
+        "scrollWidth": 191,
+        "clientWidth": 191,
+        "recortado": false,
+        "dentroDelMapa": true,
+        "desvioCentroPx": 0,
+        "ok": true
+      }
+    ]
+  },
+  "scrollHorizontal": {
+    "travesia-desktop": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "hay": false
+    },
+    "travesia-mobile": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hay": false
+    },
+    "home-1440": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "hay": false
+    },
+    "home-768": {
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "hay": false
+    },
+    "home-390": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hay": false
+    },
+    "como-llegar-desktop": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "hay": false
+    },
+    "como-llegar-mobile": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hay": false
+    }
+  },
+  "consola": [],
+  "yapaReal": "activo"
+}
