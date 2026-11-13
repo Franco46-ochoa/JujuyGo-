@@ -90,6 +90,10 @@
 
 /* Pins del relato de viaje */
 :host ::ng-deep .yapa-route-div-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
   background: transparent !important;
   border: none !important;
 }
@@ -98,18 +102,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: none;
   min-height: 36px;
-  max-width: 152px;
+  max-width: min(260px, 70vw);
   padding: 7px 12px;
-  overflow: hidden;
   border: 1px solid var(--tinta);
   border-radius: 999px;
   background: var(--papel);
   color: var(--tinta);
   box-shadow: 0 2px 8px rgba(36, 22, 16, 0.18);
   font: 600 14px/1.2 var(--sans, "Archivo", sans-serif);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  text-align: center;
+  white-space: normal;
   touch-action: manipulation;
 }
 

@@ -1,0 +1,4 @@
+CIERRA
+ninguno
+Juez: subagente Devin (subagent_explore) con contexto fresco. Verificó alcance (solo travesia-plan.css, .zone-* en home.css, .yapa-route-* en yapa-mapa.component.css), criterios 1.1–1.6, 2.1–2.6, 3.1–3.4 contra despues/medicion.json (seis filas: 6.67, 8.35, 6.02, 5.31, 4.97, 5.05), método de medición y clon de yapa válidos, recibo honesto.
+Observaciones menores del juez (hover pisado por travesia-motion.css) resueltas después con 4 reglas en travesia-plan.css; hover medido en hover.txt (5.31 / 6.02 / 5.31 / 4.87). medir-32 re-corrido: 28/28, zonas y pins OK, sin scroll, 0 errores.
