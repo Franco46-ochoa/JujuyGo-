@@ -23,6 +23,7 @@ export class LugarDetallePage {
   protected readonly lugaresContexto = signal<Lugar[]>([]);
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal('');
+  protected readonly esErrorDeRed = signal(false);
   private readonly slug = signal('');
 
   constructor() {
@@ -67,6 +68,7 @@ export class LugarDetallePage {
   private cargar(slug: string): Observable<Lugar | null> {
     this.loading.set(true);
     this.errorMessage.set('');
+    this.esErrorDeRed.set(false);
     if (!slug) {
       this.errorMessage.set('No encontramos este lugar.');
       return of(null);
@@ -74,6 +76,7 @@ export class LugarDetallePage {
 
     return this.catalogo.getLugar(slug).pipe(
       catchError((error: HttpErrorResponse) => {
+        this.esErrorDeRed.set(error.status !== 404);
         this.errorMessage.set(error.status === 404
           ? 'No encontramos este lugar en el catálogo.'
           : 'No pudimos cargar el lugar. Revisá tu conexión e intentá de nuevo.');

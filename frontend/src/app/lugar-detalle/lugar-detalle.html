@@ -1,7 +1,7 @@
 <main class="detail-page">
   <nav class="detail-nav" aria-label="Navegación">
     <a class="detail-brand" routerLink="/">Yapa<span></span></a>
-    <a class="back-link" routerLink="/">← Volver a explorar</a>
+    <a class="back-link" routerLink="/" fragment="zonas">← Volver a explorar</a>
   </nav>
 
   @if (loading()) {
@@ -10,7 +10,7 @@
     <div class="detail-status detail-error" role="alert">
       <h1 class="serif">No pudimos mostrar el lugar</h1>
       <p>{{ errorMessage() }}</p>
-      @if (errorMessage().includes('conexión')) {
+      @if (esErrorDeRed()) {
         <button type="button" (click)="reintentar()">Reintentar</button>
       }
     </div>

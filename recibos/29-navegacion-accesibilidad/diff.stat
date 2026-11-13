@@ -1,0 +1,12 @@
+ frontend/src/app/app.config.ts                    |  7 +++--
+ frontend/src/app/app.routes.ts                    |  6 +++-
+ frontend/src/app/como-llegar/como-llegar.css      |  1 +
+ frontend/src/app/como-llegar/como-llegar.html     |  7 ++++-
+ frontend/src/app/home/home.html                   | 10 +++++--
+ frontend/src/app/home/home.ts                     | 31 +++++++++++++++++--
+ frontend/src/app/lugar-detalle/lugar-detalle.html |  4 +--
+ frontend/src/app/lugar-detalle/lugar-detalle.ts   |  3 ++
+ frontend/src/app/no-encontrado/no-encontrado.css  | 36 +++++++++++++++++++++++
+ frontend/src/app/no-encontrado/no-encontrado.html |  9 ++++++
+ frontend/src/app/no-encontrado/no-encontrado.ts   | 10 +++++++
+ 11 files changed, 113 insertions(+), 11 deletions(-)
