@@ -66,12 +66,17 @@ Nada — etapa 2 cerrada el 2026-11-13.
   - Plan con timeline/fotos/mapa por día: https://franco46-ochoa.github.io/JujuyGo-/travesia.html
 - Fuente local de los prototipos: `C:\Users\Elect\orca\projects\prototipos-jujuygo\` (repo propio, branch gh-pages). Sistema visual fiel a `docs/design.md` + home.css; fotos y coordenadas reales del catálogo.
 - **Revisión de Franco (2026-11-13)**: dirección visual y conceptual APROBADA en ambos (conservar como base, no empezar de cero). Copy favorito: "Los lugares que se sueñan, los colectivos que sí pasan y el día que cierra."
-- **Correcciones ya aplicadas** a los prototipos (commit gh-pages `4854d67`):
+- **Correcciones ya aplicadas** a los prototipos (commits gh-pages `4854d67` + `84d46dc`):
   - Duración: "tres días, dos noches" (antes decía 3 noches).
-  - Purmamarca: la vuelta al cruce RN9 (~2 km a pie o remis) ahora está contada como traslado, con margen — ya no "vuelve caminando en 30 min" suelto.
-  - Hornocal: traslado local etiquetado "sin horario fijo / verificar regreso", con plan B explícito.
   - Home: la banda de horarios subió — ahora va zonas → banda operativa → imperdibles (el diferencial aparece temprano).
-- **Pendiente de validación real** (datos demostrativos, no validados por backend): margen 30' a pie Tilcara↔cruce es realista/seguro; timing real del traslado a Hornocal y colectivo de vuelta 15:30. Hay que chequearlo con la fuente de horarios antes de convertir en spec.
+  - **Horarios re-alineados al dataset autorizado** (`backend/src/data/horario-quebrada.js`, 896 servicios):
+    - Regreso día 3: **15:10 Evelia → SSJ** (antes 15:30, que el dataset confirma que va a Perico — lo detectó Franco). Plan B: 15:50 Jama Bus, 16:15 Panamericano directo, 17:15.
+    - Día 1: 08:00 Santa Ana local por Purmamarca → Humahuaca, bajada Tilcara ~09:50 (antes "08:10 Panamericano" inexistente en dataset).
+    - Día 2: 08:40 Evelia → SSJ **local por Purmamarca entra al pueblo** — bajada en la parada del centro, no en el cruce. Vuelta: 14:40 Evelia → Humahuaca **desde el pueblo** (antes "14:20 Panamericano desde el cruce").
+    - La caminata cruce↔pueblo (~2 km banquina) quedó como plan B con remis, NO como recomendación — pedido explícito de Franco hasta verificar el recorrido peatonal.
+    - Banda home: servicios reales (07:00 Evelia directo, 08:30 Panamericano→Humahuaca, 11:20 Evelia directo).
+  - Hornocal: traslado local etiquetado "sin horario fijo / verificar regreso".
+- **Pendiente de validación de mundo real** (no resoluble con el dataset): condiciones/safety del sendero cruce↔pueblo; existencia real y horarios de los traslados compartidos a Hornocal (el dataset solo cubre colectivos de línea); vigencia actual del horario publicado.
 - **Falta**: aprobación final de Franco de los prototipos corregidos → recién ahí se escriben los specs de rediseño.
 - Nada de implementación de rediseño hasta esa aprobación.
 
