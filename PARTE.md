@@ -1,6 +1,6 @@
 # Parte — JujuyGo / Yapa
 
-Fecha: 2026-11-13 · master local: `1a09fda` · producción verificada por última vez: `8e8929c` (main-TQLREOEC.js)
+Fecha: 2026-11-13 · master: `75300bb` pusheado a origin · producción verificada: `75300bb` (main-FESCVGYX.js)
 
 Producto: itinerario operable sobre horarios reales + yapas que respetan el reloj del colectivo. Turistas sin auto. "Jujuy se descubre. Jujuy se recorre." MVP gratis, navegación abierta, login Google para generar/guardar/compartir travesías. Ruta piloto verificada: Terminal SS.Jujuy → Maimará → Tilcara → Humahuaca.
 
@@ -19,9 +19,16 @@ Todo mergeado y deployado. Qué quedó funcionando:
 
 Deuda que nació acá y ya está saldada en etapa 2: hover 4,15:1 del mapa (→33), pin del cruce tapado (→33), `window.confirm` (→33), márgenes de traslado (→35).
 
-## Etapa 2 — Corrección, a11y y rendimiento (slices 29–35): EN CURSO
+## Etapa 2 — Corrección, a11y y rendimiento (slices 29–35): CERRADA
 
-### Decidido y hecho (en master)
+Push único `8e8929c..75300bb` (33+35+34+docs). Verificación en producción con Chrome DevTools:
+
+- Home: H1 «Descubrí Jujuy. / El norte que te queda» (copy del 30 en prod), CTA «Armá tu travesía»; 1440 y 390.
+- Imágenes: todas con `srcset`/`sizes`, WebP servido (hero `purmamarca-1280.webp` a DPR 3, `-640.webp` a DPR 1); preload con `imagesrcset`/`imagesizes`, 1 sola petición de hero; lazy activo en thumbs.
+- Flujos: `/`, `/lugares/cerro-siete-colores` (hero eager `fetchpriority=high`), `/como-llegar`, `/travesia` (wizard + login Google) — todos renderizan.
+- Consola: **0 errores, 0 warnings**; **0 requests ≥400** en las 4 vistas.
+
+### Decidido y hecho (en master y producción)
 
 - **29** navegación/accesibilidad — merge `499fe04`.
 - **30** copy de home — `c7f8a47`; altura de Jujuy capital fuera del hero (no asociarla con la foto de Purmamarca).
@@ -33,7 +40,7 @@ Deuda que nació acá y ya está saldada en etapa 2: hover 4,15:1 del mapa (→3
 
 ### Falta para cerrar la etapa
 
-- [ ] Push único `origin master` (33+35+34, 7 commits) y verificación Vercel, incluida la validación en producción del copy del 30.
+Nada — etapa 2 cerrada el 2026-11-13.
 
 ### Deuda declarada que queda (futuros slices)
 
