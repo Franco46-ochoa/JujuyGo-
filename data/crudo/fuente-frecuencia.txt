@@ -1,0 +1,11 @@
+Extracto literal del bundle publico de https://horario-quebrada.netlify.app/ (capturado 2026-11-13).
+
+[chunk-I4CLWIEL.js] tipo de dia:
+getScheduleDayId(c){let u=c.getDay(),E=c.getFullYear(),P=String(c.getMonth()+1).padStart(2,"0"),b=String(c.getDate()).padStart(2,"0"),B=`${P}-${b}`,x=`${E}-${P}-${b}`;return this.holidayService.isHoliday(B,x)||u===0?5:u===6?4:2}static{this.\u0275fac=function(u
+
+[chunk-EIOVXHPX.js] filtro por frecuencia:
+Service.getScheduleDayId(I),le=(A,nt)=>{let W=new Set([1]);if(nt===2?W.add(2):nt===4?(W.add(3),W.add(4)):nt===5&&(W.add(3),W.add(5)),!W.has(A.frequency))return!1;let ct=this.southT
+
+Lectura: dia 2 = lunes a viernes no feriado; 4 = sabado no feriado; 5 = domingo o feriado.
+Frecuencias permitidas: dia 2 -> {1,2}; dia 4 -> {1,3,4}; dia 5 -> {1,3,5}.
+Por lo tanto: 1 todos los dias; 2 lunes a viernes no feriados; 3 sabados, domingos y feriados; 4 solo sabados; 5 domingos y feriados.

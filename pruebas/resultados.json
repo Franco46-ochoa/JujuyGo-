@@ -1,0 +1,110 @@
+{
+  "generado": "2026-11-14T04:33:05.396Z",
+  "resultados": [
+    {
+      "nombre": "D1 vista general",
+      "paso": true,
+      "detalle": "cards=3 marcadores=5 encimados=0"
+    },
+    {
+      "nombre": "D8 sin pares encimados (general desktop)",
+      "paso": true,
+      "detalle": "[]"
+    },
+    {
+      "nombre": "D2 día 2",
+      "paso": true,
+      "detalle": "pressed=false,true,false atenuados=8 activos=6 fuera=0"
+    },
+    {
+      "nombre": "D2-bis sin pares encimados (día 2)",
+      "paso": true,
+      "detalle": "[]"
+    },
+    {
+      "nombre": "D3 card→detalle→Escape",
+      "paso": true,
+      "detalle": "{\"sel\":{\"detalle\":true,\"sel\":1},\"foco\":{\"detalle\":true,\"activo\":\"item-d2-i1\"}}"
+    },
+    {
+      "nombre": "D9 detalle vs control zoom",
+      "paso": true,
+      "detalle": "{\"detTop\":172,\"zoomBottom\":156,\"cruza\":false}"
+    },
+    {
+      "nombre": "D4 marcador→card",
+      "paso": true,
+      "detalle": "{\"current\":\"true\",\"detalle\":true}"
+    },
+    {
+      "nombre": "D5 solo teclado",
+      "paso": true,
+      "detalle": "llego-selector=true"
+    },
+    {
+      "nombre": "D6 textos",
+      "paso": true,
+      "detalle": "{\"hornocalSinHorario\":true,\"hornocalVerificar\":true,\"purmamarcaSinCoords\":true,\"sinKm\":true,\"descartadoPerico\":true,\"leyenda\":true,\"estadoCondicional\":true,\"sinGarantiaSinCierra\":true,\"paletaSinImg\":true,\"sinCierraSuelto\":true,\"horasEnJson\":true,\"horasFuera\":[],\"horasFuera2\":[]}"
+    },
+    {
+      "nombre": "D7 sin errores",
+      "paso": true,
+      "detalle": "consola=[] requests=[] tilesFallidos=0"
+    },
+    {
+      "nombre": "D8-m sin pares encimados (general mobile)",
+      "paso": true,
+      "detalle": "[]"
+    },
+    {
+      "nombre": "M-a chip en contraida",
+      "paso": true,
+      "detalle": "{\"antes\":\"contraida\",\"estado\":\"contraida\",\"esDia2\":true}"
+    },
+    {
+      "nombre": "M-b botones extremos",
+      "paso": true,
+      "detalle": "{\"contraida\":{\"subir\":false,\"bajar\":true},\"expandida\":{\"estado\":\"expandida\",\"subir\":true,\"bajar\":false}}"
+    },
+    {
+      "nombre": "M1 botones hoja",
+      "paso": true,
+      "detalle": "contraida→media→expandida→media→contraida aria=false"
+    },
+    {
+      "nombre": "M2 arrastre asa",
+      "paso": true,
+      "detalle": "estado=expandida deltaMapa=0"
+    },
+    {
+      "nombre": "M3 scroll en hoja",
+      "paso": true,
+      "detalle": "scroll 83→516 deltaMapa=0"
+    },
+    {
+      "nombre": "M4 tap marcador",
+      "paso": true,
+      "detalle": "{\"estado\":\"media\",\"cardVisible\":true,\"mk\":{\"x\":181,\"y\":273,\"topEl\":\"\"}}"
+    },
+    {
+      "nombre": "M5 tap card→marcador visible",
+      "paso": true,
+      "detalle": "{\"sheetTop\":379.8125,\"markerBottom\":132,\"ok\":true}"
+    },
+    {
+      "nombre": "M6 marcadores sobre hoja",
+      "paso": true,
+      "detalle": "{\"contraida\":{\"n\":3,\"tapados\":0},\"media\":{\"n\":3,\"tapados\":0},\"expandida\":{\"n\":3,\"tapados\":3}}"
+    },
+    {
+      "nombre": "M7 reduced motion",
+      "paso": true,
+      "detalle": "transition-duration=0s"
+    },
+    {
+      "nombre": "M8 teclado",
+      "paso": true,
+      "detalle": "estado=expandida card=item-d3-i0 ultimo="
+    }
+  ]
+}

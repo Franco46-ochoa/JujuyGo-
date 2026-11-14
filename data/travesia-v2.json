@@ -1,0 +1,580 @@
+{
+  "meta": {
+    "generado": "2026-11-14T04:17:01.384Z",
+    "aviso": "Prototipo. Horarios tomados de los registros crudos del dataset autorizado y armados a mano en la forma del contrato. No es una travesía validada por el backend.",
+    "fuentes": {
+      "horarios": "https://horario-quebrada.netlify.app/ — Datos proporcionados por el titular de horario-quebrada.netlify.app con autorización expresa para uso en JujuyGo. (generado 2026-11-10T01:51:27.355Z)",
+      "nota_fuente": "Datos estáticos mantenidos manualmente por la fuente. hora_salida es el horario publicado; hora_llegada_estimada y precio son estimaciones calculadas por diccionarios de la fuente y deben re-verificarse antes de operaciones críticas.",
+      "duraciones": "Diccionario de tiempos de la fuente (backend/src/hq.js duracionEstimadaMinutos): siempre estimado",
+      "frecuencia": "Bundle público de la fuente (data/crudo/fuente-frecuencia.txt)",
+      "margenes": "backend/src/itinerario/margenes.js",
+      "coordenadas": "Producción /api/transporte/paradas y /api/lugares (data/crudo)"
+    },
+    "bloqueos": [
+      "Purmamarca pueblo no tiene parada ni coordenadas verificadas en la base: se muestra sin marcador.",
+      "No hay geometría verificada del recorrido de los colectivos: las líneas son conexiones esquemáticas.",
+      "Traslados a Hornocal: sin horario fijo en ninguna fuente.",
+      "Distancia cruce–pueblo de Purmamarca sin confirmar (2 vs 3 km): no se muestran km."
+    ],
+    "frecuencias": {
+      "1": "Todos los días",
+      "2": "Lunes a viernes (no feriados)",
+      "3": "Sábados, domingos y feriados",
+      "4": "Solo sábados",
+      "5": "Domingos y feriados"
+    }
+  },
+  "dias": [
+    {
+      "numero": 1,
+      "fecha": "2026-11-17",
+      "dia_semana": "martes",
+      "recorrido": [
+        "San Salvador de Jujuy",
+        "Tilcara"
+      ],
+      "noche": "Tilcara",
+      "foto": "tilcara.jpg",
+      "paradas": 1,
+      "rango": {
+        "desde": "07:00",
+        "hasta": "08:50",
+        "confianza_hasta": "estimado"
+      },
+      "estado": "cierra",
+      "estado_texto": "Cierra con los horarios cargados",
+      "items": [
+        {
+          "tipo": "tramo",
+          "servicio_id": "hq-0023",
+          "empresa": "Evelia",
+          "servicio": "Local por Purmamarca",
+          "destino_final": "Tilcara",
+          "desde": {
+            "id_dataset": 10,
+            "nombre": "San Salvador de Jujuy",
+            "slug_db": "terminal-jjs",
+            "lat": -24.2128,
+            "lng": -65.2891,
+            "coordenadas": "verificadas-en-base"
+          },
+          "hasta": {
+            "id_dataset": 21,
+            "nombre": "Tilcara",
+            "slug_db": "tilcara",
+            "lat": -23.5776,
+            "lng": -65.3934,
+            "coordenadas": "verificadas-en-base"
+          },
+          "salida": "07:00",
+          "salida_confianza": "publicado",
+          "salida_nota": null,
+          "llegada": "08:50",
+          "llegada_confianza": "estimado",
+          "duracion_min": 110,
+          "frecuencia": {
+            "codigo": 2,
+            "texto": "Lunes a viernes (no feriados)"
+          }
+        },
+        {
+          "tipo": "visita",
+          "lugar": {
+            "slug": "pucara-de-tilcara",
+            "nombre": "Pucará de Tilcara",
+            "localidad": "Tilcara",
+            "lat": -23.5895,
+            "lng": -65.4024,
+            "altitud_m": 2500,
+            "foto": "tilcara.jpg"
+          },
+          "hora": "09:05",
+          "hora_confianza": "estimado",
+          "margen_min": 15,
+          "duracion_min": 120,
+          "duracion_origen": "Duración por defecto del planificador (no es un dato del lugar)"
+        },
+        {
+          "tipo": "yapa",
+          "tipo_yapa": "localidad",
+          "lugar": {
+            "slug": "garganta-del-diablo-tilcara",
+            "nombre": "Garganta del Diablo",
+            "localidad": "Tilcara",
+            "lat": -23.5797,
+            "lng": -65.3782,
+            "altitud_m": 2900,
+            "foto": "garganta.jpg"
+          },
+          "mensaje": "La Garganta del Diablo también queda en Tilcara.",
+          "hora_sugerida": null,
+          "cierre": {
+            "estado": "sin-garantia",
+            "faltan": [
+              "Tiempo de acceso desde el pueblo (no está en los datos)",
+              "Duración de la visita"
+            ],
+            "texto": "Sin garantía de horario: no tenemos el tiempo de acceso ni la duración de la visita."
+          }
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "fecha": "2026-11-18",
+      "dia_semana": "miércoles",
+      "recorrido": [
+        "Tilcara",
+        "Purmamarca",
+        "Humahuaca"
+      ],
+      "noche": "Humahuaca",
+      "foto": "purmamarca.jpg",
+      "paradas": 1,
+      "rango": {
+        "desde": "08:40",
+        "hasta": "15:55",
+        "confianza_hasta": "estimado"
+      },
+      "estado": "cierra",
+      "estado_texto": "Cierra con los horarios cargados",
+      "items": [
+        {
+          "tipo": "tramo",
+          "servicio_id": "hq-0595",
+          "empresa": "Evelia",
+          "servicio": "Local por Purmamarca",
+          "destino_final": "San Salvador de Jujuy",
+          "desde": {
+            "id_dataset": 21,
+            "nombre": "Tilcara",
+            "slug_db": "tilcara",
+            "lat": -23.5776,
+            "lng": -65.3934,
+            "coordenadas": "verificadas-en-base"
+          },
+          "hasta": {
+            "id_dataset": 19,
+            "nombre": "Purmamarca Pueblo",
+            "slug_db": null,
+            "lat": null,
+            "lng": null,
+            "coordenadas": "sin-verificar"
+          },
+          "salida": "08:40",
+          "salida_confianza": "publicado",
+          "salida_nota": null,
+          "llegada": "09:10",
+          "llegada_confianza": "estimado",
+          "duracion_min": 30,
+          "frecuencia": {
+            "codigo": 2,
+            "texto": "Lunes a viernes (no feriados)"
+          }
+        },
+        {
+          "tipo": "visita",
+          "lugar": {
+            "slug": "cerro-siete-colores",
+            "nombre": "Cerro de los Siete Colores",
+            "localidad": "Purmamarca",
+            "lat": -23.7448,
+            "lng": -65.4995,
+            "altitud_m": 2324,
+            "foto": "purmamarca.jpg"
+          },
+          "hora": "09:25",
+          "hora_confianza": "estimado",
+          "margen_min": 15,
+          "duracion_min": 120,
+          "duracion_origen": "Duración por defecto del planificador (no es un dato del lugar)"
+        },
+        {
+          "tipo": "tramo",
+          "servicio_id": "hq-0538",
+          "empresa": "Evelia",
+          "servicio": "Local por Purmamarca",
+          "destino_final": "Humahuaca",
+          "desde": {
+            "id_dataset": 19,
+            "nombre": "Purmamarca Pueblo",
+            "slug_db": null,
+            "lat": null,
+            "lng": null,
+            "coordenadas": "sin-verificar"
+          },
+          "hasta": {
+            "id_dataset": 24,
+            "nombre": "Humahuaca",
+            "slug_db": "humahuaca",
+            "lat": -23.2056,
+            "lng": -65.3503,
+            "coordenadas": "verificadas-en-base"
+          },
+          "salida": "14:40",
+          "salida_confianza": "publicado",
+          "salida_nota": null,
+          "llegada": "15:55",
+          "llegada_confianza": "estimado",
+          "duracion_min": 75,
+          "frecuencia": {
+            "codigo": 2,
+            "texto": "Lunes a viernes (no feriados)"
+          }
+        },
+        {
+          "tipo": "yapa",
+          "tipo_yapa": "rn9",
+          "lugar": {
+            "slug": "paleta-del-pintor",
+            "nombre": "Paleta del Pintor",
+            "localidad": "Maimará",
+            "lat": -23.624,
+            "lng": -65.41,
+            "altitud_m": 2390,
+            "foto": null,
+            "foto_nota": "El catálogo no tiene foto propia de este lugar (repite la de Cerro de los Siete Colores)."
+          },
+          "mensaje": "Mirá la Paleta del Pintor desde la ventanilla al pasar por Maimará.",
+          "hora_sugerida": "15:00",
+          "cierre": {
+            "estado": "cierra",
+            "razones": [
+              "No te bajás: el 14:40 de Evelia pasa por Maimará ~15:00 (estimado)",
+              "La parada de Maimará queda frente a la Paleta del Pintor (notas de parada de la base)",
+              "No suma minutos ni cambia el servicio"
+            ]
+          }
+        },
+        {
+          "tipo": "yapa",
+          "tipo_yapa": "localidad",
+          "lugar": {
+            "slug": "monumento-independencia-humahuaca",
+            "nombre": "Monumento a los Héroes de la Independencia",
+            "localidad": "Humahuaca",
+            "lat": -23.2054,
+            "lng": -65.3508,
+            "altitud_m": 2939,
+            "foto": "humahuaca.jpg"
+          },
+          "mensaje": "El Monumento a los Héroes de la Independencia queda en Humahuaca, donde dormís.",
+          "hora_sugerida": "16:10",
+          "cierre": {
+            "estado": "cierra",
+            "razones": [
+              "Llegás a Humahuaca ~15:55 (estimado) + 15 min de margen = 16:10",
+              "Con una visita de 60 min (supuesto, no dato) terminás ~17:10",
+              "Dormís en Humahuaca: no dependés de otro colectivo hoy"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "numero": 3,
+      "fecha": "2026-11-19",
+      "dia_semana": "jueves",
+      "recorrido": [
+        "Humahuaca",
+        "Hornocal",
+        "San Salvador de Jujuy"
+      ],
+      "noche": null,
+      "foto": "hornocal.jpg",
+      "paradas": 1,
+      "rango": {
+        "desde": "15:10",
+        "hasta": "17:15",
+        "confianza_hasta": "estimado"
+      },
+      "estado": "condicional",
+      "estado_texto": "Cierra solo si volvés de Serranía del Hornocal antes de las 14:25",
+      "items": [
+        {
+          "tipo": "visita",
+          "lugar": {
+            "slug": "serrania-del-hornocal",
+            "nombre": "Serranía del Hornocal",
+            "localidad": "Humahuaca",
+            "lat": -23.205,
+            "lng": -65.181,
+            "altitud_m": 4350,
+            "foto": "hornocal.jpg"
+          },
+          "hora": null,
+          "hora_confianza": null,
+          "margen_min": 15,
+          "duracion_min": null,
+          "duracion_origen": "Sin dato: depende del traslado local",
+          "acceso_local": "El colectivo llega a Humahuaca; el Hornocal requiere un traslado local de altura.",
+          "badges": [
+            "local",
+            "sin-horario",
+            "verificar-regreso"
+          ],
+          "regreso_limite": "14:25",
+          "regreso_regla": "Volver a la terminal de Humahuaca antes de 14:25: 45 min de margen con acceso local (margenes.js) antes del 15:10"
+        },
+        {
+          "tipo": "tramo",
+          "servicio_id": "hq-0758",
+          "empresa": "Evelia",
+          "servicio": "Rápido",
+          "destino_final": "San Salvador de Jujuy",
+          "desde": {
+            "id_dataset": 24,
+            "nombre": "Humahuaca",
+            "slug_db": "humahuaca",
+            "lat": -23.2056,
+            "lng": -65.3503,
+            "coordenadas": "verificadas-en-base"
+          },
+          "hasta": {
+            "id_dataset": 10,
+            "nombre": "San Salvador de Jujuy",
+            "slug_db": "terminal-jjs",
+            "lat": -24.2128,
+            "lng": -65.2891,
+            "coordenadas": "verificadas-en-base"
+          },
+          "salida": "15:10",
+          "salida_confianza": "publicado",
+          "salida_nota": null,
+          "llegada": "17:15",
+          "llegada_confianza": "estimado",
+          "duracion_min": 125,
+          "frecuencia": {
+            "codigo": 2,
+            "texto": "Lunes a viernes (no feriados)"
+          }
+        },
+        {
+          "tipo": "plan-b",
+          "alternativas": [
+            {
+              "tipo": "tramo",
+              "servicio_id": "hq-0759",
+              "empresa": "Evelia",
+              "servicio": "Local por Purmamarca",
+              "destino_final": "San Salvador de Jujuy",
+              "desde": {
+                "id_dataset": 24,
+                "nombre": "Humahuaca",
+                "slug_db": "humahuaca",
+                "lat": -23.2056,
+                "lng": -65.3503,
+                "coordenadas": "verificadas-en-base"
+              },
+              "hasta": {
+                "id_dataset": 10,
+                "nombre": "San Salvador de Jujuy",
+                "slug_db": "terminal-jjs",
+                "lat": -24.2128,
+                "lng": -65.2891,
+                "coordenadas": "verificadas-en-base"
+              },
+              "salida": "15:10",
+              "salida_confianza": "publicado",
+              "salida_nota": null,
+              "llegada": "17:50",
+              "llegada_confianza": "estimado",
+              "duracion_min": 160,
+              "frecuencia": {
+                "codigo": 1,
+                "texto": "Todos los días"
+              }
+            },
+            {
+              "tipo": "tramo",
+              "servicio_id": "hq-0764",
+              "empresa": "Jama Bus",
+              "servicio": "Rápido",
+              "destino_final": "San Salvador de Jujuy",
+              "desde": {
+                "id_dataset": 24,
+                "nombre": "Humahuaca",
+                "slug_db": "humahuaca",
+                "lat": -23.2056,
+                "lng": -65.3503,
+                "coordenadas": "verificadas-en-base"
+              },
+              "hasta": {
+                "id_dataset": 10,
+                "nombre": "San Salvador de Jujuy",
+                "slug_db": "terminal-jjs",
+                "lat": -24.2128,
+                "lng": -65.2891,
+                "coordenadas": "verificadas-en-base"
+              },
+              "salida": "15:50",
+              "salida_confianza": "publicado",
+              "salida_nota": null,
+              "llegada": "17:55",
+              "llegada_confianza": "estimado",
+              "duracion_min": 125,
+              "frecuencia": {
+                "codigo": 1,
+                "texto": "Todos los días"
+              }
+            },
+            {
+              "tipo": "tramo",
+              "servicio_id": "hq-0766",
+              "empresa": "Panamericano",
+              "servicio": "Directo",
+              "destino_final": "San Salvador de Jujuy",
+              "desde": {
+                "id_dataset": 24,
+                "nombre": "Humahuaca",
+                "slug_db": "humahuaca",
+                "lat": -23.2056,
+                "lng": -65.3503,
+                "coordenadas": "verificadas-en-base"
+              },
+              "hasta": {
+                "id_dataset": 10,
+                "nombre": "San Salvador de Jujuy",
+                "slug_db": "terminal-jjs",
+                "lat": -24.2128,
+                "lng": -65.2891,
+                "coordenadas": "verificadas-en-base"
+              },
+              "salida": "16:15",
+              "salida_confianza": "publicado",
+              "salida_nota": null,
+              "llegada": "18:15",
+              "llegada_confianza": "estimado",
+              "duracion_min": 120,
+              "frecuencia": {
+                "codigo": 1,
+                "texto": "Todos los días"
+              }
+            }
+          ],
+          "descartados": [
+            {
+              "servicio_id": "hq-0761",
+              "empresa": "Panamericano",
+              "servicio": "Rápido",
+              "salida": "15:30",
+              "motivo": "Termina en Perico, no en San Salvador de Jujuy"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "regreso_plan_b": {
+    "alternativas": [
+      {
+        "tipo": "tramo",
+        "servicio_id": "hq-0759",
+        "empresa": "Evelia",
+        "servicio": "Local por Purmamarca",
+        "destino_final": "San Salvador de Jujuy",
+        "desde": {
+          "id_dataset": 24,
+          "nombre": "Humahuaca",
+          "slug_db": "humahuaca",
+          "lat": -23.2056,
+          "lng": -65.3503,
+          "coordenadas": "verificadas-en-base"
+        },
+        "hasta": {
+          "id_dataset": 10,
+          "nombre": "San Salvador de Jujuy",
+          "slug_db": "terminal-jjs",
+          "lat": -24.2128,
+          "lng": -65.2891,
+          "coordenadas": "verificadas-en-base"
+        },
+        "salida": "15:10",
+        "salida_confianza": "publicado",
+        "salida_nota": null,
+        "llegada": "17:50",
+        "llegada_confianza": "estimado",
+        "duracion_min": 160,
+        "frecuencia": {
+          "codigo": 1,
+          "texto": "Todos los días"
+        }
+      },
+      {
+        "tipo": "tramo",
+        "servicio_id": "hq-0764",
+        "empresa": "Jama Bus",
+        "servicio": "Rápido",
+        "destino_final": "San Salvador de Jujuy",
+        "desde": {
+          "id_dataset": 24,
+          "nombre": "Humahuaca",
+          "slug_db": "humahuaca",
+          "lat": -23.2056,
+          "lng": -65.3503,
+          "coordenadas": "verificadas-en-base"
+        },
+        "hasta": {
+          "id_dataset": 10,
+          "nombre": "San Salvador de Jujuy",
+          "slug_db": "terminal-jjs",
+          "lat": -24.2128,
+          "lng": -65.2891,
+          "coordenadas": "verificadas-en-base"
+        },
+        "salida": "15:50",
+        "salida_confianza": "publicado",
+        "salida_nota": null,
+        "llegada": "17:55",
+        "llegada_confianza": "estimado",
+        "duracion_min": 125,
+        "frecuencia": {
+          "codigo": 1,
+          "texto": "Todos los días"
+        }
+      },
+      {
+        "tipo": "tramo",
+        "servicio_id": "hq-0766",
+        "empresa": "Panamericano",
+        "servicio": "Directo",
+        "destino_final": "San Salvador de Jujuy",
+        "desde": {
+          "id_dataset": 24,
+          "nombre": "Humahuaca",
+          "slug_db": "humahuaca",
+          "lat": -23.2056,
+          "lng": -65.3503,
+          "coordenadas": "verificadas-en-base"
+        },
+        "hasta": {
+          "id_dataset": 10,
+          "nombre": "San Salvador de Jujuy",
+          "slug_db": "terminal-jjs",
+          "lat": -24.2128,
+          "lng": -65.2891,
+          "coordenadas": "verificadas-en-base"
+        },
+        "salida": "16:15",
+        "salida_confianza": "publicado",
+        "salida_nota": null,
+        "llegada": "18:15",
+        "llegada_confianza": "estimado",
+        "duracion_min": 120,
+        "frecuencia": {
+          "codigo": 1,
+          "texto": "Todos los días"
+        }
+      }
+    ],
+    "descartados": [
+      {
+        "servicio_id": "hq-0761",
+        "empresa": "Panamericano",
+        "servicio": "Rápido",
+        "salida": "15:30",
+        "motivo": "Termina en Perico, no en San Salvador de Jujuy"
+      }
+    ]
+  }
+}
