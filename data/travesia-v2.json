@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generado": "2026-11-14T05:13:00.189Z",
+    "generado": "2026-11-14T05:17:58.306Z",
     "aviso": "Prototipo. Horarios tomados de los registros crudos del dataset autorizado y armados a mano en la forma del contrato. No es una travesía validada por el backend.",
     "fuentes": {
       "horarios": "https://horario-quebrada.netlify.app/ — Datos proporcionados por el titular de horario-quebrada.netlify.app con autorización expresa para uso en JujuyGo. (generado 2026-11-10T01:51:27.355Z)",
@@ -75,7 +75,8 @@
           "frecuencia": {
             "codigo": 2,
             "texto": "Lunes a viernes (no feriados)"
-          }
+          },
+          "nota_destino": null
         },
         {
           "tipo": "visita",
@@ -171,7 +172,8 @@
           "frecuencia": {
             "codigo": 2,
             "texto": "Lunes a viernes (no feriados)"
-          }
+          },
+          "nota_destino": null
         },
         {
           "tipo": "visita",
@@ -221,7 +223,8 @@
           "frecuencia": {
             "codigo": 2,
             "texto": "Lunes a viernes (no feriados)"
-          }
+          },
+          "nota_destino": null
         },
         {
           "tipo": "yapa",
@@ -366,7 +369,8 @@
           "frecuencia": {
             "codigo": 2,
             "texto": "Lunes a viernes (no feriados)"
-          }
+          },
+          "nota_destino": null
         },
         {
           "tipo": "plan-b",
@@ -402,7 +406,42 @@
               "frecuencia": {
                 "codigo": 1,
                 "texto": "Todos los días"
-              }
+              },
+              "nota_destino": null
+            },
+            {
+              "tipo": "tramo",
+              "servicio_id": "hq-0761",
+              "empresa": "Panamericano",
+              "servicio": "Rápido",
+              "destino_final": "Perico",
+              "desde": {
+                "id_dataset": 24,
+                "nombre": "Humahuaca",
+                "slug_db": "humahuaca",
+                "lat": -23.2056,
+                "lng": -65.3503,
+                "coordenadas": "verificadas-en-base"
+              },
+              "hasta": {
+                "id_dataset": 10,
+                "nombre": "San Salvador de Jujuy",
+                "slug_db": "terminal-jjs",
+                "lat": -24.2128,
+                "lng": -65.2891,
+                "coordenadas": "verificadas-en-base"
+              },
+              "salida": "15:30",
+              "salida_confianza": "publicado",
+              "salida_nota": null,
+              "llegada": "17:35",
+              "llegada_confianza": "estimado",
+              "duracion_min": 125,
+              "frecuencia": {
+                "codigo": 1,
+                "texto": "Todos los días"
+              },
+              "nota_destino": "La fuente lo lista para San Salvador de Jujuy; el servicio sigue hasta Perico. Confirmá en qué parada te deja."
             },
             {
               "tipo": "tramo",
@@ -435,7 +474,8 @@
               "frecuencia": {
                 "codigo": 1,
                 "texto": "Todos los días"
-              }
+              },
+              "nota_destino": null
             },
             {
               "tipo": "tramo",
@@ -468,18 +508,11 @@
               "frecuencia": {
                 "codigo": 1,
                 "texto": "Todos los días"
-              }
+              },
+              "nota_destino": null
             }
           ],
-          "descartados": [
-            {
-              "servicio_id": "hq-0761",
-              "empresa": "Panamericano",
-              "servicio": "Rápido",
-              "salida": "15:30",
-              "motivo": "Termina en Perico, no en San Salvador de Jujuy"
-            }
-          ]
+          "descartados": []
         }
       ]
     }
@@ -517,7 +550,42 @@
         "frecuencia": {
           "codigo": 1,
           "texto": "Todos los días"
-        }
+        },
+        "nota_destino": null
+      },
+      {
+        "tipo": "tramo",
+        "servicio_id": "hq-0761",
+        "empresa": "Panamericano",
+        "servicio": "Rápido",
+        "destino_final": "Perico",
+        "desde": {
+          "id_dataset": 24,
+          "nombre": "Humahuaca",
+          "slug_db": "humahuaca",
+          "lat": -23.2056,
+          "lng": -65.3503,
+          "coordenadas": "verificadas-en-base"
+        },
+        "hasta": {
+          "id_dataset": 10,
+          "nombre": "San Salvador de Jujuy",
+          "slug_db": "terminal-jjs",
+          "lat": -24.2128,
+          "lng": -65.2891,
+          "coordenadas": "verificadas-en-base"
+        },
+        "salida": "15:30",
+        "salida_confianza": "publicado",
+        "salida_nota": null,
+        "llegada": "17:35",
+        "llegada_confianza": "estimado",
+        "duracion_min": 125,
+        "frecuencia": {
+          "codigo": 1,
+          "texto": "Todos los días"
+        },
+        "nota_destino": "La fuente lo lista para San Salvador de Jujuy; el servicio sigue hasta Perico. Confirmá en qué parada te deja."
       },
       {
         "tipo": "tramo",
@@ -550,7 +618,8 @@
         "frecuencia": {
           "codigo": 1,
           "texto": "Todos los días"
-        }
+        },
+        "nota_destino": null
       },
       {
         "tipo": "tramo",
@@ -583,17 +652,10 @@
         "frecuencia": {
           "codigo": 1,
           "texto": "Todos los días"
-        }
+        },
+        "nota_destino": null
       }
     ],
-    "descartados": [
-      {
-        "servicio_id": "hq-0761",
-        "empresa": "Panamericano",
-        "servicio": "Rápido",
-        "salida": "15:30",
-        "motivo": "Termina en Perico, no en San Salvador de Jujuy"
-      }
-    ]
+    "descartados": []
   }
 }

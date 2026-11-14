@@ -223,7 +223,7 @@ async function main() {
         hornocalVerificar: /verificar regreso/i.test(t3),
         purmamarcaSinCoords: /Purmamarca Pueblo/.test(t2) && /sin coordenadas verificadas/i.test(t2),
         sinKm: !/\bkm\b/i.test(t3) && !/\bkm\b/i.test(t2) && !/\bkm\b/i.test(txt),
-        descartadoPerico: /Perico/i.test(t3),
+        pericoComoAlternativa: /sigue hasta Perico/i.test(t3) && !/no sirve/i.test(t3),
         leyenda: /conexión esquemática/i.test(t3),
         estadoCondicional: t3.includes('Cierra solo si volvés')
       };

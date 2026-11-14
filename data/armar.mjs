@@ -75,8 +75,10 @@ function tramo(servicioId, subeEn, bajaEn, fecha) {
   const [lo, hi] = [Math.min(r.origen_id, r.destino_id), Math.max(r.origen_id, r.destino_id)];
   if ((r.destino_id > r.origen_id) !== (bajaEn > subeEn)) throw new Error(`${servicioId} va en otro sentido`);
   if (![subeEn, bajaEn].every(x => x >= lo && x <= hi)) throw new Error(`${servicioId} no cubre ${subeEn}->${bajaEn}`);
-  // Si se baja en el destino del registro, la ciudad final tiene que ser esa (caso Perico).
-  if (bajaEn === r.destino_id && r.ciudad_destino !== ciudad(bajaEn).nombre) throw new Error(`${servicioId} termina en ${r.ciudad_destino}, no en ${ciudad(bajaEn).nombre}`);
+  // destino_id es la ciudad del sentido que usa la fuente para listar el servicio; ciudad_destino es
+  // su destino final (ej. hq-0761: destino_id 10 = San Salvador, ciudad_destino "Perico"). La fuente
+  // lo lista para San Salvador, así que se acepta y se avisa que sigue viaje.
+  const continua = r.ciudad_destino !== ciudad(r.destino_id).nombre;
   // Solo los "Local por Purmamarca" entran al pueblo (filtro pueblo/ruta de la fuente).
   if ([subeEn, bajaEn].includes(19) && !/purmamarca/i.test(r.servicio)) throw new Error(`${servicioId} no entra a Purmamarca pueblo`);
   const esIntermedio = r.origen_id !== subeEn;
@@ -100,6 +102,9 @@ function tramo(servicioId, subeEn, bajaEn, fecha) {
     llegada_confianza: 'estimado',
     duracion_min: viaje,
     frecuencia: { codigo: r.frecuencia, texto: FRECUENCIA[r.frecuencia] },
+    nota_destino: continua && bajaEn === r.destino_id
+      ? `La fuente lo lista para ${ciudad(bajaEn).nombre}; el servicio sigue hasta ${r.ciudad_destino}. Confirmá en qué parada te deja.`
+      : null,
   };
 }
 const yaPasaPor = (t, idCiudad) => {
@@ -198,11 +203,8 @@ const v3 = {
   regreso_limite: limiteHornocal,
   regreso_regla: `Volver a la terminal de Humahuaca antes de ${limiteHornocal}: ${MARGEN_LOCAL} min de margen con acceso local (margenes.js) antes del ${t4.salida}`,
 };
-const alternativas = ['hq-0759', 'hq-0764', 'hq-0766'].map(id => tramo(id, 24, 10, fechas[2]));
-const descartados = [dataset.horarios.find(h => h.id === 'hq-0761')].map(r => ({
-  servicio_id: r.id, empresa: r.empresa, servicio: r.servicio, salida: r.hora,
-  motivo: `Termina en ${r.ciudad_destino}, no en San Salvador de Jujuy`,
-}));
+const alternativas = ['hq-0759', 'hq-0761', 'hq-0764', 'hq-0766'].map(id => tramo(id, 24, 10, fechas[2]));
+const descartados = [];
 
 const dia = (numero, fecha, recorrido, items, noche) => {
   const lugaresDia = items.filter(i => i.tipo === 'visita').map(i => i.lugar);
@@ -253,7 +255,7 @@ const salida = {
 salida.dias[2].items.push({ tipo: 'plan-b', ...salida.regreso_plan_b });
 
 writeFileSync(new URL('travesia-v2.json', aqui), `${JSON.stringify(salida, null, 2)}\n`);
-writeFileSync(new URL('crudo/hq-registros-usados.json', aqui), `${JSON.stringify([...usados.values(), dataset.horarios.find(h => h.id === 'hq-0761')], null, 2)}\n`);
+writeFileSync(new URL('crudo/hq-registros-usados.json', aqui), `${JSON.stringify([...usados.values()], null, 2)}\n`);
 console.log('OK', [...usados.keys()].join(' '));
 for (const d of salida.dias) {
   console.log(`Día ${d.numero} ${d.dia_semana} ${d.fecha}`);

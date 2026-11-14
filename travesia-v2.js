@@ -348,6 +348,7 @@ function tramoFila(t, compacta = false) {
   const dur = fmtDur(t.duracion_min);
   w.append(el('p', 'tramo-info', `${dur ? dur + ' de viaje (estimado)' : 'Duración sin dato'} · Corre: ${t.frecuencia.texto}`));
   if (t.salida_nota) w.append(el('p', 'tramo-nota', t.salida_nota));
+  if (t.nota_destino) w.append(el('p', 'tramo-nota', t.nota_destino));
   return w;
 }
 

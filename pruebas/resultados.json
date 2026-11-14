@@ -1,5 +1,5 @@
 {
-  "generado": "2026-11-14T05:14:29.729Z",
+  "generado": "2026-11-14T05:19:16.967Z",
   "resultados": [
     {
       "nombre": "D1 vista general",
@@ -44,7 +44,7 @@
     {
       "nombre": "D6 textos",
       "paso": true,
-      "detalle": "{\"hornocalSinHorario\":true,\"hornocalVerificar\":true,\"purmamarcaSinCoords\":true,\"sinKm\":true,\"descartadoPerico\":true,\"leyenda\":true,\"estadoCondicional\":true,\"sinGarantiaSinCierra\":true,\"paletaSinImg\":true,\"sinCierraSuelto\":true,\"horasEnJson\":true,\"horasFuera\":[],\"horasFuera2\":[]}"
+      "detalle": "{\"hornocalSinHorario\":true,\"hornocalVerificar\":true,\"purmamarcaSinCoords\":true,\"sinKm\":true,\"pericoComoAlternativa\":true,\"leyenda\":true,\"estadoCondicional\":true,\"sinGarantiaSinCierra\":true,\"paletaSinImg\":true,\"sinCierraSuelto\":true,\"horasEnJson\":true,\"horasFuera\":[],\"horasFuera2\":[]}"
     },
     {
       "nombre": "D7 sin errores",
@@ -94,7 +94,7 @@
     {
       "nombre": "M5 tap card→marcador visible",
       "paso": true,
-      "detalle": "{\"sheetTop\":379.8125,\"markerBottom\":132,\"ok\":true}"
+      "detalle": "{\"sheetTop\":379.8125,\"markerBottom\":172,\"ok\":true}"
     },
     {
       "nombre": "M6 marcadores sobre hoja",

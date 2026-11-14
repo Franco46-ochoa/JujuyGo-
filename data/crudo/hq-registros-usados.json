@@ -61,6 +61,17 @@
   {
     "origen_id": 24,
     "destino_id": 10,
+    "ciudad_destino": "Perico",
+    "hora": "15:30",
+    "minuto": 30,
+    "servicio": "Rápido",
+    "empresa": "Panamericano",
+    "frecuencia": 1,
+    "id": "hq-0761"
+  },
+  {
+    "origen_id": 24,
+    "destino_id": 10,
     "ciudad_destino": "San Salvador de Jujuy",
     "hora": "15:50",
     "minuto": 50,
@@ -79,16 +90,5 @@
     "empresa": "Panamericano",
     "frecuencia": 1,
     "id": "hq-0766"
-  },
-  {
-    "origen_id": 24,
-    "destino_id": 10,
-    "ciudad_destino": "Perico",
-    "hora": "15:30",
-    "minuto": 30,
-    "servicio": "Rápido",
-    "empresa": "Panamericano",
-    "frecuencia": 1,
-    "id": "hq-0761"
   }
 ]
