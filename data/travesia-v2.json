@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generado": "2026-11-14T04:17:01.384Z",
+    "generado": "2026-11-14T05:13:00.189Z",
     "aviso": "Prototipo. Horarios tomados de los registros crudos del dataset autorizado y armados a mano en la forma del contrato. No es una travesía validada por el backend.",
     "fuentes": {
       "horarios": "https://horario-quebrada.netlify.app/ — Datos proporcionados por el titular de horario-quebrada.netlify.app con autorización expresa para uso en JujuyGo. (generado 2026-11-10T01:51:27.355Z)",
@@ -108,6 +108,7 @@
           },
           "mensaje": "La Garganta del Diablo también queda en Tilcara.",
           "hora_sugerida": null,
+          "referencia": null,
           "cierre": {
             "estado": "sin-garantia",
             "faltan": [
@@ -237,6 +238,15 @@
           },
           "mensaje": "Mirá la Paleta del Pintor desde la ventanilla al pasar por Maimará.",
           "hora_sugerida": "15:00",
+          "referencia": {
+            "id_dataset": 20,
+            "nombre": "Maimará",
+            "slug_db": "maimara",
+            "lat": -23.6247,
+            "lng": -65.4089,
+            "coordenadas": "verificadas-en-base",
+            "relacion": "Parada de Maimará \"frente al pueblo y la Paleta del Pintor\" (notas de parada de la base)"
+          },
           "cierre": {
             "estado": "cierra",
             "razones": [
@@ -260,6 +270,15 @@
           },
           "mensaje": "El Monumento a los Héroes de la Independencia queda en Humahuaca, donde dormís.",
           "hora_sugerida": "16:10",
+          "referencia": {
+            "id_dataset": 24,
+            "nombre": "Humahuaca",
+            "slug_db": "humahuaca",
+            "lat": -23.2056,
+            "lng": -65.3503,
+            "coordenadas": "verificadas-en-base",
+            "relacion": "Mismo pueblo: llegada del tramo a la terminal de Humahuaca"
+          },
           "cierre": {
             "estado": "cierra",
             "razones": [

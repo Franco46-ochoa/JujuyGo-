@@ -276,6 +276,35 @@ async function main() {
         `consola=${JSON.stringify(consola.slice(0, 3))} requests=${JSON.stringify(otras.slice(0, 3))} tilesFallidos=${tilesFallidos.length}`);
       if (tilesFallidos.length) resultados.push({ nombre: 'D7 tiles fallidos (red)', paso: true, detalle: `${tilesFallidos.length} tiles no cargaron — problema de red, no del prototipo` });
     }
+
+    // D10 — conexiones de yapas: solo desde su `referencia` declarada; la línea del día no pasa por yapas
+    {
+      await page.evaluate(() => { location.hash = ''; });
+      await page.waitForTimeout(400);
+      const lineas = await page.evaluate(() => {
+        const out = [];
+        window.__mapa.eachLayer(l => {
+          if (l.getLatLngs && l.options.className) out.push({ c: l.options.className, ll: l.getLatLngs().map(p => [p.lat, p.lng]) });
+        });
+        return out;
+      });
+      const igual = (a, b) => Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9;
+      const yapas = DATA.dias.flatMap(d => d.items.filter(i => i.tipo === 'yapa'));
+      const linYapa = lineas.filter(l => l.c === 'v2-lin-yapa');
+      const esperadas = yapas.filter(y => y.referencia?.lat != null && y.lugar?.lat != null);
+      const cadaUna = esperadas.every(y => linYapa.some(l =>
+        l.ll.length === 2 && igual(l.ll[0], [y.referencia.lat, y.referencia.lng]) && igual(l.ll[1], [y.lugar.lat, y.lugar.lng])));
+      const paleta = yapas.find(y => y.lugar.slug === 'paleta-del-pintor');
+      const linPaleta = linYapa.filter(l => igual(l.ll[1], [paleta.lugar.lat, paleta.lugar.lng]));
+      const paletaDesdeMaimara = linPaleta.length === 1 && paleta.referencia.nombre === 'Maimará'
+        && igual(linPaleta[0].ll[0], [paleta.referencia.lat, paleta.referencia.lng]);
+      const sinRef = yapas.filter(y => !y.referencia);
+      const sinRefSinLinea = sinRef.every(y => !linYapa.some(l => igual(l.ll[1], [y.lugar.lat, y.lugar.lng])));
+      const coordsYapa = yapas.filter(y => y.lugar?.lat != null).map(y => [y.lugar.lat, y.lugar.lng]);
+      const diaNoPasaPorYapa = lineas.filter(l => l.c === 'v2-lin').every(l => !l.ll.some(p => coordsYapa.some(c => igual(p, c))));
+      ok('D10 conexiones de yapas', linYapa.length === esperadas.length && cadaUna && paletaDesdeMaimara && sinRefSinLinea && diaNoPasaPorYapa,
+        JSON.stringify({ lineasYapa: linYapa.length, esperadas: esperadas.length, cadaUna, paletaDesdeMaimara, garganta_sin_linea: sinRefSinLinea, diaNoPasaPorYapa }));
+    }
     await ctx.close();
   }
 

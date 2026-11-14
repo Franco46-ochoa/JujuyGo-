@@ -85,7 +85,10 @@ function puntosDelDia(dia) {
     } else if (it.tipo === 'yapa') {
       const g = it.lugar;
       if (g && g.lat != null) {
-        out.push({ tipo: 'yapa', lat: g.lat, lng: g.lng, nombre: g.nombre, itemId: it._id, orden: i + 1, ref: ultimo });
+        // La conexión sale SOLO de la referencia espacial declarada en los datos; sin referencia, no hay línea.
+        const r = it.referencia;
+        const ref = r && r.coordenadas === 'verificadas-en-base' && r.lat != null ? { lat: r.lat, lng: r.lng } : null;
+        out.push({ tipo: 'yapa', lat: g.lat, lng: g.lng, nombre: g.nombre, itemId: it._id, orden: i + 1, ref });
       }
     }
   });
@@ -151,7 +154,8 @@ function dibujarMapa() {
 
   // líneas esquemáticas por día
   DATA.dias.forEach(d => {
-    const seq = puntosDelDia(d).filter(p => p.tipo !== 'noche');
+    // Las yapas no son puntos del recorrido: la línea del día no pasa por ellas.
+    const seq = puntosDelDia(d).filter(p => p.tipo !== 'noche' && p.tipo !== 'yapa');
     const ll = seq.map(p => [p.lat, p.lng]);
     if (ll.length > 1) {
       const atenuar = vista !== 'general' && vista !== d.numero;

@@ -138,6 +138,8 @@ const y1 = {
   tipo: 'yapa', tipo_yapa: 'localidad', lugar: lugar('garganta-del-diablo-tilcara'),
   mensaje: 'La Garganta del Diablo también queda en Tilcara.',
   hora_sugerida: null,
+  // Sin dato del acceso: no se dibuja conexión (una línea sugeriría un camino que no conocemos).
+  referencia: null,
   cierre: {
     estado: 'sin-garantia',
     faltan: ['Tiempo de acceso desde el pueblo (no está en los datos)', 'Duración de la visita'],
@@ -156,6 +158,7 @@ const y2 = {
   tipo: 'yapa', tipo_yapa: 'rn9', lugar: lugar('paleta-del-pintor'),
   mensaje: 'Mirá la Paleta del Pintor desde la ventanilla al pasar por Maimará.',
   hora_sugerida: pasoMaimara,
+  referencia: { ...parada(20), relacion: 'Parada de Maimará "frente al pueblo y la Paleta del Pintor" (notas de parada de la base)' },
   cierre: {
     estado: 'cierra',
     razones: [
@@ -171,6 +174,7 @@ const y3 = {
   tipo: 'yapa', tipo_yapa: 'localidad', lugar: lugar('monumento-independencia-humahuaca'),
   mensaje: 'El Monumento a los Héroes de la Independencia queda en Humahuaca, donde dormís.',
   hora_sugerida: hhmm(ventanaY3),
+  referencia: { ...parada(24), relacion: 'Mismo pueblo: llegada del tramo a la terminal de Humahuaca' },
   cierre: {
     estado: 'cierra',
     razones: [

@@ -1,5 +1,5 @@
 {
-  "generado": "2026-11-14T04:33:05.396Z",
+  "generado": "2026-11-14T05:14:29.729Z",
   "resultados": [
     {
       "nombre": "D1 vista general",
@@ -50,6 +50,11 @@
       "nombre": "D7 sin errores",
       "paso": true,
       "detalle": "consola=[] requests=[] tilesFallidos=0"
+    },
+    {
+      "nombre": "D10 conexiones de yapas",
+      "paso": true,
+      "detalle": "{\"lineasYapa\":2,\"esperadas\":2,\"cadaUna\":true,\"paletaDesdeMaimara\":true,\"garganta_sin_linea\":true,\"diaNoPasaPorYapa\":true}"
     },
     {
       "nombre": "D8-m sin pares encimados (general mobile)",
